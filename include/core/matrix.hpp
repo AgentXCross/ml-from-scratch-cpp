@@ -23,7 +23,7 @@ public:
 
     // Element access
     double &at(int row, int col); // read + write
-    double at(int row, int col); // read-only
+    double at(int row, int col) const; // read-only
 
     // Operator override
     Matrix operator+(const Matrix &other) const;

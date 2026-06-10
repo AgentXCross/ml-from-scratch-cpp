@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <initializer_list>
 
 class Matrix {
 private:
@@ -39,4 +40,9 @@ public:
 
     // print the matrix
     void print() const;
+
+    // Initialize Matrix from a vector of vectors
+    static Matrix from_vector(
+        const std::vector<std::vector<double>> &values
+    );
 };

@@ -34,9 +34,9 @@ Matrix LinearRegression::predict(const Matrix &X) const {
 
 void LinearRegression::backward(
     const Matrix &X,
-    const Matrix &prediction_graidents
+    const Matrix &prediction_gradients
 ) {
-    if (X.rows() != prediction_graidents.rows()) {
+    if (X.rows() != prediction_gradients.rows()) {
         throw std::invalid_argument("X and prediction_gradients must have the same number of rows");
     }
 
@@ -44,12 +44,12 @@ void LinearRegression::backward(
         throw std::invalid_argument("prediction_gradients must have exactly one column");
     }
 
-    weight_gradients_ = X.transpose().matmul(prediction_graidents);
+    weight_gradients_ = X.transpose().matmul(prediction_gradients);
 
     double bias_gradient = 0.0;
 
-    for (int i = 0; i < prediction_graidents.rows(); i++) {
-        bias_gradient = bias_gradient + prediction_graidents.at(i, 0);
+    for (int i = 0; i < prediction_gradients.rows(); i++) {
+        bias_gradient = bias_gradient + prediction_gradients.at(i, 0);
     }
 
     bias_gradients_.at(0, 0) = bias_gradient;

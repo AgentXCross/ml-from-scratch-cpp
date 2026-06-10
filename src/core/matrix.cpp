@@ -143,3 +143,29 @@ void Matrix::print() const {
         std::cout << "\n";
     }
 }
+
+Matrix Matrix::from_vector(
+    const std::vector<std::vector<double>> &values
+) {
+    int rows = values.size();
+
+    if (rows == 0) {
+        return Matrix();
+    }
+
+    int cols = values[0].size();
+
+    Matrix result(rows, cols);
+
+    for (int i = 0; i < rows; i++) {
+        if (values[i].size() != cols) {
+            throw std::invalid_argument("All rows must have the same number of columns");
+        }
+
+        for (int j = 0; j < cols; j++) {
+            result.at(i, j) = values[i][j];
+        }
+    }
+
+    return result;
+}

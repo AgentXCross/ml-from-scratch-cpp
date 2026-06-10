@@ -23,3 +23,6 @@ Makefile
 
 # macOS
 .DS_Store
+
+# Local Codex notes
+CODEX.txt

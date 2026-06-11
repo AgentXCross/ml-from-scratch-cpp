@@ -121,6 +121,18 @@ Matrix Matrix::transpose() const {
     return result;
 }
 
+std::pair<int, int> Matrix::shape() const {
+    return {rows_, cols_};
+}
+
+Matrix Matrix::zeros(int rows, int cols) {
+    return Matrix(rows, cols, 0.0);
+}
+
+Matrix Matrix::ones(int rows, int cols) {
+    return Matrix(rows, cols, 1.0);
+}
+
 Matrix Matrix::random(int rows, int cols, double min, double max) {
     Matrix result(rows, cols);
 
@@ -142,6 +154,10 @@ void Matrix::print() const {
         }
         std::cout << "\n";
     }
+}
+
+void Matrix::print_shape() const {
+    std::cout << "(" << rows_ << ", " << cols_ << ")\n";
 }
 
 Matrix Matrix::from_vector(

@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <initializer_list>
+#include <utility>
 
 class Matrix {
 private:
@@ -35,11 +36,17 @@ public:
     Matrix matmul(const Matrix &other) const;
     Matrix transpose() const;
 
+    // Shape
+    std::pair<int, int> shape() const;
+
     // static means that this function belongs to this class itself, not individual objects
+    static Matrix zeros(int rows, int cols);
+    static Matrix ones(int rows, int cols);
     static Matrix random(int rows, int cols, double min = -1.0, double max = 1.0);
 
     // print the matrix
     void print() const;
+    void print_shape() const;
 
     // Initialize Matrix from a vector of vectors
     static Matrix from_vector(

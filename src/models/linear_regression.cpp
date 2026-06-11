@@ -36,6 +36,11 @@ void LinearRegression::backward(
     const Matrix &X,
     const Matrix &prediction_gradients
 ) {
+    // prediction_gradients[i] = ∂L/∂pred
+    // Ex: Let pred = w1x1 + w2x2 + b
+    // Then ∂pred/∂w1 = x1
+    // By the Chain Rule, ∂L/∂w1 = ∂L/∂pred * ∂pred/∂w1 = (∂L/∂pred) * x1
+    // ∂L/∂w1 is the first element in weight_gradients_
     if (X.rows() != prediction_gradients.rows()) {
         throw std::invalid_argument("X and prediction_gradients must have the same number of rows");
     }
@@ -46,6 +51,9 @@ void LinearRegression::backward(
 
     weight_gradients_ = X.transpose().matmul(prediction_gradients);
 
+    // From the example above, taking the partial deriative of the prediction with respect to the bias
+    // ∂pred/∂b = 1
+    // So ∂L/∂b = ∂L/∂pred = prediction_gradients[i]
     double bias_gradient = 0.0;
 
     for (int i = 0; i < prediction_gradients.rows(); i++) {

@@ -50,6 +50,16 @@ target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core
 )
 
+# Utils
+add_library(cpp_ml_utils
+    src/core/utils/threshold.cpp
+    src/core/utils/argmax.cpp
+    src/core/utils/argmin.cpp
+)
+target_link_libraries(cpp_ml_utils PUBLIC
+    cpp_ml_core
+)
+
 # Linear regression example
 # cmake --build build --target linear_regression_example
 add_executable(linear_regression_example

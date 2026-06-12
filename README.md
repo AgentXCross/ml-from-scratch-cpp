@@ -1,1 +1,1 @@
-# Classical and Deep Learning Library in C++
+# C++ Machine Learning Library from Scratch

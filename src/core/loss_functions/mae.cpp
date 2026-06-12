@@ -33,7 +33,7 @@ Matrix mean_absolute_error_gradient(
         throw std::invalid_argument("y_true and y_pred must have the same dimensions");
     }
 
-    Matrix gradient(y_true.rows(), y_true.cols());
+    Matrix dL_dpred(y_true.rows(), y_true.cols());
 
     int num_elements = y_true.rows() * y_true.cols();
 
@@ -42,16 +42,16 @@ Matrix mean_absolute_error_gradient(
             double error = y_pred.at(i, j) - y_true.at(i, j);
 
             if (error > 0.0) {
-                gradient.at(i, j) = 1.0 / num_elements;
+                dL_dpred.at(i, j) = 1.0 / num_elements;
             }
             else if (error < 0.0) {
-                gradient.at(i, j) = -1.0 / num_elements;
+                dL_dpred.at(i, j) = -1.0 / num_elements;
             }
             else {
-                gradient.at(i, j) = 0.0; // MAE not differentiable at 0
+                dL_dpred.at(i, j) = 0.0; // MAE not differentiable at 0
             }
         }
     }
 
-    return gradient;
+    return dL_dpred;
 }

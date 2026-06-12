@@ -7,8 +7,8 @@ private:
     Matrix weights_;
     Matrix bias_;
 
-    Matrix weight_gradients_;
-    Matrix bias_gradients_;
+    Matrix dL_dw_;
+    Matrix dL_db_;
 
 public:
     LogisticRegression();
@@ -17,7 +17,7 @@ public:
     Matrix predict_probs(const Matrix &X) const; // returns sigmoid probs
     Matrix predict(const Matrix &X) const; // returns class labels {0, 1}
 
-    void backward(const Matrix &X, const Matrix &prediction_gradients);
+    void backward(const Matrix &X, const Matrix &dL_dpred);
 
     void step(double learning_rate);
 

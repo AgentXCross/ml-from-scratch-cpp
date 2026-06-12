@@ -40,13 +40,13 @@ Matrix binary_cross_entropy_gradient(
 ) {
     // ∂L/∂p = -y/p + (1-y)/(1-p)
     if (y_true.rows() != y_pred.rows() || y_true.cols() != y_pred.cols()) {
-        throw std::invalid_argument("y_true and y_cols must have the same dimensions");
+        throw std::invalid_argument("y_true and y_pred must have the same dimensions");
     }
 
     double epsilon = 1e-15;
     int num_elements = y_true.rows() * y_true.cols();
 
-    Matrix gradient(y_true.rows(), y_true.cols());
+    Matrix dL_dpred(y_true.rows(), y_true.cols());
 
     for (int i = 0; i < y_true.rows(); i++) {
         for (int j = 0; j < y_true.cols(); j++) {
@@ -59,9 +59,9 @@ Matrix binary_cross_entropy_gradient(
                 p = 1.0 - epsilon;
             }
 
-            gradient.at(i, j) = (-(y / p) + ((1.0 - y) / (1.0 - p))) / num_elements;
+            dL_dpred.at(i, j) = (-(y / p) + ((1.0 - y) / (1.0 - p))) / num_elements;
         }
     }
 
-    return gradient;
+    return dL_dpred;
 }

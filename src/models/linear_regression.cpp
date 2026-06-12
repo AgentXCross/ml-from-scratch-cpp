@@ -6,16 +6,16 @@ LinearRegression::LinearRegression() {
     weights_ = Matrix();
     bias_ = Matrix();
 
-    weight_gradients_ = Matrix();
-    bias_gradients_ = Matrix();
+    dL_dw_ = Matrix();
+    dL_db_ = Matrix();
 }
 
 LinearRegression::LinearRegression(int num_features) {
-    weights_ = Matrix(num_features, 1);
+    weights_ = Matrix::random(num_features, 1, -0.01, 0.01);
     bias_ = Matrix(1, 1);
 
-    weight_gradients_ = Matrix(num_features, 1);
-    bias_gradients_ = Matrix(1, 1);
+    dL_dw_ = Matrix(num_features, 1);
+    dL_db_ = Matrix(1, 1);
 }
 
 Matrix LinearRegression::predict(const Matrix &X) const {
@@ -34,44 +34,43 @@ Matrix LinearRegression::predict(const Matrix &X) const {
 
 void LinearRegression::backward(
     const Matrix &X,
-    const Matrix &prediction_gradients
+    const Matrix &dL_dpred 
 ) {
-    // prediction_gradients[i] = ∂L/∂pred
+    // all d are ∂ 
+    // dL/dpred[i] is the loss gradient with respect to a prediction.
     // Ex: Let pred = w1x1 + w2x2 + b
-    // Then ∂pred/∂w1 = x1
-    // By the Chain Rule, ∂L/∂w1 = ∂L/∂pred * ∂pred/∂w1 = (∂L/∂pred) * x1
-    // ∂L/∂w1 is the first element in weight_gradients_
-    if (X.rows() != prediction_gradients.rows()) {
-        throw std::invalid_argument("X and prediction_gradients must have the same number of rows");
+    // Then dpred/dw1 = x1.
+    // By chain rule, dL/dw1 = dL/dpred * dpred/dw1 = (dL/dpred) * x1.
+    // dL_dw1 is the first element in dL_dw_.
+    if (X.rows() != dL_dpred.rows()) {
+        throw std::invalid_argument("X and dL_dpred must have the same number of rows");
     }
 
-    if (prediction_gradients.cols() != 1) {
-        throw std::invalid_argument("prediction_gradients must have exactly one column");
+    if (dL_dpred.cols() != 1) {
+        throw std::invalid_argument("dL_dpred must have exactly one column");
     }
 
-    weight_gradients_ = X.transpose().matmul(prediction_gradients);
+    dL_dw_ = X.transpose().matmul(dL_dpred);
 
-    // From the example above, taking the partial deriative of the prediction with respect to the bias
-    // ∂pred/∂b = 1
-    // So ∂L/∂b = ∂L/∂pred = prediction_gradients[i]
+    // For the bias, dpred/db = 1, so dL/db is the sum of dL/dpred.
     double bias_gradient = 0.0;
 
-    for (int i = 0; i < prediction_gradients.rows(); i++) {
-        bias_gradient = bias_gradient + prediction_gradients.at(i, 0);
+    for (int i = 0; i < dL_dpred.rows(); i++) {
+        bias_gradient = bias_gradient + dL_dpred.at(i, 0);
     }
 
-    bias_gradients_.at(0, 0) = bias_gradient;
+    dL_db_.at(0, 0) = bias_gradient;
 }
 
 void LinearRegression::step(double learning_rate) {
-    weights_ = weights_ - (weight_gradients_ * learning_rate);
-    bias_ = bias_ - (bias_gradients_ * learning_rate);
+    dL_dw_ = weights_ - (dL_dw_ * learning_rate);
+    dL_db_ = bias_ - (dL_db_ * learning_rate);
 }
 
 Matrix LinearRegression::weights() const {
-    return weights_;
+    return dL_dw_;
 }
 
 Matrix LinearRegression::bias() const {
-    return bias_;
+    return dL_db_;
 }

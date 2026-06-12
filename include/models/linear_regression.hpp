@@ -7,8 +7,8 @@ private:
     Matrix weights_;
     Matrix bias_;
 
-    Matrix weight_gradients_;
-    Matrix bias_gradients_;
+    Matrix dL_dw_;
+    Matrix dL_db_;
 
 public:
     LinearRegression();
@@ -19,7 +19,7 @@ public:
 
     void backward(
         const Matrix &X,
-        const Matrix &prediction_gradients
+        const Matrix &dL_dpred
     );
 
     void step(double learning_rate);

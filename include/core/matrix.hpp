@@ -32,6 +32,9 @@ public:
     Matrix operator-(const Matrix &other) const;
     Matrix operator*(double scalar) const;
 
+    // Element-wise multiplication
+    Matrix elementwise_multiply(const Matrix &other) const;
+
     // Matmul and T
     Matrix matmul(const Matrix &other) const;
     Matrix transpose() const;

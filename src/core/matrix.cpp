@@ -87,6 +87,22 @@ Matrix Matrix::operator*(double scalar) const {
     return result;
 }
 
+Matrix Matrix::elementwise_multiply(const Matrix &other) const {
+    if (rows_ != other.rows() || cols_ != other.cols()) {
+        throw std::invalid_argument("Matrix dimensions must match for element-wise multiplication");
+    }
+
+    Matrix result(rows_, cols_);
+
+    for (int i = 0; i < rows_; i++) {
+        for (int j = 0; j < cols_; j++) {
+            result.at(i, j) = at(i, j) * other.at(i, j);
+        }
+    }
+
+    return result;
+}
+
 Matrix Matrix::matmul(const Matrix &other) const {
     if (cols_ != other.rows_) {
         throw std::invalid_argument("Invalid dimensions for matrix multiplication");

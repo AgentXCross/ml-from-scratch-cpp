@@ -1,6 +1,6 @@
 # C++ Machine Learning Library from Scratch
 
-This project is a small machine learning library built from scratch in C++. I'm implementing classical machine learning algorithms such as linear regression and logistic regression, alongside deep learning components. The goal is to build the library in a more PyTorch-style way, where training loops are explicit and the mathematics behind forward passes, gradient calculations, and parameter updates stays visible.
+This project is a small machine learning library built from scratch in C++. I'm implementing classical machine learning algorithms alongside deep learning components. The goal is to build the library in a more PyTorch-style way, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
 
 ## Source Structure
 ```text

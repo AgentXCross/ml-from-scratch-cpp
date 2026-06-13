@@ -5,12 +5,26 @@ project(cpp_ml_from_scratch LANGUAGES CXX) # project name and language
 set(CMAKE_CXX_STANDARD 17) # C++ version
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Regeneration command
+# cmake -S . -B build -DCMAKE_CXX_COMPILER=clang++ 
+
 # Core
 add_library(cpp_ml_core
     src/core/matrix.cpp
 )
 target_include_directories(cpp_ml_core PUBLIC
     include
+)
+
+# Preprocessing
+add_library(cpp_ml_preprocessing
+    src/preprocessing/standard_scaler.cpp
+    src/preprocessing/dataset.cpp
+    src/preprocessing/min_max_scaler.cpp
+    src/preprocessing/train_test_split.cpp
+)
+target_link_libraries(cpp_ml_preprocessing PUBLIC
+    cpp_ml_core
 )
 
 # Losses
@@ -42,14 +56,6 @@ target_link_libraries(cpp_ml_metrics PUBLIC
     cpp_ml_core
 )
 
-# Models
-add_library(cpp_ml_models
-    src/models/linear_regression.cpp
-)
-target_link_libraries(cpp_ml_models PUBLIC
-    cpp_ml_core
-)
-
 # Utils
 add_library(cpp_ml_utils
     src/core/utils/threshold.cpp
@@ -58,6 +64,17 @@ add_library(cpp_ml_utils
 )
 target_link_libraries(cpp_ml_utils PUBLIC
     cpp_ml_core
+)
+
+# Models
+add_library(cpp_ml_models
+    src/models/linear_regression.cpp
+    src/models/logistic_regression.cpp
+)
+target_link_libraries(cpp_ml_models PUBLIC
+    cpp_ml_core
+    cpp_ml_activations
+    cpp_ml_utils
 )
 
 # Linear regression example

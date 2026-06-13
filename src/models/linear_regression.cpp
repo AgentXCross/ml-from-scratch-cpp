@@ -34,7 +34,7 @@ Matrix LinearRegression::predict(const Matrix &X) const {
 
 void LinearRegression::backward(
     const Matrix &X,
-    const Matrix &dL_dpred 
+    const Matrix &dL_dpred
 ) {
     // all d are ∂ 
     // dL/dpred[i] is the loss gradient with respect to a prediction.
@@ -63,14 +63,14 @@ void LinearRegression::backward(
 }
 
 void LinearRegression::step(double learning_rate) {
-    dL_dw_ = weights_ - (dL_dw_ * learning_rate);
-    dL_db_ = bias_ - (dL_db_ * learning_rate);
+    weights_ = weights_ - (dL_dw_ * learning_rate);
+    bias_ = bias_ - (dL_db_ * learning_rate);
 }
 
 Matrix LinearRegression::weights() const {
-    return dL_dw_;
+    return weights_;
 }
 
 Matrix LinearRegression::bias() const {
-    return dL_db_;
+    return bias_;
 }

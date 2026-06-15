@@ -87,3 +87,15 @@ target_link_libraries(linear_regression_example PRIVATE
     cpp_ml_models
     cpp_ml_losses
 )
+
+# Logistic regression example
+# cmake --build build --target logistic_regression_example
+add_executable(logistic_regression_example
+    examples/logistic_regression_example.cpp
+)
+target_link_libraries(logistic_regression_example PRIVATE
+    cpp_ml_models
+    cpp_ml_losses
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+)

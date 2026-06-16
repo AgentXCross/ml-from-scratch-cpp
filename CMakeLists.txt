@@ -55,6 +55,10 @@ target_link_libraries(cpp_ml_activations PUBLIC
 add_library(cpp_ml_metrics
     src/core/metrics/accuracy.cpp
     src/core/metrics/r2_score.cpp
+    src/core/metrics/f1_score.cpp
+    src/core/metrics/precision.cpp
+    src/core/metrics/recall.cpp
+    src/core/metrics/confusion_matrix.cpp
 )
 target_link_libraries(cpp_ml_metrics PUBLIC
     cpp_ml_core
@@ -80,6 +84,20 @@ target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_activations
     cpp_ml_utils
 )
+
+# ====== Tests ======
+
+# Matrix 
+# cmake --build build --target test_matrix
+add_executable(test_matrix
+    tests/test_matrix.cpp
+)
+target_link_libraries(test_matrix PRIVATE
+    cpp_ml_core;
+)
+
+
+# ====== Examples ======
 
 # Linear regression example
 # cmake --build build --target linear_regression_example

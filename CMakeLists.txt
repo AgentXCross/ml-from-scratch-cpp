@@ -42,6 +42,10 @@ target_link_libraries(cpp_ml_losses PUBLIC
 add_library(cpp_ml_activations
     src/core/activations/relu.cpp
     src/core/activations/sigmoid.cpp
+    src/core/activations/leaky_relu.cpp
+    src/core/activations/tanh.cpp
+    src/core/activations/gelu.cpp
+    src/core/activations/softmax.cpp
 )
 target_link_libraries(cpp_ml_activations PUBLIC
     cpp_ml_core

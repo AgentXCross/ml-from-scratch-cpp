@@ -5,14 +5,14 @@ This project is a small machine learning library built from scratch in C++. I'm 
 ## Source Structure
 ```text
 src/
-├── core/                   Core math and ML building blocks.
+├── core/                   Core building blocks.
 │   ├── activations/        Activation functions.
 │   ├── loss_functions/     Loss functions and their gradients.
 │   ├── metrics/            Evaluation metrics.
 │   └── utils/              Helper operations.
 ├── models/                 Trainable models.
-├── optim/             Optimizers and parameter update.
-└── preprocessing/     Data preparation.
+├── optim/                  Optimizers and parameter update.
+└── preprocessing/          Data preparation.
 ```
 
 ## Algorithms I Plan to Implement

@@ -19,9 +19,10 @@ src/
 - [x] Linear Regression
 - [x] Logistic Regression
 - [ ] Ridge / Lasso / Elastic Net (Linear Regression with Regularization)
-- [ ] Perceptron
-- [ ] ADALINE
-- [ ] KNN
+- [x] Perceptron
+- [x] ADALINE
+- [ ] Softmax / Multinomial Logistic Regression
+- [X] KNN
 - [ ] Naive Bayes
 - [ ] Decision Tree
 - [ ] Random Forest

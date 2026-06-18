@@ -176,6 +176,20 @@ void Matrix::print_shape() const {
     std::cout << "(" << rows_ << ", " << cols_ << ")\n";
 }
 
+Matrix Matrix::row(int row_index) const {
+    if (row_index < 0 || row_index >= rows_) {
+        throw std::out_of_range("Matrix row index is out of range");
+    }
+
+    Matrix result(1, cols_);
+
+    for (int j = 0; j < cols_; j++) {
+        result.at(0, j) = at(row_index, j);
+    }
+
+    return result;
+}
+
 Matrix Matrix::from_vector(
     const std::vector<std::vector<double>> &values
 ) {

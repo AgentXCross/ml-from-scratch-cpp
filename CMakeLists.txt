@@ -69,6 +69,7 @@ add_library(cpp_ml_utils
     src/core/utils/threshold.cpp
     src/core/utils/argmax.cpp
     src/core/utils/argmin.cpp
+    src/core/utils/euclidean_distance.cpp
 )
 target_link_libraries(cpp_ml_utils PUBLIC
     cpp_ml_core
@@ -78,6 +79,8 @@ target_link_libraries(cpp_ml_utils PUBLIC
 add_library(cpp_ml_models
     src/models/linear_regression.cpp
     src/models/logistic_regression.cpp
+    src/models/perceptron.cpp
+    src/models/adaline.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core

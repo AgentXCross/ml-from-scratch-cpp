@@ -200,6 +200,22 @@ void test_shape_mismatch_addition_throws() {
     assert(threw);
 }
 
+void test_row_extraction() {
+    Matrix A = Matrix::from_vector({
+        {1.0, 2.0, 3.0},
+        {4.0, 5.0, 6.0}
+    });
+
+    Matrix row = A.row(1);
+
+    assert(row.rows() == 1);
+    assert(row.cols() == 3);
+
+    assert(close(row.at(0, 0), 4.0));
+    assert(close(row.at(0, 1), 5.0));
+    assert(close(row.at(0, 2), 6.0));
+}
+
 int main() {
     test_constructor_and_shape();
     test_default_values_are_zero();
@@ -213,6 +229,7 @@ int main() {
     test_transpose();
     test_out_of_range_access_throws();
     test_shape_mismatch_addition_throws();
+    test_row_extraction();
 
     std::cout << "All Matrix tests passed.\n";
 

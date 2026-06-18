@@ -51,6 +51,9 @@ public:
     void print() const;
     void print_shape() const;
 
+    // row extraction
+    Matrix row(int row_index) const;
+
     // Initialize Matrix from a vector of vectors
     static Matrix from_vector(
         const std::vector<std::vector<double>> &values

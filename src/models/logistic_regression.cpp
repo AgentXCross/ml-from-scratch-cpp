@@ -14,7 +14,7 @@ LogisticRegression::LogisticRegression() {
 
 LogisticRegression::LogisticRegression(int num_features) {
     weights_ = Matrix::random(num_features, 1, -0.01, 0.01);
-    bias_ = Matrix(1, 1);
+    bias_ = Matrix::random(1, 1, -0.01, 0.01);
 
     dL_dw_ = Matrix(num_features, 1);
     dL_db_ = Matrix(1, 1);

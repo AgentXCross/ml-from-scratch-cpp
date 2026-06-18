@@ -87,7 +87,38 @@ Matrix KNN::predict(const Matrix &X) const {
         Matrix sample = X.row(i);
 
         for (int train_i = 0; train_i < X_train_.rows(); train_i++) {
-            Matrix train_sample = X_train_.row()
+            Matrix train_sample = X_train_.row(train_i);
+
+            double distance = euclidean_distance(sample, train_sample);
+            double label = y_train_.at(train_i, 0);
+
+            distances_and_labels.push_back({distance, label});
         }
+
+        std::sort(
+            distances_and_labels.begin(),
+            distances_and_labels.end(),
+            [](const std::pair<double, double> &a, const std::pair<double, double> &b) {
+                return a.first < b.first;
+            }
+        );
+
+        Matrix class_counts(1, num_classes);
+
+        for (int neighbor = 0; neighbor < k_; neighbor++) {
+            int label = static_cast<int> (distances_and_labels[neighbor].second);
+
+            class_counts.at(0, label) = class_counts.at(0, label) + 1.0;
+        }
+
+        int predicted_label = argmax(class_counts);
+
+        predictions.at(i, 0) = static_cast<double> (predicted_label);
     }
+
+    return predictions;
+}
+
+int KNN::k() const {
+    return k_;
 }

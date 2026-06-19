@@ -81,6 +81,9 @@ add_library(cpp_ml_models
     src/models/logistic_regression.cpp
     src/models/perceptron.cpp
     src/models/adaline.cpp
+    src/models/knn.cpp
+    src/models/softmax_regression.cpp
+    src/models/naive_bayes.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core

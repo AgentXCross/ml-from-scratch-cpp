@@ -1,4 +1,5 @@
 #include "models/logistic_regression.hpp"
+
 #include "core/activations/sigmoid.hpp"
 #include "core/utils/threshold.hpp"
 

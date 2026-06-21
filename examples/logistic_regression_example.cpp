@@ -42,7 +42,8 @@ int main(void) {
             Matrix train_predictions = model.predict(X_train);
             double train_accuracy = accuracy_score(y_train, train_predictions);
 
-            std::cout << "Epoch: " << epoch << " | Loss: " << loss << " | Train accuracy: " << train_accuracy << "\n";
+            std::cout << "Epoch: " << epoch << " | Loss: " << loss << 
+                        " | Train accuracy: " << train_accuracy << "\n";
         }
     }
 

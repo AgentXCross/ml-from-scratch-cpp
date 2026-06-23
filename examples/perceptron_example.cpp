@@ -44,4 +44,6 @@ int main(void) {
     double test_accuracy = accuracy_score(y_test, test_predictions);
 
     std::cout << "\nTest Accuracy: " << test_accuracy << "\n";
+
+    return 0;
 }

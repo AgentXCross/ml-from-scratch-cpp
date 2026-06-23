@@ -138,3 +138,15 @@ target_link_libraries(perceptron_example
     cpp_ml_metrics
     cpp_ml_preprocessing
 )
+
+# ADALINE example
+# cmake --build build --target adaline_example
+add_executable(adaline_example
+    examples/adaline_example.cpp
+)
+target_link_libraries(adaline_example
+    cpp_ml_models
+    cpp_ml_losses
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+)

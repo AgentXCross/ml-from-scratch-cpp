@@ -127,3 +127,14 @@ target_link_libraries(logistic_regression_example PRIVATE
     cpp_ml_metrics
     cpp_ml_preprocessing
 )
+
+# Perceptron example
+# cmake --build build --target perceptron_example
+add_executable(perceptron_example
+    examples/perceptron_example.cpp
+)
+target_link_libraries(perceptron_example
+    cpp_ml_models
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+)

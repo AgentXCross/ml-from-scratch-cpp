@@ -2,17 +2,24 @@
 
 This project is a small machine learning library built from scratch in C++. I'm implementing classical machine learning algorithms alongside deep learning components. The goal is to build the library in a PyTorch-style, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
 
-## Source Code Structure
+## Code Structure
 ```text
-src/
-├── core/                   Core building blocks.
-│   ├── activations/        Activation functions and their gradients.
-│   ├── loss_functions/     Loss functions and their gradients.
-│   ├── metrics/            Evaluation metrics.
-│   └── utils/              Helper operations.
-├── models/                 Trainable model definitions.
-├── optim/                  Optimizers (Parameter updates are currently implemented directly within each model)
-└── preprocessing/          Data preparation.
+root/
+├── build/                      CMake build output.
+├── data/                       Small datasets used by examples.
+├── examples/                   Model usage examples.
+├── include/                    Headers.
+├── scripts/                    Python dataset prep and utility scripts.
+├── src/                        Source implementations.
+│   ├── core/                   Core building blocks.
+│   │   ├── activations/        Activation functions and their gradients.
+│   │   ├── loss_functions/     Loss functions and their gradients.
+│   │   ├── metrics/            Evaluation metrics.
+│   │   └── utils/              Helper operations.
+│   ├── models/                 Model implementations.
+│   ├── optim/                  Optimizers and parameter update logic.
+│   └── preprocessing/          Data loading, splitting, and scaling.
+└── tests/                      Correctness checks for core components.
 ```
 
 ## Algorithms I Plan to Implement
@@ -21,9 +28,9 @@ src/
 - [ ] Ridge / Lasso / Elastic Net (Linear Regression with Regularization)
 - [x] Perceptron
 - [x] ADALINE
-- [ ] Softmax / Multinomial Logistic Regression
+- [X] Softmax / Multinomial Logistic Regression
 - [X] KNN
-- [ ] Naive Bayes
+- [X] Naive Bayes
 - [ ] Decision Tree
 - [ ] Random Forest
 - [ ] Gradient Boosted Trees

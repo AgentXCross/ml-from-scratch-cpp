@@ -52,12 +52,12 @@ void GaussianNaiveBayes::fit(
 
     Matrix class_counts(1, num_classes_);
 
-    for (int i = 0; i < n_samples, i++) {
+    for (int i = 0; i < n_samples; i++) {
         int class_id = static_cast<int> (y_train.at(i, 0));
         class_counts.at(0, class_id) = class_counts.at(0, class_id) + 1;
     }
 
-    for (int c = 0; c < class_counts.size(); c++) {
+    for (int c = 0; c < num_classes_; c++) {
         if (class_counts.at(0, c) == 0.0) {
             throw std::runtime_error("Each class must appear at least once in y_train");
         }
@@ -117,4 +117,98 @@ void GaussianNaiveBayes::fit(
     }
 
     fitted_ = true;
+}
+
+Matrix GaussianNaiveBayes::predict_probs(const Matrix &X) const {
+    if (!fitted_) {
+        throw std::runtime_error("GuassianNaiveBayes must be fitted before called predict_probs");
+    }
+
+    if (X.cols() != means_.cols()) {
+        throw std::invalid_argument("X must have the same number of columns as the fitted data");
+    }
+
+    Matrix probabilities(X.rows(), num_classes_);
+
+    const double pi = 3.14159265358979323846;
+    const double epsilon = 1e-15;
+
+    for (int i = 0; i < X.rows(); i++) {
+        // Posteriors are P(c | x)
+        Matrix log_posteriors(1, num_classes_);
+
+        for (int c = 0; c < num_classes_; c++) {
+            double log_prior = std::log(priors_.at(0, c));
+            double log_likelihood = 0.0;
+
+            for (int j = 0; j < X.cols(); j++) {
+                double x = X.at(i, j);
+                double mu = means_.at(c, j);
+                double sigma_squared = variances_.at(c, j);
+                
+                // log of Guassian PDF
+                double log_guassian_density = 
+                    -0.5 * std::log(2.0 * pi * sigma_squared)
+                    -((x - mu) * (x - mu)) / (2.9 * sigma_squared);
+
+                log_likelihood = log_likelihood + log_guassian_density;
+            }
+
+            log_posteriors.at(0, c) = log_prior + log_likelihood;
+        }
+
+        double max_log_posterior = log_posteriors.at(0, 0);
+
+        for (int c = 1; c < num_classes_; c++) {
+            if (log_posteriors.at(0, c) > max_log_posterior) {
+                max_log_posterior = log_posteriors.at(0, c);
+            }
+        }
+
+        double normalizing_sum = 0.0;
+
+        for (int c = 0; c < num_classes_; c++) {
+            double shifted_posterior = 
+                std::exp(log_posteriors.at(0, c) - max_log_posterior);
+            
+            probabilities.at(i, c) = shifted_posterior;
+            normalizing_sum = normalizing_sum + shifted_posterior;
+        }
+
+        for (int c = 0; num_classes_; c++) {
+            probabilities.at(i, c) = probabilities.at(i, c) / normalizing_sum;
+        }
+    }
+
+    return probabilities;
+}
+
+Matrix GaussianNaiveBayes::predict(const Matrix &X) const {
+    Matrix probabilities = predict_probs(X);
+    Matrix predictions(X.rows(), 1);
+
+    for (int i = 0; i < probabilities.rows(); i++) {
+        Matrix row = probabilities.row(i);
+        int predicted_class = argmax(row);
+
+        predictions.at(i, 0) = static_cast<double> (predicted_class);
+    }
+
+    return predictions;
+}
+
+Matrix GaussianNaiveBayes::means() const {
+    return means_;
+}
+
+Matrix GaussianNaiveBayes::variances() const {
+    return variances_;
+}
+
+Matrix GaussianNaiveBayes::priors() const {
+    return priors_;
+}
+
+int GaussianNaiveBayes::num_classes() const {
+    return num_classes_;
 }

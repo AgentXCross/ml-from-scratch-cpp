@@ -39,7 +39,7 @@ Matrix SoftmaxRegression::predict_probs(const Matrix &X) const {
     Matrix logits = X.matmul(weights_);
 
     for (int i = 0; i < X.rows(); i++) {
-        for (int j = 0; j < X.cols(); j++) {
+        for (int j = 0; j < logits.cols(); j++) {
             logits.at(i, j) = logits.at(i, j) + bias_.at(0, j);
         }
     }
@@ -52,7 +52,7 @@ Matrix SoftmaxRegression::predict(const Matrix &X) const {
     Matrix predictions(probabilities.rows(), 1);
 
     for (int i = 0; i < predictions.rows(); i++) {
-        Matrix row = predictions.row(i);
+        Matrix row = probabilities.row(i);
         int predicted_class = argmax(row);
 
         predictions.at(i, 0) = static_cast<double> (predicted_class);

@@ -9,7 +9,7 @@ root/
 ├── data/                       Small datasets used by examples.
 ├── examples/                   Model usage examples.
 ├── include/                    Headers.
-├── scripts/                    Python dataset prep and utility scripts.
+├── scripts/                    Python dataset prep and shell scripts.
 ├── src/                        Source implementations.
 │   ├── core/                   Core building blocks.
 │   │   ├── activations/        Activation functions and their gradients.

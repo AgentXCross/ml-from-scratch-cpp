@@ -26,3 +26,6 @@ Makefile
 
 # Local Codex notes
 CODEX.txt
+
+# pycache
+__pycache__

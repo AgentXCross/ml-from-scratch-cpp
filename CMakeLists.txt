@@ -22,6 +22,7 @@ add_library(cpp_ml_preprocessing
     src/preprocessing/dataset.cpp
     src/preprocessing/min_max_scaler.cpp
     src/preprocessing/train_test_split.cpp
+    src/preprocessing/one_hot_encode.cpp
 )
 target_link_libraries(cpp_ml_preprocessing PUBLIC
     cpp_ml_core
@@ -145,6 +146,29 @@ add_executable(adaline_example
     examples/adaline_example.cpp
 )
 target_link_libraries(adaline_example
+    cpp_ml_models
+    cpp_ml_losses
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+)
+
+# KNN example
+# cmake --build build --target knn_example
+add_executable(knn_example
+    examples/knn_example.cpp
+)
+target_link_libraries(knn_example
+    cpp_ml_models
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+)
+
+# Softmax Regression example
+# cmake --build build --target softmax_regression_example
+add_executable(softmax_regression_example
+    examples/softmax_regression_example.cpp
+)
+target_link_libraries(softmax_regression_example
     cpp_ml_models
     cpp_ml_losses
     cpp_ml_metrics

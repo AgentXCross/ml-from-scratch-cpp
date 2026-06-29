@@ -163,7 +163,7 @@ target_link_libraries(knn_example
     cpp_ml_preprocessing
 )
 
-# Softmax Regression example
+# Softmax regression example
 # cmake --build build --target softmax_regression_example
 add_executable(softmax_regression_example
     examples/softmax_regression_example.cpp

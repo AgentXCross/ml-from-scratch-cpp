@@ -169,12 +169,13 @@ double weighted_gini_impurity(
             + right_weight * gini_impurity(y_right);
 }
 
+
 /*
 find_best_split returns True if a valid split is found, false otherwise.
 Method:
 for each feature:
     for each value in that feature:
-        try splitting there
+        try splitting there (split at the values of the training samples)
         score the split
         keep the best one
 */
@@ -203,7 +204,115 @@ bool find_best_split(
     best_threshold = 0.0;
 
     for (int feature_index = 0; feature_index < X.cols(); feature_index++) {
-        
+        for (int i = 0; i < X.rows(); i++) {
+            double threshold = X.at(i, feature_index);
+
+            Matrix X_left;
+            Matrix y_left;
+            Matrix X_right;
+            Matrix y_right;
+
+            split_dataset(
+                X,
+                y,
+                feature_index,
+                threshold,
+                X_left,
+                y_left,
+                X_right,
+                y_right
+            );
+
+            if (X_left.rows() == 0 || X_right.rows() == 0) {
+                continue;
+            }
+
+            double impurity = weighted_gini_impurity(y_left, y_right);
+
+            if (impurity < best_impurity) {
+                best_impurity = impurity;
+                best_feature_index = feature_index;
+                best_threshold = threshold;
+                found_split = true;
+            }
+        }
     }
+
+    return found_split;
 }
 
+
+DecisionTreeNode::DecisionTreeNode() {
+    is_leaf = false;
+
+    feature_index = -1;
+    threshold = 0.0;
+
+    prediction = 0.0;
+
+    left = nullptr;
+    right = nullptr;
+}
+
+
+DecisionTree::DecisionTree() {
+    root_ = nullptr;
+
+    max_depth_ = 5;
+    min_samples_split_ = 2;
+}
+
+
+DecisionTree::DecisionTree(int max_depth, int min_samples_split) {
+    if (max_depth <= 0) {
+        throw std::invalid_argument("max_depth must be positive");
+    }
+
+    if (min_samples_split <= 1) {
+        throw std::invalid_argument("min_samples_split must be greater than 1");
+    }
+
+    root_ = nullptr;
+
+    max_depth_ = max_depth;
+    min_samples_split_ = min_samples_split;
+}
+
+
+DecisionTree::~DecisionTree() {
+    free_tree(root_);
+}
+
+
+void DecisionTree::free_tree(DecisionTreeNode *node) {
+    if (node == nullptr) {
+        return;
+    }
+
+    free_tree(node->left);
+    free_tree(node->right);
+
+    delete node;
+}
+
+
+void DecisionTree::fit(
+    const Matrix &X,
+    const Matrix &y
+) {
+    if (X.rows() == 0 || X.cols() == 0) {
+        throw std::invalid_argument("X cannot be empty");
+    }
+
+    if (y.rows() == 0 || y.cols() != 1) {
+        throw std::invalid_argument("y must be a non-empty column vector");
+    }
+
+    if (X.rows() != y.rows()) {
+        throw std::invalid_argument("X and y must have the same number of rows");
+    }
+
+    free_tree(root_);
+
+    root_ = build_tree(X, y, 0);
+}

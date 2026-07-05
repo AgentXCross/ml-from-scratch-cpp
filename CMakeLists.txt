@@ -71,6 +71,7 @@ add_library(cpp_ml_utils
     src/core/utils/argmax.cpp
     src/core/utils/argmin.cpp
     src/core/utils/euclidean_distance.cpp
+    src/core/utils/tree_utils.cpp
 )
 target_link_libraries(cpp_ml_utils PUBLIC
     cpp_ml_core
@@ -85,6 +86,7 @@ add_library(cpp_ml_models
     src/models/knn.cpp
     src/models/softmax_regression.cpp
     src/models/naive_bayes.cpp
+    src/models/decision_tree.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core

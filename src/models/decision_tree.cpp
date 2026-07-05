@@ -1,73 +1,9 @@
 #include "models/decision_tree.hpp"
 
-#include <map>
+#include "core/utils/tree_utils.hpp"
+
 #include <stdexcept>
 #include <vector>
-
-
-/*
-Gini impurity for a set of class labels (multiclass).
-
-Gini impurity = 1 - Σ(p_i²)
-where p_i is the proportion of samples belonging to class i in the node.
-
-Gini impurity measures how mixed the classes are in a node.
-
-0.0 means that the node is pure (all the training samples in this node belong to one class).
-Higher values mean that the node contains a variety of classes.
-*/
-double gini_impurity(const Matrix &y) {
-    if (y.rows() == 0 || y.cols() != 1) {
-        throw std::invalid_argument("y must be a non-empty column vector");
-    }
-
-    std::map<double, int> class_counts;
-
-    for (int i = 0; i < y.rows(); i++) {
-        double label = y.at(i, 0);
-        class_counts[label]++;
-    }
-
-    double impurity = 1.0;
-
-    for (const auto &[key, value] : class_counts) {
-        int count = value;
-        double probability = static_cast<double> (count) / y.rows();
-
-        impurity = impurity - probability * probability;
-    }
-
-    return impurity;
-}
-
-
-double majority_class(const Matrix &y) {
-    if (y.rows() == 0 || y.cols() != 1) {
-        throw std::invalid_argument("y must be a non-empty column vector");
-    }
-
-    std::map<double, int> class_counts;
-
-    for (int i = 0; i < y.rows(); i++) {
-        double label = y.at(i, 0);
-        class_counts[label]++;
-    }
-
-    double best_label = 0.0;
-    int best_count = -1;
-
-    for (const auto &[key, value] : class_counts) {
-        double label = key;
-        int count = value;
-
-        if (count > best_count) {
-            best_label = label;
-        }
-    }
-
-    return best_label;
-}
-
 
 bool all_same_class(const Matrix &y) {
     if (y.rows() == 0 || y.cols() != 1) {
@@ -315,4 +251,111 @@ void DecisionTree::fit(
     free_tree(root_);
 
     root_ = build_tree(X, y, 0);
+}
+
+/*
+Recursively create nodes, returns the root.
+
+create node
+if stopping condition 
+(all same class or reached max depth or not enough samples for split or no split found):
+    make leaf
+else:
+    find best split
+    split data
+    recursively build the left and right children
+*/
+DecisionTreeNode *DecisionTree::build_tree(
+    const Matrix &X,
+    const Matrix &y,
+    int depth
+) {
+    DecisionTreeNode *node = new DecisionTreeNode();
+
+    if (all_same_class(y) ||
+        depth >= max_depth_ ||
+        X.rows() < min_samples_split_
+    ) {
+        node->is_leaf = true;
+        node->prediction = majority_class(y);
+
+        return node;
+    }
+
+    int best_feature_index = -1;
+    double best_threshold = 0.0;
+
+    bool found_split = find_best_split(
+        X,
+        y,
+        best_feature_index,
+        best_threshold
+    );
+
+    if (!found_split) {
+        node->is_leaf = true;
+        node->prediction = majority_class(y);
+
+        return node;
+    }
+
+    Matrix X_left;
+    Matrix y_left;
+    Matrix X_right;
+    Matrix y_right;
+
+    split_dataset(
+        X,
+        y,
+        best_feature_index,
+        best_threshold,
+        X_left,
+        y_left,
+        X_right,
+        y_right
+    );
+
+    node->is_leaf = false;
+    node->feature_index = best_feature_index;
+    node->threshold = best_threshold;
+
+    node->left = build_tree(X_left, y_left, depth + 1);
+    node->right = build_tree(X_right, y_right, depth + 1);
+
+    return node;
+}
+
+double DecisionTree::predict_sample(
+    const Matrix &x,
+    const DecisionTreeNode *node
+) const {
+    if (node == nullptr) {
+        throw std::runtime_error("Cannot predict using an empty tree");
+    }
+
+    if (node->is_leaf) {
+        return node->prediction;
+    }
+
+    if (x.at(0, node->feature_index) <= node->threshold) {
+        return predict_sample(x, node->left);
+    } else {
+        return predict_sample(x, node->right);
+    }
+}
+
+Matrix DecisionTree::predict(const Matrix &X) const {
+    if (root_ == nullptr) {
+        throw std::runtime_error("DecisionTree must be fitted before calling predict");
+    }
+
+    Matrix predictions(X.rows(), 1);
+
+    for (int i = 0; i < X.rows(); i++) {
+        Matrix sample = X.row(i);
+
+        predictions.at(i, 0) = predict_sample(sample, root_);
+    }
+
+    return predictions;
 }

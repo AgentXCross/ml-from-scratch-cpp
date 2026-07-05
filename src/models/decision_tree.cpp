@@ -180,10 +180,8 @@ bool find_best_split(
 
 DecisionTreeNode::DecisionTreeNode() {
     is_leaf = false;
-
     feature_index = -1;
     threshold = 0.0;
-
     prediction = 0.0;
 
     left = nullptr;
@@ -215,23 +213,6 @@ DecisionTree::DecisionTree(int max_depth, int min_samples_split) {
 }
 
 
-DecisionTree::~DecisionTree() {
-    free_tree(root_);
-}
-
-
-void DecisionTree::free_tree(DecisionTreeNode *node) {
-    if (node == nullptr) {
-        return;
-    }
-
-    free_tree(node->left);
-    free_tree(node->right);
-
-    delete node;
-}
-
-
 void DecisionTree::fit(
     const Matrix &X,
     const Matrix &y
@@ -248,8 +229,6 @@ void DecisionTree::fit(
         throw std::invalid_argument("X and y must have the same number of rows");
     }
 
-    free_tree(root_);
-
     root_ = build_tree(X, y, 0);
 }
 
@@ -265,12 +244,12 @@ else:
     split data
     recursively build the left and right children
 */
-DecisionTreeNode *DecisionTree::build_tree(
+std::unique_ptr<DecisionTreeNode> DecisionTree::build_tree(
     const Matrix &X,
     const Matrix &y,
     int depth
 ) {
-    DecisionTreeNode *node = new DecisionTreeNode();
+    auto node = std::make_unique<DecisionTreeNode>();
 
     if (all_same_class(y) ||
         depth >= max_depth_ ||
@@ -338,9 +317,9 @@ double DecisionTree::predict_sample(
     }
 
     if (x.at(0, node->feature_index) <= node->threshold) {
-        return predict_sample(x, node->left);
+        return predict_sample(x, node->left.get());
     } else {
-        return predict_sample(x, node->right);
+        return predict_sample(x, node->right.get());
     }
 }
 
@@ -354,7 +333,7 @@ Matrix DecisionTree::predict(const Matrix &X) const {
     for (int i = 0; i < X.rows(); i++) {
         Matrix sample = X.row(i);
 
-        predictions.at(i, 0) = predict_sample(sample, root_);
+        predictions.at(i, 0) = predict_sample(sample, root_.get());
     }
 
     return predictions;

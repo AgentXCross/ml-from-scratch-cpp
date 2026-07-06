@@ -28,11 +28,11 @@ root/
 - [ ] Ridge / Lasso / Elastic Net (Linear Regression with Regularization)
 - [x] Perceptron
 - [x] ADALINE
-- [X] Softmax / Multinomial Logistic Regression
-- [X] KNN
-- [X] Naive Bayes
-- [ ] Decision Tree
-- [ ] Random Forest
+- [x] Softmax / Multinomial Logistic Regression
+- [x] KNN
+- [x] Naive Bayes
+- [x] Decision Tree
+- [x] Random Forest
 - [ ] Gradient Boosted Trees
 - [ ] Linear SVM
 - [ ] K-Means Clustering

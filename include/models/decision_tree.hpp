@@ -3,6 +3,7 @@
 #include "core/matrix.hpp"
 
 #include <memory>
+#include <random>
 
 struct DecisionTreeNode {
     bool is_leaf; // A leaf is a terminal node in a decision tree that makes the prediction
@@ -23,6 +24,12 @@ private:
 
     int max_depth_;
     int min_samples_split_;
+    int max_features_;
+    unsigned int random_seed_;
+
+    std::mt19937 generator_;
+
+    bool fitted_;
 
     std::unique_ptr<DecisionTreeNode> build_tree(
         const Matrix &X,
@@ -37,7 +44,12 @@ private:
 
 public:
     DecisionTree();
-    DecisionTree(int max_depth, int min_samples_split);
+    DecisionTree(
+        int max_depth, 
+        int min_samples_split,
+        int max_features = 0, // 0 means to use all features
+        unsigned int random_seed = 42
+    );
 
     void fit(
         const Matrix &X,

@@ -2,6 +2,7 @@
 
 #include "core/utils/tree_utils.hpp"
 
+#include <algorithm>
 #include <stdexcept>
 #include <vector>
 
@@ -107,9 +108,48 @@ double weighted_gini_impurity(
 
 
 /*
+sample_feature_indices returns a vector of the indices of features chosen to be
+considered for creating splits in nodes
+*/
+std::vector<int> sample_feature_indices(
+    int num_features,
+    int max_features,
+    std::mt19937 &generator
+) {
+    if (num_features <= 0) {
+        throw std::invalid_argument("num_features must be positive");
+    }
+
+    if (max_features < 0) {
+        throw std::invalid_argument("max_features cannot be negative");
+    }
+
+    std::vector<int> feature_indices;
+
+    for (int feature_index = 0; feature_index < num_features; feature_index++) {
+        feature_indices.push_back(feature_index);
+    }
+
+    if (max_features == 0 || max_features >= num_features) {
+        return feature_indices;
+    }
+
+    std::shuffle(
+        feature_indices.begin(),
+        feature_indices.end(),
+        generator
+    );
+
+    feature_indices.resize(max_features);
+
+    return feature_indices;
+}
+
+
+/*
 find_best_split returns True if a valid split is found, false otherwise.
 Method:
-for each feature:
+for each feature in the sampled features:
     for each value in that feature:
         try splitting there (split at the values of the training samples)
         score the split
@@ -118,6 +158,8 @@ for each feature:
 bool find_best_split(
     const Matrix &X,
     const Matrix &y,
+    int max_features,
+    std::mt19937 &generator,
     int &best_feature_index,
     double &best_threshold
 ) {
@@ -139,7 +181,13 @@ bool find_best_split(
     best_feature_index = -1;
     best_threshold = 0.0;
 
-    for (int feature_index = 0; feature_index < X.cols(); feature_index++) {
+    std::vector<int> feature_indices = sample_feature_indices(
+        X.cols(),
+        max_features,
+        generator
+    );
+
+    for (int feature_index : feature_indices) {
         for (int i = 0; i < X.rows(); i++) {
             double threshold = X.at(i, feature_index);
 
@@ -194,10 +242,21 @@ DecisionTree::DecisionTree() {
 
     max_depth_ = 5;
     min_samples_split_ = 2;
+    max_features_ = 0;
+
+    random_seed_ = 42;
+    generator_ = std::mt19937(random_seed_);
+
+    fitted_ = false;
 }
 
 
-DecisionTree::DecisionTree(int max_depth, int min_samples_split) {
+DecisionTree::DecisionTree(
+    int max_depth, 
+    int min_samples_split,
+    int max_features,
+    unsigned int random_seed
+) {
     if (max_depth <= 0) {
         throw std::invalid_argument("max_depth must be positive");
     }
@@ -206,10 +265,20 @@ DecisionTree::DecisionTree(int max_depth, int min_samples_split) {
         throw std::invalid_argument("min_samples_split must be greater than 1");
     }
 
+    if (max_features < 0) {
+        throw std::invalid_argument("max_features cannot be negative");
+    }
+
     root_ = nullptr;
 
     max_depth_ = max_depth;
     min_samples_split_ = min_samples_split;
+    max_features_ = max_features;
+
+    random_seed_ = random_seed;
+    generator_ = std::mt19937(random_seed_);
+
+    fitted_ = false;
 }
 
 
@@ -230,6 +299,7 @@ void DecisionTree::fit(
     }
 
     root_ = build_tree(X, y, 0);
+    fitted_ = true;
 }
 
 /*
@@ -267,6 +337,8 @@ std::unique_ptr<DecisionTreeNode> DecisionTree::build_tree(
     bool found_split = find_best_split(
         X,
         y,
+        max_features_,
+        generator_,
         best_feature_index,
         best_threshold
     );
@@ -325,6 +397,10 @@ double DecisionTree::predict_sample(
 
 Matrix DecisionTree::predict(const Matrix &X) const {
     if (root_ == nullptr) {
+        throw std::runtime_error("DecisionTree must be fitted before calling predict");
+    }
+
+    if (!fitted_) {
         throw std::runtime_error("DecisionTree must be fitted before calling predict");
     }
 

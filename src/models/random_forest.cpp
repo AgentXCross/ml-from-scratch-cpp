@@ -15,6 +15,7 @@ RandomForest::RandomForest() {
     fitted_ = false;
 }
 
+
 RandomForest::RandomForest(
     int num_trees,
     int max_depth,
@@ -46,6 +47,7 @@ RandomForest::RandomForest(
     random_seed_ = random_seed;
     fitted_ = false;
 }
+
 
 void RandomForest::fit(
     const Matrix &X,
@@ -116,4 +118,11 @@ void RandomForest::fit(
     }
 
     fitted_ = true;
+}
+
+
+Matrix RandomForest::predict(const Matrix &X) const {
+    if (!fitted_) {
+        throw std::runtime_error("RandomForest must be fitted before calling predict");
+    }
 }

@@ -2,7 +2,7 @@
 
 This project is a small machine learning library built from scratch in C++. I'm implementing classical machine learning algorithms alongside deep learning components. The goal is to build the library in a PyTorch-style, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
 
-## Code Structure
+## Repo Structure
 ```text
 root/
 ├── build/                      CMake build output.
@@ -22,7 +22,7 @@ root/
 └── tests/                      Correctness checks for core components.
 ```
 
-## Algorithms I Plan to Implement
+## Implemented Algorithms
 - [x] Linear Regression
 - [x] Logistic Regression
 - [ ] Ridge / Lasso / Elastic Net (Linear Regression with Regularization)
@@ -31,8 +31,8 @@ root/
 - [x] Softmax / Multinomial Logistic Regression
 - [x] KNN
 - [x] Naive Bayes
-- [x] Decision Trees
-- [x] Random Forests / Bagging (all features available at every split)
+- [x] Decision Trees (Classifier and Regressor)
+- [x] Random Forests & Bagging (Classifier and Regressor)
 - [ ] Gradient Boosted Trees
 - [ ] Linear SVM
 - [ ] K-Means Clustering

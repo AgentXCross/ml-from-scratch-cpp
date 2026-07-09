@@ -31,6 +31,9 @@ private:
 
     bool fitted_;
 
+    /*
+    build_tree 
+    */
     std::unique_ptr<DecisionTreeNode> build_tree(
         const Matrix &X,
         const Matrix &y,

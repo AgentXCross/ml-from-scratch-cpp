@@ -181,7 +181,7 @@ target_link_libraries(softmax_regression_example
 # Random forest example
 # cmake --build build --target random_forest_example
 add_executable(random_forest_example
-    examples/softmax_regression_example.cpp
+    examples/random_forest_example.cpp
 )
 target_link_libraries(random_forest_example
     cpp_ml_models

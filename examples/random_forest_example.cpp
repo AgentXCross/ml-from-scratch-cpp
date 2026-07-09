@@ -27,11 +27,25 @@ int main(void) {
     int num_trees = 10;
     int max_depth = 5;
     int min_samples_split = 4;
-    int max_features = std::sqrt(X_train.cols());
+    int max_features = static_cast<double> (std::sqrt(X_train.cols()));
 
     RandomForest model(num_trees, max_depth, min_samples_split, max_features);
 
     model.fit(X_train, y_train);
     std::cout << "Random Forest model fitted to training data." << "\n";
 
+    Matrix train_predictions = model.predict(X_train);
+    Matrix test_predictions = model.predict(X_test);
+
+    double train_accuracy = accuracy_score(y_train, train_predictions);
+    double test_accuracy = accuracy_score(y_test, test_predictions);
+
+    double train_f1 = f1_score(y_train, train_predictions);
+    double test_f1 = f1_score(y_test, test_predictions);
+
+    std::cout << "Train Accuracy: " << train_accuracy << " || " <<
+        "Test Accuracy: " << test_accuracy << "\n";
+    
+    std::cout << "Train F1: " << train_f1 << " || " << 
+        "Test F1: " << test_f1 << "\n";
 }

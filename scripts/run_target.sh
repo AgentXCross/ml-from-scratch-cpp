@@ -14,6 +14,7 @@ valid_targets=(
     knn_example
     softmax_regression_example
     naive_bayes_example
+    random_forest_example
 
     test_matrix
 )

@@ -33,5 +33,5 @@ double precision_score(
         return 0.0;
     }
 
-    return static_cast<double> (tp) / tp + fp;
+    return static_cast<double> (tp) / (tp + fp);
 }

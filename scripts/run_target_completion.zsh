@@ -16,6 +16,7 @@ _run_target_completions() {
         knn_example
         softmax_regression_example
         naive_bayes_example
+        random_forest_example
 
         test_matrix
     )

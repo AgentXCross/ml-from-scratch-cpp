@@ -31,8 +31,8 @@ root/
 - [x] Softmax / Multinomial Logistic Regression
 - [x] KNN
 - [x] Naive Bayes
-- [x] Decision Tree
-- [x] Random Forest
+- [x] Decision Trees
+- [x] Random Forests / Bagging (all features available at every split)
 - [ ] Gradient Boosted Trees
 - [ ] Linear SVM
 - [ ] K-Means Clustering

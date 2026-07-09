@@ -87,6 +87,7 @@ add_library(cpp_ml_models
     src/models/softmax_regression.cpp
     src/models/naive_bayes.cpp
     src/models/decision_tree.cpp
+    src/models/random_forest.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core
@@ -173,6 +174,17 @@ add_executable(softmax_regression_example
 target_link_libraries(softmax_regression_example
     cpp_ml_models
     cpp_ml_losses
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+)
+
+# Random forest example
+# cmake --build build --target random_forest_example
+add_executable(random_forest_example
+    examples/softmax_regression_example.cpp
+)
+target_link_libraries(random_forest_example
+    cpp_ml_models
     cpp_ml_metrics
     cpp_ml_preprocessing
 )

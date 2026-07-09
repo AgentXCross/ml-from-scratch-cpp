@@ -1,9 +1,11 @@
 #include "models/random_forest.hpp"
 
 #include <map>
+#include <memory>
 #include <random>
 #include <stdexcept>
 #include <vector>
+
 
 RandomForest::RandomForest() {
     num_trees_ = 10;
@@ -35,8 +37,8 @@ RandomForest::RandomForest(
         throw std::invalid_argument("min_samples_split must be greater than 1");
     } 
 
-    if (max_features <= 0) {
-        throw std::invalid_argument("max_features must be positive");
+    if (max_features < 0) {
+        throw std::invalid_argument("max_features must be positive or 0 (to represent all features)");
     }
 
     num_trees_ = num_trees;
@@ -65,8 +67,8 @@ void RandomForest::fit(
         throw std::invalid_argument("X and y must have the same number of rows");
     }
 
-    if (max_features_ <= 0) {
-        throw std::invalid_argument("max_features must be positive");
+    if (max_features_ < 0) {
+        throw std::invalid_argument("max_features must be positive or 0 (to represent all features)");
     }
 
     if (max_features_ > X.cols()) {
@@ -109,7 +111,9 @@ void RandomForest::fit(
 
         std::unique_ptr<DecisionTree> tree = std::make_unique<DecisionTree> (
             max_depth_,
-            min_samples_split_
+            min_samples_split_,
+            max_features_,
+            random_seed_ + tree_index
         );
 
         tree->fit(X_bootstrap, y_bootstrap);
@@ -125,4 +129,50 @@ Matrix RandomForest::predict(const Matrix &X) const {
     if (!fitted_) {
         throw std::runtime_error("RandomForest must be fitted before calling predict");
     }
+
+    if (X.rows() == 0 || X.cols() == 0) {
+        throw std::invalid_argument("X cannot be empty");
+    }
+
+    Matrix predictions(X.rows(), 1);
+
+    // Each individual tree predicts one label per sample
+    // Each element in tree_predictions is the prediction of one tree on all samples
+    // So the predictions on the ith sample is the ith row
+    std::vector<Matrix> tree_predictions; 
+
+    for (int tree_index = 0; tree_index < trees_.size(); tree_index++) {
+        // predict from decision_tree.cpp returns a Matrix of a column vector
+        tree_predictions.push_back(trees_[tree_index]->predict(X)); 
+    }
+
+    for (int i = 0; i < X.rows(); i++) { // ith sample
+        std::map<double, int> class_counts;
+
+        for (int tree_index = 0; tree_index < tree_predictions.size(); tree_index++) {
+            double predicted_class = tree_predictions[tree_index].at(i, 0);
+            class_counts[predicted_class]++;
+        }
+
+        double best_class = 0.0;
+        int best_count = -1;
+
+        for (const auto &[key, value] : class_counts) {
+            double class_label = key;
+            int count = value;
+
+            if (count > best_count) {
+                best_count = count;
+                best_class = class_label;
+            }
+        }
+
+        predictions.at(i, 0) = best_class;
+    }
+
+    return predictions;
+}
+
+int RandomForest::num_trees() const {
+    return num_trees_;
 }

@@ -8,9 +8,9 @@
 struct DecisionTreeNode {
     bool is_leaf; // A leaf is a terminal node in a decision tree that makes the prediction
 
-    int feature_index;
-    double threshold;
-    double prediction;
+    int feature_index; // Which feature this node considers
+    double threshold; // Threshold value of the feature
+    double prediction; // 
 
     std::unique_ptr<DecisionTreeNode> left;
     std::unique_ptr<DecisionTreeNode> right;

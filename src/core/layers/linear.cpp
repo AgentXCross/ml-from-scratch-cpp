@@ -8,7 +8,7 @@ Linear::Linear() {
 
     input_ = Matrix();
 
-    dL_dw_ = Matrix();
+    dL_dW_ = Matrix();
     dL_db_ = Matrix();
 }
 
@@ -30,7 +30,7 @@ Linear::Linear(
 
     input_ = Matrix();
 
-    dL_dw_ = Matrix(in_features, out_features);
+    dL_dW_ = Matrix(in_features, out_features);
     dL_db_ = Matrix(1, out_features);
 }
 
@@ -61,5 +61,44 @@ Matrix Linear::backward(const Matrix &dL_dout) {
 
     // dL_dout has the same shape as the output shape 
     // So same number of rows as the input X and same number of columns as the weights
-    if (dL_dout.rows() != i)
+    if (dL_dout.rows() != input_.rows()) {
+        throw std::invalid_argument("dL_dout rows must match input rows");
+    }
+
+    if (dL_dout.cols() != input_.cols()) {
+        throw std::invalid_argument("dL_dout cols must match input cols");
+    }
+
+    // dL_dW = X.T @ dL_dout
+    dL_dW_ = input_.transpose().matmul(dL_dout);
+
+    for (int j = 0; j < dL_dout.cols(); j++) {
+        double bias_gradient = 0.0;
+
+        for (int i = 0; i < dL_dout.rows(); i++) {
+            bias_gradient = bias_gradient + dL_dout.at(i, j);
+        }
+
+        dL_db_.at(0, j) = bias_gradient;
+    }
+
+    Matrix dL_dX = dL_dout.matmul(weights_.transpose());
+
+    return dL_dX;
+}
+
+
+void Linear::step(double learning_rate) {
+    weights_ = weights_ - (dL_dW_ * learning_rate);
+    bias_ = bias_ - (dL_db_ * learning_rate);
+}
+
+
+Matrix Linear::weights() const {
+    return weights_;
+}
+
+
+Matrix Linear::bias() const {
+    return bias_;
 }

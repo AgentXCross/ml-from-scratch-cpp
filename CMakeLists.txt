@@ -88,6 +88,7 @@ add_library(cpp_ml_models
     src/models/naive_bayes.cpp
     src/models/decision_tree.cpp
     src/models/random_forest.cpp
+    src/models/mlp.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core

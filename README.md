@@ -15,7 +15,9 @@ root/
 │   │   ├── activations/        Activation functions and their gradients.
 │   │   ├── loss_functions/     Loss functions and their gradients.
 │   │   ├── metrics/            Evaluation metrics.
-│   │   └── utils/              Helper operations.
+│   │   ├── utils/              Helper operations.
+│   │   ├── matrix.cpp          Matrix class (No longer used).
+│   │   └── tensor.cpp          Tensor class.
 │   ├── models/                 Model implementations.
 │   ├── optim/                  Optimizers and parameter update logic.
 │   └── preprocessing/          Data loading, splitting, and scaling.

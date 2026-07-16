@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Core
 add_library(cpp_ml_core
     src/core/matrix.cpp
+    src/core/tensor.cpp
 )
 target_include_directories(cpp_ml_core PUBLIC
     include

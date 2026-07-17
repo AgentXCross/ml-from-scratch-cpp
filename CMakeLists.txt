@@ -78,6 +78,15 @@ target_link_libraries(cpp_ml_utils PUBLIC
     cpp_ml_core
 )
 
+# Layers
+add_library(cpp_ml_layers
+    src/core/layers/linear.cpp
+    src/core/layers/sequential.cpp
+)
+target_link_libraries(cpp_ml_layers PUBLIC
+    cpp_ml_core
+)
+
 # Models
 add_library(cpp_ml_models
     src/models/linear_regression.cpp
@@ -95,6 +104,7 @@ target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core
     cpp_ml_activations
     cpp_ml_utils
+    cpp_ml_layers
 )
 
 # ====== Tests ======
@@ -105,7 +115,7 @@ add_executable(test_matrix
     tests/test_matrix.cpp
 )
 target_link_libraries(test_matrix PRIVATE
-    cpp_ml_core;
+    cpp_ml_core
 )
 
 

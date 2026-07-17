@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
 class Tensor {
@@ -13,6 +12,7 @@ private:
 
 public:
     Tensor();
+    Tensor(double scalar); // Creates a scalar tensor (size = 1, ndim = 0)
     Tensor(const std::vector<int> &shape);
     Tensor(
         const std::vector<int> &shape,
@@ -25,10 +25,10 @@ public:
     static Tensor from_vector(const std::vector<std::vector<double>> &values);
 
     // Returns a tensor of 0's
-    static Tensor zeros(const std::vector<int>);
+    static Tensor zeros(const std::vector<int> &shape);
 
     // Returns a tensor of 1's
-    static Tensor ones(const std::vector<int>);
+    static Tensor ones(const std::vector<int> &shape);
 
     // Returns a tensor with random values within a range
     static Tensor random(
@@ -55,11 +55,21 @@ public:
 
     double at(int row, int col) const; // Only for rank 2
 
-    Tensor row(int row_index) const;
+    Tensor row(int row_index) const; // Only for rank 2
 
-    Tensor transpose() const;
+    Tensor squeeze() const; // Removes all dimensions of size 1
 
-    Tensor matmul(const Tensor &other) const;
+    Tensor squeeze(int axis) const; // Removes the specified dimension if its size is 1
+
+    Tensor unsqueeze(int axis) const; // Inserts a new dimension of size 1 at the specified axis
+
+    Tensor permute(const std::vector<int> &axes) const; // Reorder the tensor's dimensions, axes contains 0 to ndim - 1
+
+    Tensor reshape(const std::vector<int> &new_shape) const; // Change the tensor's shape while preserving the data order
+
+    Tensor transpose() const; // Only for rank 2 (for now)
+
+    Tensor matmul(const Tensor &other) const; // Only for rank 2 (for now)
 
     Tensor elementwise_multiply(const Tensor &other) const;
 
@@ -69,7 +79,11 @@ public:
 
     Tensor operator*(double scalar) const;
 
-    void print() const;
+    void print() const; // Prints a matrix for rank 2, flat ind
 
     void print_shape() const;
+
+    bool is_scalar() const; // ndim = 0, size = 1
+
+    bool empty() const; // size = 0
 };

@@ -1,6 +1,6 @@
 # C++ Machine Learning Library from Scratch
 
-This project is a small machine learning library built from scratch in C++. I'm implementing classical machine learning algorithms alongside deep learning components. The goal is to build the library in a PyTorch-style, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
+Machine learning library built from scratch using the C++ Standard Library. I'm implementing classical machine learning algorithms alongside deep learning components. The goal is to build the library in a PyTorch-style, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
 
 ## Repo Structure
 ```text
@@ -16,8 +16,8 @@ root/
 │   │   ├── loss_functions/     Loss functions and their gradients.
 │   │   ├── metrics/            Evaluation metrics.
 │   │   ├── utils/              Helper operations.
-│   │   ├── matrix.cpp          Matrix class (No longer used).
-│   │   └── tensor.cpp          Tensor class.
+│   │   ├── matrix.cpp          Matrix class and operations (No longer used).
+│   │   └── tensor.cpp          Tensor class and operations.
 │   ├── models/                 Model implementations.
 │   ├── optim/                  Optimizers and parameter update logic.
 │   └── preprocessing/          Data loading, splitting, and scaling.

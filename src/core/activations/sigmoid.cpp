@@ -4,28 +4,32 @@
 #include <stdexcept>
 
 
-Matrix sigmoid(const Matrix &x) {
-    Matrix result(x.rows(), x.cols());
+Tensor sigmoid(const Tensor &x) {
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot compute sigmoid of an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            result.at(i, j) = 1.0 / (1.0 + std::exp(-x.at(i, j)));
-        }
+    Tensor result(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        result.at_flat(i) = 1.0 / (1.0 + std::exp(-x.at_flat(i)));
     }
 
     return result;
 }
 
 
-Matrix sigmoid_gradient(const Matrix &x) {
-    Matrix result(x.rows(), x.cols());
+Tensor sigmoid_gradient(const Tensor &x) {
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot compute sigmoid gradients of an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            double sig = 1.0 / (1.0 + std::exp(-x.at(i, j)));
+    Tensor result(x.shape());
 
-            result.at(i, j) = sig * (1 - sig);
-        }
+    for (int i = 0; i < x.size(); i++) {
+        double sig = 1.0 / (1.0 + std::exp(-x.at_flat(i)));
+
+        result.at_flat(i) = sig * (1 - sig);
     }
 
     return result;
@@ -33,29 +37,31 @@ Matrix sigmoid_gradient(const Matrix &x) {
 
 
 Sigmoid::Sigmoid() {
-    input_ = Matrix();
+    input_ = Tensor();
+    has_input_ = false;
 }
 
 
-Matrix Sigmoid::forward(const Matrix &X) {
+Tensor Sigmoid::forward(const Tensor &X) {
     input_ = X;
+    has_input_ = true;
 
     return sigmoid(X);
 }
 
 
-Matrix Sigmoid::backward(const Matrix &dL_dout) {
-    if (input_.rows() == 0 || input_.cols() == 0) {
+Tensor Sigmoid::backward(const Tensor &dL_dout) {
+    if (!has_input_) {
         throw std::runtime_error("forward must be called before backward");
     }
 
-    if (dL_dout.rows() != input_.rows() || dL_dout.cols() != input_.cols()) {
+    if (!dL_dout.has_same_shape(input_)) {
         throw std::invalid_argument("dL_dout must have the same shape as input");
     }
 
-    Matrix dout_dX = sigmoid_gradient(input_);
+    Tensor dout_dX = sigmoid_gradient(input_);
 
-    Matrix dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
 
     return dL_dX;
 }

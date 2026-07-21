@@ -3,30 +3,22 @@
 #include <cmath>
 #include <stdexcept>
 
-// row-wise softmax
-Matrix softmax(const Matrix &x) {
-    if (x.rows() == 0 || x.cols() == 0) {
-        throw std::invalid_argument("Cannot compute softmax of an empty matrix");
+// row-wise softmax for rank-2 Tensors only
+Tensor softmax(const Tensor &x) {
+    if (!x.is_matrix()) {
+        throw std::invalid_argument("softmax expects a rank-2 tensor");
     }
-    Matrix result(x.rows(), x.cols());
-
-    Matrix summation_of_exp = Matrix::zeros(x.rows(), 1);
-
-    double sum = 0.0;
+    Tensor result(x.shape());
 
     for (int i = 0; i < x.rows(); i++) {
-        sum = 0.0;
+        double sum = 0.0;
 
         for (int j = 0; j < x.cols(); j++) {
             sum += std::exp(x.at(i, j));
         }
 
-        summation_of_exp.at(i, 0) = sum;
-    }
-
-    for (int i = 0; i < x.rows(); i++) {
         for (int j = 0; j < x.cols(); j++) {
-            result.at(i, j) = std::exp(x.at(i, j)) / summation_of_exp.at(i, 0);
+            result.at(i, j) = std::exp(x.at(i, j)) / sum;
         }
     }
 

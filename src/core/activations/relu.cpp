@@ -4,26 +4,30 @@
 #include <stdexcept>
 
 
-Matrix relu(const Matrix &x) {
-    Matrix result(x.rows(), x.cols());
+Tensor relu(const Tensor &x) {
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot apply ReLU to an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            result.at(i, j) = std::max(0.0, x.at(i, j));
-        }
+    Tensor result(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        result.at_flat(i) = std::max(0.0, x.at_flat(i));
     }
 
     return result;
 }
 
 
-Matrix relu_gradient(const Matrix &x) {
-    Matrix result(x.rows(), x.cols());
+Tensor relu_gradient(const Tensor &x) {
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot compute ReLU gradients of an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            result.at(i, j) = (x.at(i, j) > 0.0) ? 1.0 : 0.0;
-        }
+    Tensor result(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        result.at_flat(i) = (x.at_flat(i) > 0.0) ? 1.0 : 0.0;
     }
 
     return result;
@@ -31,29 +35,31 @@ Matrix relu_gradient(const Matrix &x) {
 
 
 ReLU::ReLU() {
-    input_ = Matrix();
+    input_ = Tensor();
+    has_input_ = false;
 }
 
 
-Matrix ReLU::forward(const Matrix &X) {
+Tensor ReLU::forward(const Tensor &X) {
     input_ = X;
+    has_input_ = true;
 
     return relu(X);
 }
 
 
-Matrix ReLU::backward(const Matrix &dL_dout) {
-    if (input_.rows() == 0 || input_.cols() == 0) {
+Tensor ReLU::backward(const Tensor &dL_dout) {
+    if (!has_input_) {
         throw std::runtime_error("forward must be called before backward");
     }
 
-    if (dL_dout.rows() != input_.rows() || dL_dout.cols() != input_.cols()) {
+    if (!dL_dout.has_same_shape(input_)) {
         throw std::invalid_argument("dL_dout must have the same shape as the input");
     }
 
-    Matrix dout_dX = relu_gradient(input_);
+    Tensor dout_dX = relu_gradient(input_);
 
-    Matrix dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
 
     return dL_dX;
 }

@@ -1,5 +1,5 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
-Matrix softmax(const Matrix &x);
+Tensor softmax(const Tensor &x);

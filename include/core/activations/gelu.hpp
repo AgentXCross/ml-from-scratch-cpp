@@ -10,6 +10,7 @@ Tensor gelu_gradient(const Tensor &x);
 class GELU : public Layer {
 private:
     Tensor input_;
+    bool has_input_;
 
 public:
     GELU();

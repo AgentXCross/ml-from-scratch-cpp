@@ -51,18 +51,20 @@ Tensor gelu_gradient(const Tensor &x) {
 
 GELU::GELU() {
     input_ = Tensor();
+    has_input_ = false;
 }
 
 
 Tensor GELU::forward(const Tensor &X) {
     input_ = X;
+    has_input_ = true;
 
     return gelu(X);
 }
 
 
 Tensor GELU::backward(const Tensor &dL_dout) {
-    if (input_.empty()) {
+    if (!has_input_) {
         throw std::runtime_error("forward must be called before backward");
     }
 

@@ -114,7 +114,7 @@ public:
     Tensor clone() const;
     Tensor contiguous() const;
 
-    Tensor operator-() const;
+    Tensor operator-() const; // negation operator
     Tensor abs() const;
     Tensor square() const;
     Tensor sqrt() const;

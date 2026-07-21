@@ -1,20 +1,21 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 #include "core/layers/layer.hpp"
 
-Matrix tanh(const Matrix &x);
+Tensor tanh(const Tensor &x);
 
-Matrix tanh_gradient(const Matrix &x);
+Tensor tanh_gradient(const Tensor &x);
 
 class Tanh : public Layer {
 private:
-    Matrix input_;
+    Tensor input_;
+    bool has_input_;
 
 public:
     Tanh();
 
-    Matrix forward(const Matrix &X) override;
+    Tensor forward(const Tensor &X) override;
 
     /*
     out = Tanh(X)
@@ -22,7 +23,7 @@ public:
 
     Returns dL_dX
     */
-    Matrix backward(const Matrix &dL_dout) override;
+    Tensor backward(const Tensor &dL_dout) override;
 
     void step(double learning_rate) override;
 };

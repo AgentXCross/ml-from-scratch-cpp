@@ -2,16 +2,18 @@
 
 #include <stdexcept>
 
-Matrix leaky_relu(const Matrix &x, double alpha) {
-    Matrix result(x.rows(), x.cols());
+Tensor leaky_relu(const Tensor &x, double alpha) {
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot compute Leaky ReLU of an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            if (x.at(i, j) > 0.0) {
-                result.at(i, j) = x.at(i, j);
-            } else {
-                result.at(i, j) = x.at(i, j) * alpha;
-            }
+    Tensor result(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        if (x.at_flat(i) >= 0.0) {
+            result.at_flat(i) = x.at_flat(i);
+        } else {
+            result.at_flat(i) = x.at_flat(i) * alpha;
         }
     }
 
@@ -19,16 +21,18 @@ Matrix leaky_relu(const Matrix &x, double alpha) {
 }
 
 
-Matrix leaky_relu_gradient(const Matrix &x, double alpha) {
-    Matrix result(x.rows(), x.cols());
+Tensor leaky_relu_gradient(const Tensor &x, double alpha) {
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot compute Leaky ReLU gradients of an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            if (x.at(i, j) > 0.0) {
-                result.at(i, j) = 1.0;
-            } else {
-                result.at(i, j) = alpha;
-            }
+    Tensor result(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        if (x.at_flat(i) >= 0.0) {
+            result.at_flat(i) = 1;
+        } else {
+            result.at_flat(i) = alpha;
         }
     }
 
@@ -37,8 +41,9 @@ Matrix leaky_relu_gradient(const Matrix &x, double alpha) {
 
 
 LeakyReLU::LeakyReLU() {
-    input_ = Matrix();
+    input_ = Tensor();
     alpha_ = 0.01;
+    has_input_ = false;
 }
 
 
@@ -47,30 +52,32 @@ LeakyReLU::LeakyReLU(double alpha) {
         throw std::invalid_argument("alpha cannot be negative");
     }
 
-    input_ = Matrix();
+    input_ = Tensor();
     alpha_ = alpha;
+    has_input_ = false;
 }
 
 
-Matrix LeakyReLU::forward(const Matrix &X) {
+Tensor LeakyReLU::forward(const Tensor &X) {
     input_ = X;
+    has_input_ = true;
 
     return leaky_relu(X, alpha_);
 }
 
 
-Matrix LeakyReLU::backward(const Matrix &dL_dout) {
-    if (input_.rows() == 0 || input_.cols() == 0) {
+Tensor LeakyReLU::backward(const Tensor &dL_dout) {
+    if (!has_input_) {
         throw std::runtime_error("forward must be called before backward");
     }
 
-    if (dL_dout.rows() != input_.rows() || dL_dout.cols() != input_.cols()) {
+    if (!dL_dout.has_same_shape(input_)) {
         throw std::invalid_argument("dL_dout must have the same shape as input");
     }
 
-    Matrix dout_dX = leaky_relu_gradient(input_, alpha_);
+    Tensor dout_dX = leaky_relu_gradient(input_, alpha_);
 
-    Matrix dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
 
     return dL_dX;
 }

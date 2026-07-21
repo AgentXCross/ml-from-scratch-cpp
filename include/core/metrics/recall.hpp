@@ -1,13 +1,13 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 /*
 recall_score returns recall = TP / (TP + FN)
-y_true and y_pred must have the same number of rows and columns.
+y_true and y_pred must have the same shape;
 */
 double recall_score(
-    const Matrix &y_true,
-    const Matrix &y_pred,
+    const Tensor &y_true,
+    const Tensor &y_pred,
     double positive_class = 1.0
 );

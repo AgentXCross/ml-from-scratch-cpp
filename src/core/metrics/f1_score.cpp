@@ -5,8 +5,8 @@
 
 
 double f1_score(
-    const Matrix &y_true,
-    const Matrix &y_pred,
+    const Tensor &y_true,
+    const Tensor &y_pred,
     double positive_class
 ) {
     double precision = precision_score(y_true, y_pred, positive_class);

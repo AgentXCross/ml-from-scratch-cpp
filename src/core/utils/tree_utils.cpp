@@ -3,9 +3,13 @@
 #include <map>
 #include <stdexcept>
 
-double gini_impurity(const Matrix &y) {
-    if (y.rows() == 0 || y.cols() != 1) {
-        throw std::invalid_argument("y must be a non-empty column vector");
+double gini_impurity(const Tensor &y) {
+    if (y.empty()) {
+        throw std::invalid_argument("y cannot be empty");
+    }
+
+    if (!y.is_matrix() || y.cols() != 1) {
+        throw std::invalid_argument("y must be a non-empty column vector with shape {n_samples, 1}");
     }
 
     std::map<double, int> class_counts;
@@ -25,9 +29,13 @@ double gini_impurity(const Matrix &y) {
 }
 
 
-double majority_class(const Matrix &y) {
-    if (y.rows() == 0 || y.cols() != 1) {
-        throw std::invalid_argument("y must be a non-empty column vector");
+double majority_class(const Tensor &y) {
+    if (y.empty()) {
+        throw std::invalid_argument("y cannot be empty");
+    }
+
+    if (!y.is_matrix() || y.cols() != 1) {
+        throw std::invalid_argument("y must be a non-empty column vector with shape {n_samples, 1}");
     }
 
     std::map<double, int> class_counts;

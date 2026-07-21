@@ -1,8 +1,8 @@
 #pragma once
  
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 double euclidean_distance(
-    const Matrix &a,
-    const Matrix &b
+    const Tensor &a,
+    const Tensor &b
 );

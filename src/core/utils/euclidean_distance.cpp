@@ -4,24 +4,18 @@
 #include <stdexcept>
 
 double euclidean_distance(
-    const Matrix &a,
-    const Matrix &b
+    const Tensor &a,
+    const Tensor &b
 ) {
-    if (a.rows() != 1 || b.rows() != 1) {
-        throw std::invalid_argument("a and b must be two row matrices");
+    if (a.empty() || b.empty()) {
+        throw std::invalid_argument("Cannot compute euclidean distance of empty tensors");
     }
 
-    if (a.cols() != b.cols()) {
-        throw std::invalid_argument("a and b must have the same number of columns");
+    if (!a.has_same_shape(b)) {
+        throw std::invalid_argument("Tensors must have the same shape");
     }
 
-    double squared_distance = 0.0;
+    Tensor difference = a - b;
 
-    for (int j = 0; j < a.cols(); j++) {
-        double difference = a.at(0, j) - b.at(0, j);
-
-        squared_distance = squared_distance + difference * difference;
-    }
-
-    return std::sqrt(squared_distance);
+    return std::sqrt(difference.square().sum());
 }

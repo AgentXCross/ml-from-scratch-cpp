@@ -69,8 +69,6 @@ target_link_libraries(cpp_ml_metrics PUBLIC
 # Utils
 add_library(cpp_ml_utils
     src/core/utils/threshold.cpp
-    src/core/utils/argmax.cpp
-    src/core/utils/argmin.cpp
     src/core/utils/euclidean_distance.cpp
     src/core/utils/tree_utils.cpp
 )

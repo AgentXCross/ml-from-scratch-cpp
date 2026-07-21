@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 /*
 Gini impurity for a set of class labels (multiclass).
@@ -13,6 +13,6 @@ Gini impurity measures how mixed the classes are in a node.
 0.0 means that the node is pure (all the training samples in this node belong to one class).
 Higher values mean that the node contains a variety of classes.
 */
-double gini_impurity(const Matrix &y);
+double gini_impurity(const Tensor &y);
 
-double majority_class(const Matrix &y);
+double majority_class(const Tensor &y);

@@ -1,20 +1,22 @@
 #include "core/utils/threshold.hpp"
 
-Matrix threshold(
-    const Matrix &x, 
+Tensor threshold(
+    const Tensor &x, 
     double cutoff,
     double upper,
     double lower
 ) {
-    Matrix result(x.rows(), x.cols());
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot threshold an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            if (x.at(i, j) >= cutoff) {
-                result.at(i, j) = upper;
-            } else {
-                result.at(i, j) = lower;
-            }
+    Tensor result(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        if (x.at_flat(i) >= cutoff) {
+            result.at_flat(i) = upper;
+        } else {
+            result.at_flat(i) = lower;
         }
     }
 

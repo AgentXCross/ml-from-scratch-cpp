@@ -61,6 +61,8 @@ public:
     double at(const std::vector<int> &indices) const;
     double &at(int row, int col); // Only for rank 2
     double at(int row, int col) const; // Only for rank 2
+    double &at_flat(int flat);
+    double at_flat(int flat) const;
 
     Tensor row(int row_index) const; // Only for rank 2
     Tensor col(int col_index) const; // Only for rank 2

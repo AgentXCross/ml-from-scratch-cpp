@@ -217,6 +217,32 @@ double Tensor::at(int row, int col) const {
 }
 
 
+double &Tensor::at_flat(int flat) {
+    if (empty()) {
+        throw std::runtime_error("Cannot index an empty tensor");
+    }
+
+    if (flat < 0 || flat >= size()) {
+        throw std::out_of_range("flat is out of range");
+    }
+
+    return data_[flat];
+}
+
+
+double Tensor::at_flat(int flat) const {
+    if (empty()) {
+        throw std::runtime_error("Cannot index an empty tensor");
+    }
+
+    if (flat < 0 || flat >= size()) {
+        throw std::out_of_range("flat is out of range");
+    }
+
+    return data_[flat];
+}
+
+
 Tensor Tensor::row(int row_index) const {
     if (!is_matrix()) {
         throw std::runtime_error("row() only works for matrices/tensors of rank 2");

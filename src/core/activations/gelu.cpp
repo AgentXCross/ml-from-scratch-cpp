@@ -5,36 +5,44 @@
 
 static const double pi = 3.14159265358979323846;
 
-Matrix gelu(const Matrix &x) {
+Tensor gelu(const Tensor &x) {
     // GELU(x) = x * Φ(x)
     // or GELU(x) = 0.5 * (1 + erf(x / sqrt(2)))
-    Matrix phi(x.rows(), x.cols());
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot apply GELU to an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            phi.at(i, j) = 0.5 * (1 + std::erf(x.at(i, j) / std::sqrt(2)));
-        }
+    Tensor phi(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        double value = x.at_flat(i);
+
+        phi.at_flat(i) = 0.5 * (1.0 + std::erf(value / std::sqrt(2.0)));
     }
 
     return phi.elementwise_multiply(x);
 }
 
 
-Matrix gelu_gradient(const Matrix &x) {
+Tensor gelu_gradient(const Tensor &x) {
     // GELU(x) = x * Φ(x)
     // GELU'(x) = Φ(x) + xΦ'(x)
     // Derivative of the Gaussian CDF is the Gaussian pdf
     // Φ'(x) = (1 / sqrt(2π)) * e^(-x^2 / 2)
-    Matrix phi_prime(x.rows(), x.cols());
-    Matrix phi(x.rows(), x.cols());
+    if (x.empty()) {
+        throw std::invalid_argument("Cannot compute GELU gradient of an empty tensor");
+    }
 
-    for (int i = 0; i < x.rows(); i++) {
-        for (int j = 0; j < x.cols(); j++) {
-            phi_prime.at(i, j) = (1 / std::sqrt(2 * pi)) * 
-                                    std::exp(- 0.5 * (x.at(i, j) * x.at(i, j)));
+    Tensor phi_prime(x.shape());
+    Tensor phi(x.shape());
+
+    for (int i = 0; i < x.size(); i++) {
+        double value = x.at_flat(i);
+
+        phi_prime.at_flat(i) = (1.0 / std::sqrt(2.0 * pi)) * 
+                                std::exp(-0.5 * value * value);
         
-            phi.at(i, j) = 0.5 * (1 + std::erf(x.at(i, j) / std::sqrt(2)));
-        }
+        phi.at_flat(i) = 0.5 * (1.0 + std::erf(value / std::sqrt(2.0)));
     }
 
     return phi + x.elementwise_multiply(phi_prime);
@@ -42,29 +50,29 @@ Matrix gelu_gradient(const Matrix &x) {
 
 
 GELU::GELU() {
-    input_ = Matrix();
+    input_ = Tensor();
 }
 
 
-Matrix GELU::forward(const Matrix &X) {
+Tensor GELU::forward(const Tensor &X) {
     input_ = X;
 
     return gelu(X);
 }
 
 
-Matrix GELU::backward(const Matrix &dL_dout) {
-    if (input_.rows() == 0 || input_.cols() == 0) {
+Tensor GELU::backward(const Tensor &dL_dout) {
+    if (input_.empty()) {
         throw std::runtime_error("forward must be called before backward");
     }
 
-    if (dL_dout.rows() != input_.rows() || dL_dout.cols() != input_.cols()) {
+    if (!dL_dout.has_same_shape(input_)) {
         throw std::invalid_argument("dL_dout must have the same shape as input");
     }
 
-    Matrix dout_dX = gelu_gradient(input_);
+    Tensor dout_dX = gelu_gradient(input_);
 
-    Matrix dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
 
     return dL_dX;
 }

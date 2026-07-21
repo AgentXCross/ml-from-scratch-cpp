@@ -1,28 +1,28 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 #include "core/layers/layer.hpp"
 
-Matrix gelu(const Matrix &x);
+Tensor gelu(const Tensor &x);
 
-Matrix gelu_gradient(const Matrix &x);
+Tensor gelu_gradient(const Tensor &x);
 
 class GELU : public Layer {
 private:
-    Matrix input_;
+    Tensor input_;
 
 public:
     GELU();
 
-    Matrix forward(const Matrix &X) override;
+    Tensor forward(const Tensor &X) override;
 
     /*
-    out = GeLU(X)
+    out = GELU(X)
     dL_dX = dL_dout * dout_dX
 
     Returns dL_dX
     */
-    Matrix backward(const Matrix &dL_dout) override;
+    Tensor backward(const Tensor &dL_dout) override;
 
     void step(double learning_rate) override;
 };

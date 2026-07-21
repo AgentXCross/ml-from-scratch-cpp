@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 class Layer {
 public:
@@ -8,9 +8,9 @@ public:
 
     // Methods that must be implemented
 
-    virtual Matrix forward(const Matrix &X) = 0;
+    virtual Tensor forward(const Tensor &X) = 0;
 
-    virtual Matrix backward(const Matrix &dL_dout) = 0;
+    virtual Tensor backward(const Tensor &dL_dout) = 0;
 
     virtual void step(double learning_rate) = 0;
 };

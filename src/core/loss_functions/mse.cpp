@@ -3,45 +3,43 @@
 #include <stdexcept>
 
 double mean_squared_error(
-    const Matrix &y_true,
-    const Matrix &y_pred
+    const Tensor &y_true,
+    const Tensor &y_pred
 ) {
-    if (y_true.rows() != y_pred.rows() ||
-        y_true.cols() != y_pred.cols()) {
-        throw std::invalid_argument("y_true and y_pred must have the same dimensions");
-    }
-    
-    double sum = 0.0;
-    int num_elements = y_true.rows() * y_true.cols();
-
-    for (int i = 0; i < y_true.rows(); i++) {
-        for (int j = 0; j < y_true.cols(); j++) {
-            double error = y_pred.at(i, j) - y_true.at(i, j);
-            sum += error * error;
-        }
+    if (!y_true.has_same_shape(y_pred)) {
+        throw std::invalid_argument("y_true and y_pred must have the same shape");
     }
 
-    return sum / num_elements;
+    if (y_true.empty() || y_pred.empty()) {
+        throw std::invalid_argument("Neither y_true nor y_pred can be empty");
+    }
+
+    if (!y_true.is_matrix() || !y_pred.is_matrix()) {
+        throw std::invalid_argument("mean_squared_error expects rank-2 tensors");
+    }
+
+    Tensor error = y_pred - y_true;
+
+    return error.square().sum() / y_true.size();
 }
 
-Matrix mean_squared_error_gradient(
-    const Matrix &y_true,
-    const Matrix &y_pred
+Tensor mean_squared_error_gradient(
+    const Tensor &y_true,
+    const Tensor &y_pred
 ) {
-    if (y_true.rows() != y_pred.rows() ||
-        y_true.cols() != y_pred.cols()) {
-        throw std::invalid_argument("y_true and y_pred must have the same dimensions");
+    if (!y_true.has_same_shape(y_pred)) {
+        throw std::invalid_argument("y_true and y_pred must have the same shape");
     }
 
-    Matrix dL_dpred(y_true.rows(), y_true.cols());
-    int num_elements = y_true.rows() * y_true.cols();
-
-    for (int i = 0; i < y_true.rows(); i++) {
-        for (int j = 0; j < y_true.cols(); j++) {
-            // Derivative of the MSE equation
-            dL_dpred.at(i, j) = (2.0 / num_elements) * (y_pred.at(i, j) - y_true.at(i, j));
-        }
+    if (y_true.empty() || y_pred.empty()) {
+        throw std::invalid_argument("Neither y_true nor y_pred can be empty");
     }
+
+    if (!y_true.is_matrix() || !y_pred.is_matrix()) {
+        throw std::invalid_argument("mean_squared_error_gradient expects rank-2 tensors");
+    }
+
+    Tensor dL_dpred = (y_pred - y_true) * (2.0 / y_true.size());
 
     return dL_dpred;
 }

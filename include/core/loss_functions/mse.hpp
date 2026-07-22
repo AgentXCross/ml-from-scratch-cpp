@@ -1,13 +1,13 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 double mean_squared_error(
-    const Matrix &y_true,
-    const Matrix &y_pred
+    const Tensor &y_true,
+    const Tensor &y_pred
 );
 
-Matrix mean_squared_error_gradient(
-    const Matrix &y_true,
-    const Matrix &y_pred
+Tensor mean_squared_error_gradient(
+    const Tensor &y_true,
+    const Tensor &y_pred
 );

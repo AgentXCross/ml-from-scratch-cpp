@@ -493,34 +493,85 @@ Tensor Tensor::transpose(int axis_1, int axis_2) const {
 }
 
 
-Tensor Tensor::matmul(const Tensor &other) const {
-    if (!is_matrix()) {
-        throw std::runtime_error("matmul() only works on matrices/tensors of rank 2");
+Tensor Tensor::batched_matmul(
+    const Tensor &a,
+    const Tensor &b
+) {
+    if (a.empty() || b.empty()) {
+        throw std::invalid_argument("Neither tensor can be empty");
     }
 
-    if (!other.is_matrix()) {
-        throw std::runtime_error("other must be a matrix/tensor of rank 2");
+    if (a.ndim() < 2 || b.ndim() < 2) {
+        throw std::invalid_argument("batched_matmul requires tensors be at least rank-3");
     }
 
-    if (cols() != other.rows()) {
-        throw std::invalid_argument("Left tensor cols must match rows of right/other tensor");
+    int m = a.shape_[a.ndim() - 2];
+    int k = a.shape_[a.ndim() - 1];
+
+    int b_k = b.shape_[b.ndim() - 2];
+    int n = b.shape_[b.ndim() - 1];
+
+    if (k != b_k) {
+        throw std::invalid_argument("Inner matrix dimensions must match");
     }
 
-    Tensor result({rows(), other.cols()});
+    int batch_dims = a.ndim() - 2; // Number of dims in a excluding the last 2
+    int b_batch_dims = b.ndim() - 2; // Number of dims in b excluding the last 2
 
-    for (int i = 0; i < result.rows(); i++) {
-        for (int j = 0; j < result.cols(); j++) {
-            double sum = 0.0;
+    if (batch_dims != b_batch_dims) {
+        throw std::invalid_argument("Batch dimensions must match exactly");
+    }
 
-            for (int k = 0; k < cols(); k++) {
-                sum += at(i, k) * other.at(k, j);
-            }
+    std::vector<int> result_shape;
 
-            result.at(i, j) = sum;
+    for (int i = 0; i < batch_dims; i++) {
+        if (a.shape_[i] != b.shape_[i]) {
+            throw std::invalid_argument("Batch dimensions must match exactly");
         }
+
+        result_shape.push_back(a.shape_[i]);
     }
 
-    return result;
+    result_shape.push_back(m);
+    result_shape.push_back(n);
+
+    Tensor result(result_shape);
+
+    int batch_size = 1;
+
+    for (int i = 0; i < batch_size; i++) {
+        batch_size *= a.shape_[i];
+    }
+}
+
+
+Tensor Tensor::matmul(const Tensor &other) const {
+    if (empty() || other.empty()) {
+        throw std::runtime_error("Cannot compute matmul of empty tensors");
+    }
+
+    if (is_matrix() && other.is_matrix()) {
+        if (cols() != other.rows()) {
+            throw std::invalid_argument("Left tensor cols must match right tensor rows");
+        }
+        Tensor result({rows(), other.cols()});
+
+        for (int i = 0; i < result.rows(); i++) {
+            for (int j = 0; j < result.cols(); j++) {
+                double sum = 0.0;
+
+                for (int k = 0; k < cols(); k++) {
+                    sum += at(i, k) * other.at(k, j);
+                }
+
+                result.at(i, j) = sum;
+            }
+        }
+
+        return result;
+    }
+
+    return Tensor::batched_matmul(*this, other);
 }
 
 

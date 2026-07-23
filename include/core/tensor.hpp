@@ -23,6 +23,11 @@ private:
     // Returns indices from flatted
     std::vector<int> flat_to_indices(int flat) const;
 
+    static Tensor batched_matmul(
+        const Tensor &a,
+        const Tensor &b
+    );
+
 public:
     Tensor(); // Creates a scalar tensor with element 0.0
     Tensor(double scalar); // Creates a scalar tensor (size = 1, ndim = 0)
@@ -74,7 +79,7 @@ public:
     Tensor reshape(const std::vector<int> &new_shape) const; // Change the tensor's shape while preserving the data order
     Tensor transpose() const; // Only for rank 2
     Tensor transpose(int axis_1, int axis_2) const; // Transpose generalized to higher dimensions, swaps the 2 axes
-    Tensor matmul(const Tensor &other) const; // Only for rank 2 (for now)
+    Tensor matmul(const Tensor &other) const; 
     Tensor elementwise_multiply(const Tensor &other) const;
 
     Tensor operator+(const Tensor &other) const;

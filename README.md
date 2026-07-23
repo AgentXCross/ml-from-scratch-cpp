@@ -27,16 +27,18 @@ root/
 ## Implemented Algorithms
 - [x] Linear Regression
 - [x] Logistic Regression
-- [ ] Ridge / Lasso / Elastic Net (Linear Regression with Regularization)
+- [ ] Ridge / Lasso / Elastic Net
 - [x] Perceptron
 - [x] ADALINE
-- [x] Softmax / Multinomial Logistic Regression
-- [x] KNN
+- [x] Softmax Regression
+- [x] K-Nearest Neighbors
 - [x] Naive Bayes
-- [x] Decision Trees (Classifier and Regressor)
-- [x] Random Forests & Bagging (Classifier and Regressor)
+- [x] Decision Tree Classifier
+- [ ] Decision Tree Regressor
+- [x] Random Forest Classifier
+- [ ] Random Forest Regressor
 - [ ] Gradient Boosted Trees
 - [ ] Linear SVM
 - [ ] K-Means Clustering
 - [ ] PCA
-- [ ] Feedforward Neural Network / MLP
+- [ ] Multilayer Perceptron (MLP)

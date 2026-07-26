@@ -6,32 +6,35 @@
 #include <random>
 #include <stdexcept>
 
-Tensor::Tensor() {
-    shape_ = std::vector<int>();
-    data_ = std::vector<double>{0.0};
-}
+
+Tensor::Tensor() 
+    : data_(std::vector<double>{0.0}),
+      shape_(std::vector<int>()) {}
 
 
-Tensor::Tensor(double scalar) {
-    data_ = std::vector<double>{scalar};
-    shape_ = std::vector<int>();
-}
+Tensor::Tensor(double scalar) 
+    : data_(std::vector<double>(scalar)),
+      shape_(std::vector<int>()) {}
 
 
-Tensor::Tensor(const std::vector<int> &shape) {
+static int compute_total_size(const std::vector<int> &shape) {
     int total_size = 1;
 
-    for (int i = 0; i < static_cast<int>(shape.size()); i++) {
-        if (shape[i] <= 0) {
+    for (int dim : shape) {
+        if (dim <= 0) {
             throw std::invalid_argument("All shape dimensions must be positive");
         }
 
-        total_size *= shape[i];
+        total_size *= 1;
     }
 
-    shape_ = shape;
-    data_ = std::vector<double>(total_size, 0.0);
+    return total_size;
 }
+
+
+Tensor::Tensor(const std::vector<int> &shape) 
+    : data_(std::vector<double>(compute_total_size(shape), 0.0)),
+      shape_(shape) {}
 
 
 Tensor::Tensor(
@@ -539,9 +542,47 @@ Tensor Tensor::batched_matmul(
 
     int batch_size = 1;
 
-    for (int i = 0; i < batch_size; i++) {
+    for (int i = 0; i < batch_dims; i++) {
         batch_size *= a.shape_[i];
     }
+
+    for (int batch_flat = 0; batch_flat < batch_size; batch_flat++) {
+        // convert the flat batch index into true indices
+        std::vector<int> batch_indices(batch_dims);
+
+        int remaining = batch_flat;
+
+        for (int i = batch_dims - 1; i >= 0; i--) {
+            batch_indices[i] = remaining % a.shape_[i];
+            remaining = remaining / a.shape_[i];
+        }
+
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                double sum = 0.0;
+
+                for (int inner = 0; inner < k; inner++) {
+                    std::vector<int> a_indices = batch_indices;
+                    a_indices.push_back(row);
+                    a_indices.push_back(inner);
+
+                    std::vector<int> b_indices = batch_indices;
+                    b_indices.push_back(inner);
+                    b_indices.push_back(col);
+
+                    sum += a.at(a_indices) * b.at(b_indices);
+                } 
+
+                std::vector<int> result_indices = batch_indices;
+                result_indices.push_back(row);
+                result_indices.push_back(col);
+
+                result.at(result_indices) = sum;
+            }
+        }
+    }
+
+    return result;
 }
 
 

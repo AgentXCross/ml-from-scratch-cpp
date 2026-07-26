@@ -1,29 +1,29 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 class SoftmaxRegression {
 private:
-    Matrix weights_;
-    Matrix bias_;
+    Tensor weights_;
+    Tensor bias_;
 
-    Matrix dL_dw_;
-    Matrix dL_db_;
+    Tensor dL_dw_;
+    Tensor dL_db_;
 
 public:
     SoftmaxRegression();
     SoftmaxRegression(int num_features, int num_classes);
 
-    Matrix predict_probs(const Matrix &X) const;
-    Matrix predict(const Matrix &X) const;
+    Tensor predict_probs(const Tensor &X) const;
+    Tensor predict(const Tensor &X) const;
 
     void backward(
-        const Matrix &X,
-        const Matrix &dL_dlogits
+        const Tensor &X,
+        const Tensor &dL_dlogits
     );
 
     void step(double learning_rate);
 
-    Matrix weights() const;
-    Matrix bias() const;
+    Tensor weights() const;
+    Tensor bias() const;
 };

@@ -1,36 +1,42 @@
 #include "models/knn.hpp"
 
-#include "core/utils/argmax.hpp"
 #include "core/utils/euclidean_distance.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <cmath>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-KNN::KNN() {
-    X_train_ = Matrix();
-    y_train_ = Matrix();
-    k_ = 1;
-    fitted_ = false;
-}
+KNN::KNN() 
+    : X_train_(Tensor()),
+      y_train_(Tensor()),
+      k_(1),
+      fitted_(false) {}
 
-KNN::KNN(int k) {
+
+static int validate_k(int k) {
     if (k <= 0) {
         throw std::invalid_argument("k must be positive");
     }
 
-    X_train_ = Matrix();
-    y_train_ = Matrix();
-    k_ = k;
-    fitted_ = false;
+    return k;
 }
 
+KNN::KNN(int k) 
+    : X_train_(Tensor()),
+      y_train_(Tensor()),
+      k_(validate_k(k)),
+      fitted_(false) {}
+
 void KNN::fit(
-    const Matrix &X_train,
-    const Matrix &y_train
+    const Tensor &X_train,
+    const Tensor &y_train
 ) {
+    if (!X_train.is_matrix() || !y_train.is_matrix()) {
+        throw std::invalid_argument("X_train and y_train must be rank-2 tensor");
+    }
     if (X_train.rows() == 0 || X_train.cols() == 0) {
         throw std::invalid_argument("X_train cannot be empty");
     }
@@ -48,7 +54,7 @@ void KNN::fit(
     }
 
     if (k_ > X_train.rows()) {
-        throw std::invalid_argument("k cannot be larger than number of trianing samples");
+        throw std::invalid_argument("k cannot be larger than number of training samples");
     }
 
     X_train_ = X_train;
@@ -56,16 +62,20 @@ void KNN::fit(
     fitted_ = true;
 }
 
-Matrix KNN::predict(const Matrix &X) const {
+Tensor KNN::predict(const Tensor &X) const {
     if (!fitted_) {
         throw std::runtime_error("KNN must be fitted before calling predict");
     }
 
-    if (X.cols() != X_train_.cols()) {
-        throw std::invalid_argument("X must have the same number of columns at X_train");
+    if (!X.is_matrix()) {
+        throw std::invalid_argument("X must be a rank-2 tensor");
     }
 
-    int num_classes = 0;
+    if (X.cols() != X_train_.cols()) {
+        throw std::invalid_argument("X must have the same number of columns as X_train");
+    }
+
+    int num_classes = 0; // go through data and determine how many classes there are
 
     for (int i = 0; i < y_train_.rows(); i++) {
         int label = static_cast<int> (y_train_.at(i, 0));
@@ -79,15 +89,17 @@ Matrix KNN::predict(const Matrix &X) const {
         }
     }
 
-    Matrix predictions(X.rows(), 1);
+    Tensor predictions({X.rows(), 1});
 
-    for (int i = 0; i < X.rows(); i++) {
+    for (int i = 0; i < X.rows(); i++) { // loop through every sample
         std::vector<std::pair<double, double>> distances_and_labels;
 
-        Matrix sample = X.row(i);
+        Tensor sample = X.row(i);
+        assert(sample.rows() == 1);
 
         for (int train_i = 0; train_i < X_train_.rows(); train_i++) {
-            Matrix train_sample = X_train_.row(train_i);
+            Tensor train_sample = X_train_.row(train_i);
+            assert(train_sample.rows() == 1);
 
             double distance = euclidean_distance(sample, train_sample);
             double label = y_train_.at(train_i, 0);
@@ -103,7 +115,7 @@ Matrix KNN::predict(const Matrix &X) const {
             }
         );
 
-        Matrix class_counts(1, num_classes);
+        Tensor class_counts({1, num_classes});
 
         for (int neighbor = 0; neighbor < k_; neighbor++) {
             int label = static_cast<int> (distances_and_labels[neighbor].second);
@@ -111,7 +123,7 @@ Matrix KNN::predict(const Matrix &X) const {
             class_counts.at(0, label) = class_counts.at(0, label) + 1.0;
         }
 
-        int predicted_label = argmax(class_counts);
+        int predicted_label = class_counts.argmax();
 
         predictions.at(i, 0) = static_cast<double> (predicted_label);
     }

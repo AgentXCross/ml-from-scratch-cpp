@@ -1,24 +1,24 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 class Perceptron {
 private:
-    Matrix weights_;
-    Matrix bias_;
+    Tensor weights_;
+    Tensor bias_;
 
 public:
     Perceptron();
     Perceptron(int num_features);
 
-    Matrix predict(const Matrix &X) const;
+    Tensor predict(const Tensor &X) const;
 
     void train_epoch(
-        const Matrix &X,
-        const Matrix &y_true,
+        const Tensor &X,
+        const Tensor &y_true,
         double learning_rate
     );
 
-    Matrix weights() const;
-    Matrix bias() const;
+    Tensor weights() const;
+    Tensor bias() const;
 };

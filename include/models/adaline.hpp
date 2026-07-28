@@ -1,29 +1,29 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 class ADALINE {
 private:
-    Matrix weights_;
-    Matrix bias_;
+    Tensor weights_;
+    Tensor bias_;
 
-    Matrix dL_dw_;
-    Matrix dL_db_;
+    Tensor dL_dw_;
+    Tensor dL_db_;
 
 public:
     ADALINE();
     ADALINE(int num_features);
 
-    Matrix predict_raw(const Matrix &X) const;
-    Matrix predict(const Matrix &X) const;
+    Tensor predict_raw(const Tensor &X) const;
+    Tensor predict(const Tensor &X) const;
 
     void backward(
-        const Matrix &X,
-        const Matrix &dL_dpred
+        const Tensor &X,
+        const Tensor &dL_dpred
     );
 
     void step(double learning_rate);
 
-    Matrix weights() const;
-    Matrix bias() const;
+    Tensor weights() const;
+    Tensor bias() const;
 };

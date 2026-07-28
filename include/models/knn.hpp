@@ -1,12 +1,12 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 class KNN {
 private:
-    Matrix X_train_;
-    Matrix y_train_;
-    int k_; // # of neighbors
+    Tensor X_train_;
+    Tensor y_train_;
+    int k_; // # of neighbors considered in classifying
     bool fitted_;
 
 public:
@@ -14,11 +14,11 @@ public:
     KNN(int k);
 
     void fit(
-        const Matrix &X_train,
-        const Matrix &y_train
+        const Tensor &X_train,
+        const Tensor &y_train
     );
 
-    Matrix predict(const Matrix &X) const;
+    Tensor predict(const Tensor &X) const;
 
     int k() const;
 };

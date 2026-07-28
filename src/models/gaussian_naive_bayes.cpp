@@ -1,22 +1,25 @@
-#include "models/naive_bayes.hpp"
+#include "models/gaussian_naive_bayes.hpp"
 
-#include "core/utils/argmax.hpp"
-
+#include <cassert>
 #include <cmath>
 #include <stdexcept>
 
-GaussianNaiveBayes::GaussianNaiveBayes() {
-    means_ = Matrix();
-    variances_ = Matrix();
-    priors_ = Matrix();
-    num_classes_ = 0;
-    fitted_ = false;
-}
+GaussianNaiveBayes::GaussianNaiveBayes() 
+    : means_(Tensor()),
+      variances_(Tensor()),
+      priors_(Tensor()),
+      num_classes_(0),
+      fitted_(false) {}
+
 
 void GaussianNaiveBayes::fit(
-    const Matrix &X_train,
-    const Matrix &y_train
+    const Tensor &X_train,
+    const Tensor &y_train
 ) {
+    if (!X_train.is_matrix() || !y_train.is_matrix()) {
+        throw std::invalid_argument("X_train and y_train must be rank-2 tensors");
+    }
+
     if (X_train.rows() == 0 || X_train.cols() == 0) {
         throw std::invalid_argument("X_train cannot be empty");
     }
@@ -197,15 +200,15 @@ Matrix GaussianNaiveBayes::predict(const Matrix &X) const {
     return predictions;
 }
 
-Matrix GaussianNaiveBayes::means() const {
+Tensor GaussianNaiveBayes::means() const {
     return means_;
 }
 
-Matrix GaussianNaiveBayes::variances() const {
+Tensor GaussianNaiveBayes::variances() const {
     return variances_;
 }
 
-Matrix GaussianNaiveBayes::priors() const {
+Tensor GaussianNaiveBayes::priors() const {
     return priors_;
 }
 

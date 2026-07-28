@@ -93,7 +93,7 @@ add_library(cpp_ml_models
     src/models/adaline.cpp
     src/models/knn.cpp
     src/models/softmax_regression.cpp
-    src/models/naive_bayes.cpp
+    src/models/gaussian_naive_bayes.cpp
     src/models/decision_tree.cpp
     src/models/random_forest.cpp
     src/models/mlp.cpp

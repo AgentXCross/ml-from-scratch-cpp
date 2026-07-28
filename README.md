@@ -32,7 +32,7 @@ root/
 - [x] ADALINE
 - [x] Softmax Regression
 - [x] K-Nearest Neighbors
-- [x] Naive Bayes
+- [x] Gaussian Naive Bayes
 - [x] Decision Tree Classifier
 - [ ] Decision Tree Regressor
 - [x] Random Forest Classifier

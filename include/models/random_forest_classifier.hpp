@@ -1,15 +1,15 @@
 #pragma once
 
-#include "core/matrix.hpp"
-#include "models/decision_tree.hpp"
+#include "core/tensor.hpp"
+#include "models/decision_tree_classifier.hpp"
 
 #include <memory>
 #include <vector>
 
-class RandomForest {
+class RandomForestClassifier {
 private:
-    // owns each DecisionTree through a unique_ptr
-    std::vector<std::unique_ptr<DecisionTree>> trees_; 
+    // owns each DecisionTreeClassifier through a unique_ptr
+    std::vector<std::unique_ptr<DecisionTreeClassifier>> trees_; 
 
     int num_trees_;
     int max_depth_;
@@ -20,9 +20,9 @@ private:
     bool fitted_;
 
 public:
-    RandomForest();
+    RandomForestClassifier();
 
-    RandomForest(
+    RandomForestClassifier(
         int num_trees,
         int max_depth,
         int min_samples_split,
@@ -31,11 +31,11 @@ public:
     );
 
     void fit(
-        const Matrix &X,
-        const Matrix &y
+        const Tensor &X,
+        const Tensor &y
     );
 
-    Matrix predict(const Matrix &X) const;
+    Tensor predict(const Tensor &X) const;
 
     int num_trees() const;
 };

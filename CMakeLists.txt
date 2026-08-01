@@ -94,8 +94,8 @@ add_library(cpp_ml_models
     src/models/knn.cpp
     src/models/softmax_regression.cpp
     src/models/gaussian_naive_bayes.cpp
-    src/models/decision_tree.cpp
-    src/models/random_forest.cpp
+    src/models/decision_tree_classifier.cpp
+    src/models/random_forest_classifier.cpp
     src/models/mlp.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC

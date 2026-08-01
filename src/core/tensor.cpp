@@ -25,7 +25,7 @@ static int compute_total_size(const std::vector<int> &shape) {
             throw std::invalid_argument("All shape dimensions must be positive");
         }
 
-        total_size *= 1;
+        total_size *= dim;
     }
 
     return total_size;

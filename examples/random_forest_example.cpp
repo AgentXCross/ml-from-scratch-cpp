@@ -1,4 +1,4 @@
-#include "models/random_forest.hpp"
+#include "models/random_forest_classifier.hpp"
 
 #include "preprocessing/dataset.hpp"
 #include "preprocessing/train_test_split.hpp"
@@ -29,7 +29,7 @@ int main(void) {
     int min_samples_split = 4;
     int max_features = static_cast<double> (std::sqrt(X_train.cols()));
 
-    RandomForest model(num_trees, max_depth, min_samples_split, max_features);
+    RandomForestClassifier model(num_trees, max_depth, min_samples_split, max_features);
 
     model.fit(X_train, y_train);
     std::cout << "Random Forest model fitted to training data." << "\n";

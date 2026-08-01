@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 #include <memory>
 #include <random>
@@ -10,7 +10,7 @@ struct DecisionTreeNode {
 
     int feature_index; // Which feature this node considers
     double threshold; // Threshold value of the feature
-    double prediction; // 
+    double prediction; // Prediction value if this node is a leaf
 
     std::unique_ptr<DecisionTreeNode> left;
     std::unique_ptr<DecisionTreeNode> right;
@@ -18,7 +18,7 @@ struct DecisionTreeNode {
     DecisionTreeNode();
 };
 
-class DecisionTree {
+class DecisionTreeClassifier {
 private:
     std::unique_ptr<DecisionTreeNode> root_;
 
@@ -35,19 +35,19 @@ private:
     build_tree 
     */
     std::unique_ptr<DecisionTreeNode> build_tree(
-        const Matrix &X,
-        const Matrix &y,
+        const Tensor &X,
+        const Tensor &y,
         int depth
     );
 
     double predict_sample(
-        const Matrix &x,
+        const Tensor &x,
         const DecisionTreeNode *node
     ) const;
 
 public:
-    DecisionTree();
-    DecisionTree(
+    DecisionTreeClassifier();
+    DecisionTreeClassifier(
         int max_depth, 
         int min_samples_split,
         int max_features = 0, // 0 means to use all features
@@ -55,9 +55,9 @@ public:
     );
 
     void fit(
-        const Matrix &X,
-        const Matrix &y
+        const Tensor &X,
+        const Tensor &y
     );
 
-    Matrix predict(const Matrix &X) const;
+    Tensor predict(const Tensor &X) const;
 };

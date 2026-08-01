@@ -1,5 +1,6 @@
-#include "models/random_forest.hpp"
+#include "models/random_forest_classifier.hpp"
 
+#include <cassert>
 #include <map>
 #include <memory>
 #include <random>
@@ -7,54 +8,76 @@
 #include <vector>
 
 
-RandomForest::RandomForest() {
-    num_trees_ = 10;
-    max_depth_ = 5;
-    min_samples_split_ = 2;
-    max_features_ = 0;
+RandomForestClassifier::RandomForestClassifier()
+    : trees_(),
+      num_trees_(10),
+      max_depth_(5),
+      min_samples_split_(2),
+      max_features_(0),
+      random_seed_(42),
+      fitted_(false) {}
 
-    random_seed_ = 42;
-    fitted_ = false;
+
+static int validate_num_trees(int num_trees) {
+    if (num_trees <= 0) {
+        throw std::invalid_argument("num_trees must be positive");
+    }
+
+    return num_trees;
 }
 
 
-RandomForest::RandomForest(
+static int validate_max_depth(int max_depth) {
+    if (max_depth <= 0) {
+        throw std::invalid_argument("max_depth must be positive");
+    }
+
+    return max_depth;
+}
+
+
+static int validate_min_samples_split(int min_samples_split) {
+    if (min_samples_split <= 1) {
+        throw std::invalid_argument("min_samples_split must be greater than 1");
+    } 
+
+    return min_samples_split;
+}
+
+
+static int validate_max_features(int max_features) {
+    if (max_features < 0) {
+        throw std::invalid_argument("max_features must be positive or 0 (to represent all features)");
+    }
+
+    return max_features;
+}
+
+
+RandomForestClassifier::RandomForestClassifier(
     int num_trees,
     int max_depth,
     int min_samples_split,
     int max_features,
     unsigned int random_seed
+)
+    : trees_(),
+      num_trees_(validate_num_trees(num_trees)),
+      max_depth_(validate_max_depth(max_depth)),
+      min_samples_split_(validate_min_samples_split(min_samples_split)),
+      max_features_(validate_max_features(max_features)),
+      random_seed_(random_seed),
+      fitted_(false) {}
+
+
+void RandomForestClassifier::fit(
+    const Tensor &X,
+    const Tensor &y
 ) {
-    if (num_trees <= 0) {
-        throw std::invalid_argument("num_trees must be positive");
+    if (!X.is_matrix() || !y.is_matrix()) {
+        throw std::invalid_argument("X and y must be rank-2 tensors");
     }
 
-    if (max_depth <= 0) {
-        throw std::invalid_argument("max_depth must be positive");
-    }
-
-    if (min_samples_split <= 1) {
-        throw std::invalid_argument("min_samples_split must be greater than 1");
-    } 
-
-    if (max_features < 0) {
-        throw std::invalid_argument("max_features must be positive or 0 (to represent all features)");
-    }
-
-    num_trees_ = num_trees;
-    max_depth_ = max_depth;
-    min_samples_split_ = min_samples_split;
-    max_features_ = max_features;
-
-    random_seed_ = random_seed;
-    fitted_ = false;
-}
-
-
-void RandomForest::fit(
-    const Matrix &X,
-    const Matrix &y
-) {
     if (X.rows() == 0 || X.cols() == 0) {
         throw std::invalid_argument("X cannot be empty");
     }
@@ -106,10 +129,16 @@ void RandomForest::fit(
             y_bootstrap_values.push_back({y.at(sampled_index, 0)});
         }
 
-        Matrix X_bootstrap = Matrix::from_vector(X_bootstrap_values);
-        Matrix y_bootstrap = Matrix::from_vector(y_bootstrap_values);
+        Tensor X_bootstrap = Tensor::from_vector(X_bootstrap_values);
+        Tensor y_bootstrap = Tensor::from_vector(y_bootstrap_values);
+        assert(X_bootstrap.is_matrix());
+        assert(y_bootstrap.is_matrix());
+        assert(X_bootstrap.rows() == X.rows());
+        assert(X_bootstrap.cols() == X.cols());
+        assert(y_bootstrap.rows() == y.rows());
+        assert(y_bootstrap.cols() == 1);
 
-        std::unique_ptr<DecisionTree> tree = std::make_unique<DecisionTree> (
+        std::unique_ptr<DecisionTreeClassifier> tree = std::make_unique<DecisionTreeClassifier> (
             max_depth_,
             min_samples_split_,
             max_features_,
@@ -121,35 +150,49 @@ void RandomForest::fit(
         trees_.push_back(std::move(tree)); // transfer ownership
     }
 
+    assert(static_cast<int>(trees_.size()) == num_trees_);
+
     fitted_ = true;
 }
 
 
-Matrix RandomForest::predict(const Matrix &X) const {
+Tensor RandomForestClassifier::predict(const Tensor &X) const {
     if (!fitted_) {
-        throw std::runtime_error("RandomForest must be fitted before calling predict");
+        throw std::runtime_error("RandomForestClassifier must be fitted before calling predict");
+    }
+
+    if (!X.is_matrix()) {
+        throw std::invalid_argument("X must be a rank-2 tensor");
     }
 
     if (X.rows() == 0 || X.cols() == 0) {
         throw std::invalid_argument("X cannot be empty");
     }
 
-    Matrix predictions(X.rows(), 1);
+    if (static_cast<int>(trees_.size()) != num_trees_) {
+        throw std::runtime_error("RandomForestClassifier has an invalid number of fitted trees");
+    }
+
+    Tensor predictions({X.rows(), 1});
 
     // Each individual tree predicts one label per sample
     // Each element in tree_predictions is the prediction of one tree on all samples
     // So the predictions on the ith sample is the ith row
-    std::vector<Matrix> tree_predictions; 
+    std::vector<Tensor> tree_predictions; 
+    tree_predictions.reserve(trees_.size());
 
-    for (int tree_index = 0; tree_index < trees_.size(); tree_index++) {
-        // predict from decision_tree.cpp returns a Matrix of a column vector
+    for (int tree_index = 0; tree_index < static_cast<int>(trees_.size()); tree_index++) {
+        // predict from decision_tree_classifier.cpp returns a column vector
         tree_predictions.push_back(trees_[tree_index]->predict(X)); 
+        assert(tree_predictions[tree_index].is_matrix());
+        assert(tree_predictions[tree_index].rows() == X.rows());
+        assert(tree_predictions[tree_index].cols() == 1);
     }
 
     for (int i = 0; i < X.rows(); i++) { // ith sample
         std::map<double, int> class_counts;
 
-        for (int tree_index = 0; tree_index < tree_predictions.size(); tree_index++) {
+        for (int tree_index = 0; tree_index < static_cast<int>(tree_predictions.size()); tree_index++) {
             double predicted_class = tree_predictions[tree_index].at(i, 0);
             class_counts[predicted_class]++;
         }
@@ -170,9 +213,14 @@ Matrix RandomForest::predict(const Matrix &X) const {
         predictions.at(i, 0) = best_class;
     }
 
+    assert(predictions.is_matrix());
+    assert(predictions.rows() == X.rows());
+    assert(predictions.cols() == 1);
+
     return predictions;
 }
 
-int RandomForest::num_trees() const {
+
+int RandomForestClassifier::num_trees() const {
     return num_trees_;
 }

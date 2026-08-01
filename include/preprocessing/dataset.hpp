@@ -1,14 +1,15 @@
 #pragma once
 
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 
 #include <string>
 
 struct Dataset {
-    Matrix X;
-    Matrix y;
+    Tensor X;
+    Tensor y;
 };
 
+// Expects numerical data
 Dataset read_csv_dataset(
     const std::string &filepath,
     int label_column,

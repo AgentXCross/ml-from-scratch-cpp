@@ -1,9 +1,11 @@
 #include "preprocessing/dataset.hpp"
 
+#include <cassert>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+
 
 Dataset read_csv_dataset(
     const std::string &filepath,
@@ -22,10 +24,10 @@ Dataset read_csv_dataset(
     std::string line;
 
     if (has_header) {
-        std::getline(file, line);
+        std::getline(file, line); // get the line to skip it
     }
 
-    while (std::getline(file, line)) {
+    while (std::getline(file, line)) { // loop through all samples
         if (line.empty()) {
             continue;
         }
@@ -35,7 +37,7 @@ Dataset read_csv_dataset(
         std::vector<double> row_values;
 
         while (std::getline(line_stream, cell, ',')) {
-            row_values.push_back(std::stod(cell));
+            row_values.push_back(std::stod(cell)); // convert all to double
         }
 
         if (row_values.empty()) {
@@ -61,9 +63,19 @@ Dataset read_csv_dataset(
         y_values.push_back(y_row);
     }
 
+    if (X_values.empty() || y_values.empty()) {
+        throw std::invalid_argument("CSV file did not contain any data rows");
+    }
+
     Dataset dataset;
-    dataset.X = Matrix::from_vector(X_values);
-    dataset.y = Matrix::from_vector(y_values);
+    dataset.X = Tensor::from_vector(X_values);
+    dataset.y = Tensor::from_vector(y_values);
+
+    assert(dataset.X.is_matrix());
+    assert(dataset.y.is_matrix());
+    assert(dataset.X.cols() > 0);
+    assert(dataset.X.rows() == dataset.y.rows());
+    assert(dataset.y.cols() == 1);
 
     return dataset;
 }

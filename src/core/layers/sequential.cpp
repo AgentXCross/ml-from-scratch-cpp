@@ -1,11 +1,11 @@
 #include "core/layers/sequential.hpp"
 
+#include <cassert>
 #include <stdexcept>
 
 
-Sequential::Sequential() {
-    layers_ = std::vector<std::unique_ptr<Layer>>();
-}
+Sequential::Sequential()
+    : layers_(std::vector<std::unique_ptr<Layer>>()) {}
 
 
 void Sequential::add(std::unique_ptr<Layer> layer) {
@@ -17,30 +17,36 @@ void Sequential::add(std::unique_ptr<Layer> layer) {
 }
 
 
-Matrix Sequential::forward(const Matrix &X) {
+Tensor Sequential::forward(const Tensor &X) {
     if (layers_.empty()) {
         throw std::runtime_error("Sequential must have at least one layer");
     }
 
-    Matrix output = X;
+    Tensor output = X;
 
-    for (int i = 0; i < layers_.size(); i++) {
+    for (int i = 0; i < static_cast<int>(layers_.size()); i++) {
         output = layers_[i]->forward(output);
+        assert(!output.empty());
     }
 
     return output;
 }
 
 
-Matrix Sequential::backward(const Matrix &dL_dout) {
+Tensor Sequential::backward(const Tensor &dL_dout) {
     if (layers_.empty()) {
         throw std::runtime_error("Sequential must have at least one layer");
     }
 
-    Matrix backprop_gradient = dL_dout;
+    if (dL_dout.empty()) {
+        throw std::invalid_argument("dL_dout cannot be empty");
+    }
+
+    Tensor backprop_gradient = dL_dout;
 
     for (int i = static_cast<int>(layers_.size()) - 1; i >= 0; i--) {
         backprop_gradient = layers_[i]->backward(backprop_gradient);
+        assert(!backprop_gradient.empty());
     }
 
     return backprop_gradient;
@@ -52,7 +58,7 @@ void Sequential::step(double learning_rate) {
         throw std::runtime_error("Sequential must have at least one layer");
     }
 
-    for (int i = 0; i < layers_.size(); i++) {
+    for (int i = 0; i < static_cast<int>(layers_.size()); i++) {
         layers_[i]->step(learning_rate);
     }
 }

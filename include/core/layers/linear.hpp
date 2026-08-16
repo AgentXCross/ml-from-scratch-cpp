@@ -4,13 +4,13 @@
 
 class Linear : public Layer {
 private:
-    Matrix weights_; // W: (in_features, out_features)
-    Matrix bias_; // b: (1, out_features)
+    Tensor weights_; // W: (in_features, out_features)
+    Tensor bias_; // b: (1, out_features)
 
-    Matrix input_; // X: (n_samples, in_features)
+    Tensor input_; // X: (n_samples, in_features)
 
-    Matrix dL_dW_; // dL_dW: (in_features, out_features)
-    Matrix dL_db_; // dL/db: (1, out_features)
+    Tensor dL_dW_; // dL_dW: (in_features, out_features)
+    Tensor dL_db_; // dL/db: (1, out_features)
 
 public:
     Linear();
@@ -31,7 +31,7 @@ public:
         b: (1, out_features)
         out: (n_samples, out_features)
     */
-    Matrix forward(const Matrix &X) override;
+    Tensor forward(const Tensor &X) override;
 
     /*
     Backpropagation through a linear layer.
@@ -60,10 +60,10 @@ public:
         dL_dx1 = dL_dout1 * dout1_dx1 + dL_dout2 * dout2_dx1
                = dL_dout1 * w11 + dL_dout2 * w12
     */
-    Matrix backward(const Matrix &dL_dout) override;
+    Tensor backward(const Tensor &dL_dout) override;
 
     void step(double learning_rate) override;
 
-    Matrix weights() const;
-    Matrix bias() const;
+    Tensor weights() const;
+    Tensor bias() const;
 };

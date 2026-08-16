@@ -1,15 +1,16 @@
 #include "core/layers/linear.hpp"
 
+#include <cassert>
 #include <stdexcept>
 
 Linear::Linear() {
-    weights_ = Matrix();
-    bias_ = Matrix();
+    weights_ = Tensor();
+    bias_ = Tensor();
 
-    input_ = Matrix();
+    input_ = Tensor();
 
-    dL_dW_ = Matrix();
-    dL_db_ = Matrix();
+    dL_dW_ = Tensor();
+    dL_db_ = Tensor();
 }
 
 
@@ -25,24 +26,30 @@ Linear::Linear(
         throw std::invalid_argument("out_features must be positive");
     }
 
-    weights_ = Matrix::random(in_features, out_features, -0.01, 0.01);
-    bias_ = Matrix::random(1, out_features, -0.01, 0.01);
+    weights_ = Tensor::random({in_features, out_features}, -0.01, 0.01);
+    bias_ = Tensor::random({1, out_features}, -0.01, 0.01);
 
-    input_ = Matrix();
+    input_ = Tensor();
 
-    dL_dW_ = Matrix(in_features, out_features);
-    dL_db_ = Matrix(1, out_features);
+    dL_dW_ = Tensor({in_features, out_features});
+    dL_db_ = Tensor({1, out_features});
 }
 
 
-Matrix Linear::forward(const Matrix &X) {
+Tensor Linear::forward(const Tensor &X) {
+    if (!X.is_matrix()) {
+        throw std::invalid_argument("X must be a rank-2 tensor");
+    }
+
     if (X.cols() != weights_.rows()) {
         throw std::invalid_argument("X columns must match weight rows");
     }
 
     input_ = X;
 
-    Matrix output = X.matmul(weights_);
+    Tensor output = X.matmul(weights_); // output has shape (# of samples, # of features)
+    assert(output.rows() == X.rows() && output.cols() == weights_.cols());
+    assert(output.ndim() == 2);
 
     for (int i = 0; i < output.rows(); i++) {
         for (int j = 0; j < output.cols(); j++) {
@@ -54,10 +61,14 @@ Matrix Linear::forward(const Matrix &X) {
 }
 
 
-Matrix Linear::backward(const Matrix &dL_dout) {
+Tensor Linear::backward(const Tensor &dL_dout) {
     if (input_.rows() == 0 || input_.cols() == 0) {
         throw std::runtime_error("forward must be called before backward");
     }  
+
+    if (!dL_dout.is_matrix()) {
+        throw std::invalid_argument("dL_dout must be a rank-2 tensor");
+    }
 
     // dL_dout has the same shape as the output shape 
     // So same number of rows as the input X and same number of columns as the weights
@@ -65,8 +76,8 @@ Matrix Linear::backward(const Matrix &dL_dout) {
         throw std::invalid_argument("dL_dout rows must match input rows");
     }
 
-    if (dL_dout.cols() != input_.cols()) {
-        throw std::invalid_argument("dL_dout cols must match input cols");
+    if (dL_dout.cols() != weights_.cols()) {
+        throw std::invalid_argument("dL_dout cols must match output columns");
     }
 
     // dL_dW = X.T @ dL_dout
@@ -76,29 +87,39 @@ Matrix Linear::backward(const Matrix &dL_dout) {
         double bias_gradient = 0.0;
 
         for (int i = 0; i < dL_dout.rows(); i++) {
-            bias_gradient = bias_gradient + dL_dout.at(i, j);
+            bias_gradient += dL_dout.at(i, j);
         }
 
         dL_db_.at(0, j) = bias_gradient;
     }
 
-    Matrix dL_dX = dL_dout.matmul(weights_.transpose());
+    Tensor dL_dX = dL_dout.matmul(weights_.transpose());
+
+    assert(dL_dW_.shape() == weights_.shape());
+    assert(dL_db_.shape() == bias_.shape());
+
+    assert(dL_dX.is_matrix());
+    assert(dL_dX.rows() == input_.rows());
+    assert(dL_dX.cols() == input_.cols());
 
     return dL_dX;
 }
 
 
 void Linear::step(double learning_rate) {
+    if (learning_rate <= 0.0) {
+        throw std::invalid_argument("Learning rate must positive.");
+    }
     weights_ = weights_ - (dL_dW_ * learning_rate);
     bias_ = bias_ - (dL_db_ * learning_rate);
 }
 
 
-Matrix Linear::weights() const {
+Tensor Linear::weights() const {
     return weights_;
 }
 
 
-Matrix Linear::bias() const {
+Tensor Linear::bias() const {
     return bias_;
 }

@@ -1,20 +1,25 @@
 #include "preprocessing/min_max_scaler.hpp"
 
+#include <cassert>
 #include <stdexcept>
 
-MinMaxScaler::MinMaxScaler() {
-    mins_ = Matrix();
-    maxs_ = Matrix();
-    fitted_ = false;
-}
+MinMaxScaler::MinMaxScaler()
+    : mins_(Tensor()),
+      maxs_(Tensor()),
+      fitted_(false) {}
 
-void MinMaxScaler::fit(const Matrix &X) {
-    if (X.rows() == 0 || X.cols() == 0) {
-        throw std::invalid_argument("Cannot fit MinMaxScaler on an empty matrix");
+
+void MinMaxScaler::fit(const Tensor &X) {
+    if (!X.is_matrix()) {
+        throw std::invalid_argument("X must be a rank-2 tensor");
     }
 
-    mins_ = Matrix(1, X.cols());
-    maxs_ = Matrix(1, X.cols());
+    if (X.rows() == 0 || X.cols() == 0) {
+        throw std::invalid_argument("Cannot fit MinMaxScaler on an empty tensor");
+    }
+
+    mins_ = Tensor({1, X.cols()});
+    maxs_ = Tensor({1, X.cols()});
 
     for (int j = 0; j < X.cols(); j++) {
         double min_value = X.at(0, j);
@@ -36,19 +41,33 @@ void MinMaxScaler::fit(const Matrix &X) {
         maxs_.at(0, j) = max_value;
     }
 
+    assert(mins_.is_matrix());
+    assert(maxs_.is_matrix());
+    assert(mins_.rows() == 1 && mins_.cols() == X.cols());
+    assert(maxs_.rows() == 1 && maxs_.cols() == X.cols());
+
     fitted_ = true;
 }
 
-Matrix MinMaxScaler::transform(const Matrix &X) const {
+
+Tensor MinMaxScaler::transform(const Tensor &X) const {
     if (!fitted_) {
         throw std::runtime_error("MinMaxScaler must be fitted before calling transform");
+    }
+
+    if (!X.is_matrix()) {
+        throw std::invalid_argument("X must be a rank-2 tensor");
+    }
+
+    if (X.rows() == 0 || X.cols() == 0) {
+        throw std::invalid_argument("Cannot transform an empty tensor");
     }
 
     if (X.cols() != mins_.cols()) {
         throw std::invalid_argument("X must have the same number of columns as the fitted data");
     }
 
-    Matrix result(X.rows(), X.cols());
+    Tensor result({X.rows(), X.cols()});
 
     for (int i = 0; i < X.rows(); i++) {
         for (int j = 0; j < X.cols(); j++) {
@@ -60,19 +79,26 @@ Matrix MinMaxScaler::transform(const Matrix &X) const {
         }
     }
 
+    assert(result.is_matrix());
+    assert(result.rows() == X.rows());
+    assert(result.cols() == X.cols());
+
     return result;
 }
 
-Matrix MinMaxScaler::fit_transform(const Matrix &X) {
+
+Tensor MinMaxScaler::fit_transform(const Tensor &X) {
     fit(X);
     
     return transform(X);
 }
 
-Matrix MinMaxScaler::mins() const {
+
+Tensor MinMaxScaler::mins() const {
     return mins_;
 }
 
-Matrix MinMaxScaler::maxs() const {
+
+Tensor MinMaxScaler::maxs() const {
     return maxs_;
 }

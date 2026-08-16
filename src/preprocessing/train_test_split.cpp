@@ -1,6 +1,7 @@
 #include "preprocessing/train_test_split.hpp"
 
 #include <algorithm>
+#include <cassert>
 #include <random>
 #include <stdexcept>
 #include <vector>
@@ -10,12 +11,20 @@ DatasetSplit train_test_split(
     double test_size,
     bool shuffle
 ) {
+    if (!dataset.X.is_matrix() || !dataset.y.is_matrix()) {
+        throw std::invalid_argument("X and y must be rank-2 tensors");
+    }
+
     if (dataset.X.rows() == 0 || dataset.y.rows() == 0) {
         throw std::invalid_argument("Cannot split an empty dataset");
     }
 
     if (dataset.X.rows() != dataset.y.rows()) {
-        throw std::invalid_argument("X and y must have the same number of columns");
+        throw std::invalid_argument("X and y must have the same number of rows");
+    }
+
+    if (dataset.y.cols() != 1) {
+        throw std::invalid_argument("y must have exactly one column");
     }
 
     if (test_size <= 0.0 || test_size >= 1.0) {
@@ -73,10 +82,23 @@ DatasetSplit train_test_split(
 
     DatasetSplit split;
 
-    split.train.X = Matrix::from_vector(X_train);
-    split.train.y = Matrix::from_vector(y_train);
-    split.test.X = Matrix::from_vector(X_test);
-    split.test.y = Matrix::from_vector(y_test);
+    split.train.X = Tensor::from_vector(X_train);
+    split.train.y = Tensor::from_vector(y_train);
+    split.test.X = Tensor::from_vector(X_test);
+    split.test.y = Tensor::from_vector(y_test);
+
+    assert(split.train.X.is_matrix());
+    assert(split.train.y.is_matrix());
+    assert(split.test.X.is_matrix());
+    assert(split.test.y.is_matrix());
+    assert(split.train.X.rows() == num_train);
+    assert(split.train.y.rows() == num_train);
+    assert(split.test.X.rows() == num_test);
+    assert(split.test.y.rows() == num_test);
+    assert(split.train.X.cols() == dataset.X.cols());
+    assert(split.test.X.cols() == dataset.X.cols());
+    assert(split.train.y.cols() == 1);
+    assert(split.test.y.cols() == 1);
 
     return split;
 }

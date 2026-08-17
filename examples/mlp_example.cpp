@@ -41,7 +41,7 @@ int main(void) {
 
     int input_features = X_train.cols();
     int epochs = 1001;
-    double learning_rate = 1e-5;
+    double learning_rate = 0.01;
 
     MLP.add(std::make_unique<Linear>(input_features, 50));
     MLP.add(std::make_unique<ReLU>());

@@ -16,19 +16,20 @@ root/
 ├── scripts/                    Python dataset prep and shell scripts.
 ├── src/                        Source implementations.
 │   ├── core/                   Core building blocks.
-│   │   ├── activations/        Activation functions and their gradients.
+│   │   ├── activations/        Activation functions and their gradients, also in layer form.
+│   │   ├── layers/             Neural network layers.
 │   │   ├── loss_functions/     Loss functions and their gradients.
 │   │   ├── metrics/            Evaluation metrics.
 │   │   ├── utils/              Helper operations.
 │   │   ├── matrix.cpp          Matrix class and operations (No longer used).
 │   │   └── tensor.cpp          Tensor class and operations.
 │   ├── models/                 Model implementations.
-│   ├── optim/                  Optimizers and parameter update logic.
+│   ├── optim/                  Optimizers and parameter update logic (Not used right now).
 │   └── preprocessing/          Data loading, splitting, and scaling.
 └── tests/                      Correctness checks for core components.
 ```
 
-## Implemented Algorithms
+## Implemented Classical Machine Learning Algorithms
 - [x] Linear Regression
 - [x] Logistic Regression
 - [ ] Ridge / Lasso / Elastic Net
@@ -36,7 +37,9 @@ root/
 - [x] ADALINE
 - [x] Softmax Regression
 - [x] K-Nearest Neighbors
+- [ ] K-Nearest Neighbors Regressor
 - [x] Gaussian Naive Bayes
+- [ ] Multinomial Naive Bayes
 - [x] Decision Tree Classifier
 - [ ] Decision Tree Regressor
 - [x] Random Forest Classifier
@@ -45,4 +48,11 @@ root/
 - [ ] Linear SVM
 - [ ] K-Means Clustering
 - [ ] PCA
-- [ ] Multilayer Perceptron (MLP)
+
+## Neural Network Components
+- [x] Linear Layer
+- [x] Sigmoid
+- [x] ReLU
+- [x] Leaky ReLU
+- [x] tanh
+- [x] GeLU

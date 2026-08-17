@@ -18,11 +18,11 @@ int main(void) {
 
     DatasetSplit split = train_test_split(dataset, 0.2, true);
 
-    Matrix X_train = split.train.X;
-    Matrix X_test = split.test.X;
+    Tensor X_train = split.train.X;
+    Tensor X_test = split.test.X;
 
-    Matrix y_train = split.train.y;
-    Matrix y_test = split.test.y;
+    Tensor y_train = split.train.y;
+    Tensor y_test = split.test.y;
 
     int num_trees = 10;
     int max_depth = 5;
@@ -34,8 +34,8 @@ int main(void) {
     model.fit(X_train, y_train);
     std::cout << "Random Forest model fitted to training data." << "\n";
 
-    Matrix train_predictions = model.predict(X_train);
-    Matrix test_predictions = model.predict(X_test);
+    Tensor train_predictions = model.predict(X_train);
+    Tensor test_predictions = model.predict(X_test);
 
     double train_accuracy = accuracy_score(y_train, train_predictions);
     double test_accuracy = accuracy_score(y_test, test_predictions);

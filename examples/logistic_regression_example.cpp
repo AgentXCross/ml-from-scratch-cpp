@@ -18,11 +18,11 @@ int main(void) {
     DatasetSplit split = train_test_split(dataset, 0.2, true);
 
     StandardScaler scaler;
-    Matrix X_train = scaler.fit_transform(split.train.X);
-    Matrix X_test = scaler.transform(split.test.X);
+    Tensor X_train = scaler.fit_transform(split.train.X);
+    Tensor X_test = scaler.transform(split.test.X);
 
-    Matrix y_train = split.train.y;
-    Matrix y_test = split.test.y;
+    Tensor y_train = split.train.y;
+    Tensor y_test = split.test.y;
 
     LogisticRegression model(X_train.cols());
 
@@ -30,16 +30,16 @@ int main(void) {
     int epochs = 10000;
 
     for (int epoch = 0; epoch < epochs; epoch++) {
-        Matrix probabilities = model.predict_probs(X_train);
+        Tensor probabilities = model.predict_probs(X_train);
 
         double loss = binary_cross_entropy(y_train, probabilities);
-        Matrix dL_dpred = binary_cross_entropy_gradient(y_train, probabilities);
+        Tensor dL_dpred = binary_cross_entropy_gradient(y_train, probabilities);
 
         model.backward(X_train, dL_dpred);
         model.step(learning_rate);
 
         if (epoch % 100 == 0) {
-            Matrix train_predictions = model.predict(X_train);
+            Tensor train_predictions = model.predict(X_train);
             double train_accuracy = accuracy_score(y_train, train_predictions);
 
             std::cout << "Epoch: " << epoch << " | Loss: " << loss << 
@@ -47,8 +47,8 @@ int main(void) {
         }
     }
 
-    Matrix test_probabilities = model.predict_probs(X_test);
-    Matrix test_predictions = model.predict(X_test);
+    Tensor test_probabilities = model.predict_probs(X_test);
+    Tensor test_predictions = model.predict(X_test);
 
     double test_loss = binary_cross_entropy(y_test, test_probabilities);
     double test_accuracy = accuracy_score(y_test, test_predictions);

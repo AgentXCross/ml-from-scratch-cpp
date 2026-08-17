@@ -1,5 +1,5 @@
 #include "models/linear_regression.hpp"
-#include "core/matrix.hpp"
+#include "core/tensor.hpp"
 #include "core/loss_functions/mse.hpp"
 
 #include <iostream>
@@ -8,7 +8,7 @@
 
 int main() {
     // Dataset: y = 2x + 1
-    Matrix X = Matrix::from_vector({
+    Tensor X = Tensor::from_vector({
         {1.0},
         {2.0},
         {3.0},
@@ -29,7 +29,7 @@ int main() {
         {50.0},
     });
 
-    Matrix y = Matrix::from_vector({
+    Tensor y = Tensor::from_vector({
         {3.0},
         {5.0},
         {7.0},
@@ -56,10 +56,10 @@ int main() {
     int epochs = 10000;
 
     for (int epoch = 0; epoch < epochs; epoch++) {
-        Matrix predictions = model.predict(X);
+        Tensor predictions = model.predict(X);
 
         double loss = mean_squared_error(y, predictions);
-        Matrix loss_gradient = mean_squared_error_gradient(y, predictions);
+        Tensor loss_gradient = mean_squared_error_gradient(y, predictions);
 
         model.backward(X, loss_gradient);
         model.step(learning_rate);

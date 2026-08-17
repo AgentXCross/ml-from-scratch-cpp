@@ -18,11 +18,11 @@ int main(void) {
     DatasetSplit split = train_test_split(dataset, 0.2, true);
 
     StandardScaler scaler;
-    Matrix X_train = scaler.fit_transform(split.train.X);
-    Matrix X_test = scaler.transform(split.test.X);
+    Tensor X_train = scaler.fit_transform(split.train.X);
+    Tensor X_test = scaler.transform(split.test.X);
 
-    Matrix y_train = split.train.y;
-    Matrix y_test = split.test.y;
+    Tensor y_train = split.train.y;
+    Tensor y_test = split.test.y;
 
     ADALINE model(X_train.cols());
 
@@ -30,16 +30,16 @@ int main(void) {
     int epochs = 1000;
 
     for (int epoch = 0; epoch < epochs; epoch++) {
-        Matrix raw = model.predict_raw(X_train);
+        Tensor raw = model.predict_raw(X_train);
 
         double loss = mean_squared_error(y_train, raw);
-        Matrix dL_dpred = mean_squared_error_gradient(y_train, raw);
+        Tensor dL_dpred = mean_squared_error_gradient(y_train, raw);
 
         model.backward(X_train, dL_dpred);
         model.step(learning_rate);
 
         if (epoch % 100 == 0) {
-            Matrix train_preds = model.predict(X_train);
+            Tensor train_preds = model.predict(X_train);
             double train_accuracy = accuracy_score(y_train, train_preds);
 
             std::cout << "Epoch: " << epoch << " | Loss: " << loss << 
@@ -47,8 +47,8 @@ int main(void) {
         }
     }
 
-    Matrix test_raw = model.predict_raw(X_test);
-    Matrix test_predictions = model.predict(X_test);
+    Tensor test_raw = model.predict_raw(X_test);
+    Tensor test_predictions = model.predict(X_test);
 
     double test_loss = mean_squared_error(y_test, test_raw);
     double test_accuracy = accuracy_score(y_test, test_predictions);

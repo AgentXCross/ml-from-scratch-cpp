@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 
+// Take probabilities for y_pred
 double binary_cross_entropy(
     const Tensor &y_true,
     const Tensor &y_pred

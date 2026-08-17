@@ -2,6 +2,8 @@
 
 # chmod +x scripts/run_target.sh to make this file executable
 
+# scripts/run_target.sh valid_target to run
+
 set -e
 
 target="$1"
@@ -15,6 +17,7 @@ valid_targets=(
     softmax_regression_example
     naive_bayes_example
     random_forest_example
+    mlp_example
 
     test_matrix
 )

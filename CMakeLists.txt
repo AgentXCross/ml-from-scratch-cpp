@@ -96,7 +96,6 @@ add_library(cpp_ml_models
     src/models/gaussian_naive_bayes.cpp
     src/models/decision_tree_classifier.cpp
     src/models/random_forest_classifier.cpp
-    src/models/mlp.cpp
 )
 target_link_libraries(cpp_ml_models PUBLIC
     cpp_ml_core
@@ -197,4 +196,19 @@ target_link_libraries(random_forest_example
     cpp_ml_models
     cpp_ml_metrics
     cpp_ml_preprocessing
+)
+
+# MLP example
+# cmake --build build --target mlp_example
+add_executable(mlp_example
+    examples/mlp_example.cpp
+)
+target_link_libraries(mlp_example
+    cpp_ml_layers
+    cpp_ml_models
+    cpp_ml_metrics
+    cpp_ml_preprocessing
+    cpp_ml_activations
+    cpp_ml_losses
+    cpp_ml_utils
 )

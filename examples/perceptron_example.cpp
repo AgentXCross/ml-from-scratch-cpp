@@ -17,11 +17,11 @@ int main(void) {
     DatasetSplit split = train_test_split(dataset, 0.2, true);
 
     StandardScaler scaler;
-    Matrix X_train = scaler.fit_transform(split.train.X);
-    Matrix X_test = scaler.transform(split.test.X);
+    Tensor X_train = scaler.fit_transform(split.train.X);
+    Tensor X_test = scaler.transform(split.test.X);
 
-    Matrix y_train = split.train.y;
-    Matrix y_test = split.test.y;
+    Tensor y_train = split.train.y;
+    Tensor y_test = split.test.y;
 
     Perceptron model(X_train.cols());
 
@@ -32,7 +32,7 @@ int main(void) {
         model.train_epoch(X_train, y_train, learning_rate);
 
         if (epoch % 100 == 0) {
-            Matrix train_predictions = model.predict(X_train);
+            Tensor train_predictions = model.predict(X_train);
             double train_accuracy = accuracy_score(y_train, train_predictions);
 
             std::cout << "Epoch: " << epoch <<
@@ -40,7 +40,7 @@ int main(void) {
         }
     }
 
-    Matrix test_predictions = model.predict(X_test);
+    Tensor test_predictions = model.predict(X_test);
     double test_accuracy = accuracy_score(y_test, test_predictions);
 
     std::cout << "\nTest Accuracy: " << test_accuracy << "\n";

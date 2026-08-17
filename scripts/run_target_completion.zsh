@@ -17,6 +17,7 @@ _run_target_completions() {
         softmax_regression_example
         naive_bayes_example
         random_forest_example
+        mlp_example
 
         test_matrix
     )

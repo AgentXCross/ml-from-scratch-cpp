@@ -24,11 +24,13 @@ static int validate_k(int k) {
     return k;
 }
 
+
 KNN::KNN(int k) 
     : X_train_(Tensor()),
       y_train_(Tensor()),
       k_(validate_k(k)),
       fitted_(false) {}
+
 
 void KNN::fit(
     const Tensor &X_train,
@@ -61,6 +63,7 @@ void KNN::fit(
     y_train_ = y_train;
     fitted_ = true;
 }
+
 
 Tensor KNN::predict(const Tensor &X) const {
     if (!fitted_) {
@@ -130,6 +133,7 @@ Tensor KNN::predict(const Tensor &X) const {
 
     return predictions;
 }
+
 
 int KNN::k() const {
     return k_;

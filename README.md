@@ -1,6 +1,6 @@
 # C++ Machine Learning Library from Scratch
 
-Machine learning library built from scratch using the C++ Standard Library. I'm implementing classical machine learning algorithms alongside deep learning components. The goal is to build the library in a PyTorch-style, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
+Machine learning library built from scratch using the C++ Standard Library. Implements classical machine learning algorithms alongside deep learning components. The goal is to build the library in a PyTorch-style, where training loops are explicit and the math behind forward passes, gradient calculations, and parameter updates stays visible.
 
 <p align="center">
   <img src="repo_banner.png" width="90%">

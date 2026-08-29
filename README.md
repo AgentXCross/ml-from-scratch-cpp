@@ -7,6 +7,7 @@ Machine learning library built from scratch using the C++ Standard Library. Impl
 </p>
 
 ## Repo Structure
+
 ```text
 root/
 ├── build/                      CMake build output.
@@ -29,7 +30,8 @@ root/
 └── tests/                      Correctness checks for core components.
 ```
 
-## Implemented Classical Machine Learning Algorithms
+## Classical Machine Learning Algorithms
+
 - [x] Linear Regression
 - [x] Logistic Regression
 - [ ] Ridge / Lasso / Elastic Net
@@ -39,7 +41,9 @@ root/
 - [x] K-Nearest Neighbors
 - [ ] K-Nearest Neighbors Regressor
 - [x] Gaussian Naive Bayes
-- [ ] Multinomial Naive Bayes
+- [ ] Categorical Naive Bayes
+- [ ] Bernoulli Naive Bayes
+- [ ] Mixed Naive Bayes
 - [x] Decision Tree Classifier
 - [ ] Decision Tree Regressor
 - [x] Random Forest Classifier
@@ -50,9 +54,38 @@ root/
 - [ ] PCA
 
 ## Neural Network Components
+
+### Layers
+
 - [x] Linear Layer
+- [ ] Conv1D
+- [ ] Conv2D
+- [ ] MaxPool1D
+- [ ] MaxPool2D
+- [ ] Flatten
+- [ ] Dropout
+- [ ] BatchNorm
+
+### Activations
+
 - [x] Sigmoid
 - [x] ReLU
 - [x] Leaky ReLU
 - [x] tanh
 - [x] GeLU
+- [ ] Softmax (Currently only implemented as a function)
+
+## Loss Functions
+
+- [x] Mean-Square Error (MSE)
+- [x] Mean-Absolute Error (MAE)
+- [ ] Huber Loss
+- [x] Binary Cross-Entropy (BCE)
+- [x] Cross-Entropy
+
+## Utilities
+
+- [x] Sequential
+- [ ] Weight Initialization
+- [ ] Model Save / Load
+- [ ] Train / Eval Mode

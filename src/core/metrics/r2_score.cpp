@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
+
 double r2_score(
     const Tensor &y_true,
     const Tensor &y_pred
@@ -40,4 +42,6 @@ double r2_score(
     }
 
     return 1 - (ss_res / ss_tot);
+}
+
 }

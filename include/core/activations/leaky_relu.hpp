@@ -3,6 +3,8 @@
 #include "core/tensor.hpp"
 #include "core/layers/layer.hpp"
 
+namespace cpp_ml {
+
 Tensor leaky_relu(const Tensor &x, double alpha);
 
 Tensor leaky_relu_gradient(const Tensor &x, double alpha);
@@ -29,3 +31,5 @@ public:
 
     void step(double learning_rate) override;
 };
+
+}

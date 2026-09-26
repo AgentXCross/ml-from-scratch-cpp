@@ -3,6 +3,8 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 Tensor one_hot_encode(
     const Tensor &y,
     int num_classes
@@ -45,4 +47,6 @@ Tensor one_hot_encode(
     assert(result.cols() == num_classes);
 
     return result;
+}
+
 }

@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class StandardScaler {
 private:
     Tensor means_;
@@ -18,3 +20,5 @@ public:
     Tensor means() const;
     Tensor stds() const;
 };
+
+}

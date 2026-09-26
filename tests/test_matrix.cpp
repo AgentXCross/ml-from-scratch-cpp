@@ -5,6 +5,8 @@
 #include <iostream>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 bool close(double a, double b, double tolerance = 1e-9) {
     return std::abs(a - b) < tolerance;
 }
@@ -234,4 +236,6 @@ int main() {
     std::cout << "All Matrix tests passed.\n";
 
     return 0;
+}
+
 }

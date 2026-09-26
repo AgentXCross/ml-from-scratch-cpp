@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
+namespace cpp_ml {
 
 RandomForestClassifier::RandomForestClassifier()
     : trees_(),
@@ -223,4 +224,6 @@ Tensor RandomForestClassifier::predict(const Tensor &X) const {
 
 int RandomForestClassifier::num_trees() const {
     return num_trees_;
+}
+
 }

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 // Take probabilities for y_pred
 double binary_cross_entropy(
@@ -77,4 +78,6 @@ Tensor binary_cross_entropy_gradient(
     }
 
     return dL_dpred;
+}
+
 }

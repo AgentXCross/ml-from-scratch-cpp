@@ -3,6 +3,7 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 LinearRegression::LinearRegression() 
     : weights_(Tensor()), 
@@ -102,4 +103,6 @@ Tensor LinearRegression::weights() const {
 
 Tensor LinearRegression::bias() const {
     return bias_;
+}
+
 }

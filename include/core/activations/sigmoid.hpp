@@ -3,6 +3,8 @@
 #include "core/tensor.hpp"
 #include "core/layers/layer.hpp"
 
+namespace cpp_ml {
+
 Tensor sigmoid(const Tensor &x);
 
 Tensor sigmoid_gradient(const Tensor &x);
@@ -27,3 +29,5 @@ public:
 
     void step(double learning_rate) override;
 };
+
+}

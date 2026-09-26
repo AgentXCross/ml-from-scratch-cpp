@@ -10,32 +10,32 @@
 #include <cmath>
 
 int main(void) {
-    Dataset dataset = read_csv_dataset(
+    cpp_ml::Dataset dataset = cpp_ml::read_csv_dataset(
         "data/wisconsin_breast_cancer.csv",
         30,
         true
     );
 
-    DatasetSplit split = train_test_split(dataset, 0.2, true);
+    cpp_ml::DatasetSplit split = cpp_ml::train_test_split(dataset, 0.2, true);
 
-    Tensor X_train = split.train.X;
-    Tensor X_test = split.test.X;
+    cpp_ml::Tensor X_train = split.train.X;
+    cpp_ml::Tensor X_test = split.test.X;
 
-    Tensor y_train = split.train.y;
-    Tensor y_test = split.test.y;
+    cpp_ml::Tensor y_train = split.train.y;
+    cpp_ml::Tensor y_test = split.test.y;
 
     int num_trees = 10;
     int max_depth = 5;
     int min_samples_split = 4;
     int max_features = static_cast<double> (std::sqrt(X_train.cols()));
 
-    RandomForestClassifier model(num_trees, max_depth, min_samples_split, max_features);
+    cpp_ml::RandomForestClassifier model(num_trees, max_depth, min_samples_split, max_features);
 
     model.fit(X_train, y_train);
     std::cout << "Random Forest model fitted to training data." << "\n";
 
-    Tensor train_predictions = model.predict(X_train);
-    Tensor test_predictions = model.predict(X_test);
+    cpp_ml::Tensor train_predictions = model.predict(X_train);
+    cpp_ml::Tensor test_predictions = model.predict(X_test);
 
     double train_accuracy = accuracy_score(y_train, train_predictions);
     double test_accuracy = accuracy_score(y_test, test_predictions);

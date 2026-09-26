@@ -1,5 +1,7 @@
 #include "core/utils/threshold.hpp"
 
+namespace cpp_ml {
+
 Tensor threshold(
     const Tensor &x, 
     double cutoff,
@@ -21,4 +23,6 @@ Tensor threshold(
     }
 
     return result;
+}
+
 }

@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 Tensor sigmoid(const Tensor &x) {
     if (x.empty()) {
@@ -70,4 +71,6 @@ Tensor Sigmoid::backward(const Tensor &dL_dout) {
 void Sigmoid::step(double learning_rate) {
     (void) learning_rate;
     // Sigmoid has no learnable parameters
+}
+
 }

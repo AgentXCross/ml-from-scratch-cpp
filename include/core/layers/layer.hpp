@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class Layer {
 public:
     virtual ~Layer() = default;
@@ -31,3 +33,5 @@ public:
     */
     virtual void step(double learning_rate) = 0;
 };
+
+}

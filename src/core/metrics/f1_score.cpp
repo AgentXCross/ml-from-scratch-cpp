@@ -3,6 +3,7 @@
 #include "core/metrics/precision.hpp"
 #include "core/metrics/recall.hpp"
 
+namespace cpp_ml {
 
 double f1_score(
     const Tensor &y_true,
@@ -19,3 +20,4 @@ double f1_score(
     return (2.0 * precision * recall) / (precision + recall);
 }
 
+}

@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 
+namespace cpp_ml {
+
 class RandomForestClassifier {
 private:
     // owns each DecisionTreeClassifier through a unique_ptr
@@ -39,3 +41,5 @@ public:
 
     int num_trees() const;
 };
+
+}

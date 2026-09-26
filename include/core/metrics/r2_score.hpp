@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 /*
 Coefficient of determination (R^2 score) between the true and
 predicted values.
@@ -16,3 +18,5 @@ double r2_score(
     const Tensor &y_true,
     const Tensor &y_pred
 );
+
+}

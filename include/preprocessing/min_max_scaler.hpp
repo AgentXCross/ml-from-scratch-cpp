@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class MinMaxScaler {
 private:
     Tensor mins_;
@@ -18,3 +20,5 @@ public:
     Tensor mins() const;
     Tensor maxs() const;
 };
+
+}

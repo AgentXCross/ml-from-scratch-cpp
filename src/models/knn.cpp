@@ -9,6 +9,8 @@
 #include <utility>
 #include <vector>
 
+namespace cpp_ml {
+
 KNN::KNN() 
     : X_train_(Tensor()),
       y_train_(Tensor()),
@@ -137,4 +139,6 @@ Tensor KNN::predict(const Tensor &X) const {
 
 int KNN::k() const {
     return k_;
+}
+
 }

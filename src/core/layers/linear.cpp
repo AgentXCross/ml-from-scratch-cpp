@@ -3,6 +3,8 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 Linear::Linear() {
     weights_ = Tensor();
     bias_ = Tensor();
@@ -26,8 +28,8 @@ Linear::Linear(
         throw std::invalid_argument("out_features must be positive");
     }
 
-    weights_ = Tensor::random({in_features, out_features}, -0.01, 0.01);
-    bias_ = Tensor::random({1, out_features}, -0.01, 0.01);
+    weights_ = Tensor::random({in_features, out_features}, -0.1, 0.1);
+    bias_ = Tensor::random({1, out_features}, -0.1, 0.1);
 
     input_ = Tensor();
 
@@ -122,4 +124,6 @@ Tensor Linear::weights() const {
 
 Tensor Linear::bias() const {
     return bias_;
+}
+
 }

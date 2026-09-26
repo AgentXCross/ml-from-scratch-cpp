@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class GaussianNaiveBayes {
 private:
     Tensor means_; // (num_classes, num_features), means for every combination of class and feature
@@ -45,3 +47,5 @@ public:
 
     int num_classes() const;
 };
+
+}

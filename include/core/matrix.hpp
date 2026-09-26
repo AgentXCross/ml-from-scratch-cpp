@@ -1,11 +1,11 @@
-// matrix.hpp
-
-# pragma once
+#pragma once
 
 #include <iostream>
 #include <vector>
 #include <initializer_list>
 #include <utility>
+
+namespace cpp_ml {
 
 class Matrix {
 private:
@@ -59,3 +59,5 @@ public:
         const std::vector<std::vector<double>> &values
     );
 };
+
+}

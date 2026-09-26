@@ -2,6 +2,7 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
 
 /*
 accuracy_score returns # correct / # total for an arbitrary # of classes
@@ -11,3 +12,5 @@ double accuracy_score(
     const Tensor &y_true,
     const Tensor &y_pred
 );
+
+}

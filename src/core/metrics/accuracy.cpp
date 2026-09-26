@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
 
 double accuracy_score(
     const Tensor &y_true,
@@ -25,4 +26,6 @@ double accuracy_score(
     }
 
     return static_cast<double> (num_correct) / num_elements;
+}
+
 }

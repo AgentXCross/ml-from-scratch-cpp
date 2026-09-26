@@ -6,6 +6,8 @@
 #include <stdexcept>
 #include <vector>
 
+namespace cpp_ml {
+
 DatasetSplit train_test_split(
     const Dataset &dataset,
     double test_size,
@@ -101,4 +103,6 @@ DatasetSplit train_test_split(
     assert(split.test.y.cols() == 1);
 
     return split;
+}
+
 }

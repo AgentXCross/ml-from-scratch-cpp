@@ -5,6 +5,8 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 SoftmaxRegression::SoftmaxRegression()
     : weights_(Tensor()),
       bias_(Tensor()),
@@ -130,4 +132,6 @@ Tensor SoftmaxRegression::weights() const {
 
 Tensor SoftmaxRegression::bias() const {
     return bias_;
+}
+
 }

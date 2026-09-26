@@ -5,6 +5,7 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 ADALINE::ADALINE() 
     : weights_(Tensor()),
@@ -108,4 +109,6 @@ Tensor ADALINE::weights() const {
 
 Tensor ADALINE::bias() const {
     return bias_;
+}
+
 }

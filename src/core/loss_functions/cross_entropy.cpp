@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 double cross_entropy(
     const Tensor &y_true,
@@ -61,4 +62,6 @@ Tensor cross_entropy_gradient(
     Tensor dL_dlogits = y_probs - y_true;
 
     return dL_dlogits / y_true.rows();
+}
+
 }

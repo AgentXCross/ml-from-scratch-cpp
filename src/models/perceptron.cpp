@@ -5,6 +5,8 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 Perceptron::Perceptron() 
     : weights_(Tensor()),
       bias_(Tensor()) {}
@@ -99,4 +101,6 @@ Tensor Perceptron::weights() const {
 
 Tensor Perceptron::bias() const {
     return bias_;
+}
+
 }

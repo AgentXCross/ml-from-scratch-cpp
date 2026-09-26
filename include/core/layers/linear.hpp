@@ -2,6 +2,8 @@
 
 #include "core/layers/layer.hpp"
 
+namespace cpp_ml {
+
 class Linear : public Layer {
 private:
     Tensor weights_; // W: (in_features, out_features)
@@ -67,3 +69,5 @@ public:
     Tensor weights() const;
     Tensor bias() const;
 };
+
+}

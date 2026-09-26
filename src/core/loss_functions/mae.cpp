@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
 
 double mean_absolute_error(
     const Tensor &y_true,
@@ -55,4 +56,6 @@ Tensor mean_absolute_error_gradient(
     }
 
     return dL_dpred;
+}
+
 }

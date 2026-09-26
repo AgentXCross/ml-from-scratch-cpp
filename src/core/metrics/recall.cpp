@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
 
 double recall_score(
     const Tensor &y_true,
@@ -35,4 +36,6 @@ double recall_score(
     }
 
     return static_cast<double> (tp) / (tp + fn);
+}
+
 }

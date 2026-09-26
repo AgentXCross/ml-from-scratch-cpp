@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
+
 double mean_squared_error(
     const Tensor &y_true,
     const Tensor &y_pred
@@ -42,4 +44,6 @@ Tensor mean_squared_error_gradient(
     Tensor dL_dpred = (y_pred - y_true) * (2.0 / y_true.size());
 
     return dL_dpred;
+}
+
 }

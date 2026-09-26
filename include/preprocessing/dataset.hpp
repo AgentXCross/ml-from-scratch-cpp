@@ -4,6 +4,8 @@
 
 #include <string>
 
+namespace cpp_ml {
+
 struct Dataset {
     Tensor X;
     Tensor y;
@@ -15,3 +17,5 @@ Dataset read_csv_dataset(
     int label_column,
     bool has_header = true
 );
+
+}

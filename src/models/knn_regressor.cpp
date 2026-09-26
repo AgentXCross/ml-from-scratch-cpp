@@ -8,6 +8,8 @@
 #include <utility>
 #include <vector>
 
+namespace cpp_ml {
+
 KNNRegressor::KNNRegressor() 
     : X_train_(Tensor()),
       y_train_(Tensor()),
@@ -132,4 +134,6 @@ Tensor KNNRegressor::predict(const Tensor &X) const {
 
 int KNNRegressor::k() const {
     return k_;
+}
+
 }

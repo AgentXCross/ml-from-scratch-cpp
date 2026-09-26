@@ -4,6 +4,8 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 GaussianNaiveBayes::GaussianNaiveBayes() 
     : means_(Tensor()),
       variances_(Tensor()),
@@ -243,4 +245,6 @@ Tensor GaussianNaiveBayes::priors() const {
 
 int GaussianNaiveBayes::num_classes() const {
     return num_classes_;
+}
+
 }

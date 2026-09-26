@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 double euclidean_distance(
     const Tensor &a,
     const Tensor &b
@@ -18,4 +20,6 @@ double euclidean_distance(
     Tensor difference = a - b;
 
     return std::sqrt(difference.square().sum());
+}
+
 }

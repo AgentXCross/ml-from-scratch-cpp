@@ -6,6 +6,8 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 LogisticRegression::LogisticRegression()
     : weights_(Tensor()),
       bias_(Tensor()),
@@ -129,4 +131,6 @@ Tensor LogisticRegression::weights() const {
 
 Tensor LogisticRegression::bias() const {
     return bias_;
+}
+
 }

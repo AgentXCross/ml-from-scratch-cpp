@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class LogisticRegression {
 private:
     Tensor weights_;
@@ -24,3 +26,5 @@ public:
     Tensor weights() const;
     Tensor bias() const;
 };
+
+}

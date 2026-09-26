@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 static const double pi = 3.14159265358979323846;
 
 Tensor gelu(const Tensor &x) {
@@ -83,4 +85,6 @@ Tensor GELU::backward(const Tensor &dL_dout) {
 void GELU::step(double learning_rate) {
     (void) learning_rate;
     // GeLU has no learnable parameters
+}
+
 }

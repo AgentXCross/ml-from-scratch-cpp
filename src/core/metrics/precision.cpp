@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
 
 double precision_score(
     const Tensor &y_true,
@@ -37,4 +38,6 @@ double precision_score(
     }
 
     return static_cast<double> (tp) / (tp + fp);
+}
+
 }

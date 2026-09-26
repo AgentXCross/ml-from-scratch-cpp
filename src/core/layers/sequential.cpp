@@ -3,6 +3,7 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 Sequential::Sequential()
     : layers_(std::vector<std::unique_ptr<Layer>>()) {}
@@ -66,4 +67,6 @@ void Sequential::step(double learning_rate) {
 
 int Sequential::size() const {
     return static_cast<int>(layers_.size());
+}
+
 }

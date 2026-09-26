@@ -6,6 +6,7 @@
 #include <random>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 Tensor::Tensor() 
     : data_(std::vector<double>{0.0}),
@@ -13,7 +14,7 @@ Tensor::Tensor()
 
 
 Tensor::Tensor(double scalar) 
-    : data_(std::vector<double>(scalar)),
+    : data_(std::vector<double>{scalar}),
       shape_(std::vector<int>()) {}
 
 
@@ -1191,4 +1192,6 @@ Tensor Tensor::pow(double exponent) const {
     }
 
     return result;
+}
+
 }

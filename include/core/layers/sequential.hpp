@@ -6,6 +6,8 @@
 #include <memory>
 #include <vector>
 
+namespace cpp_ml {
+
 class Sequential {
 private:
     std::vector<std::unique_ptr<Layer>> layers_;
@@ -23,3 +25,5 @@ public:
 
     int size() const;
 };
+
+}

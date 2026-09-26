@@ -2,7 +2,7 @@
 
 #include <vector>
 
-
+namespace cpp_ml {
 /*
 Tensor class.
 
@@ -127,3 +127,5 @@ public:
     Tensor log() const;
     Tensor pow(double exponent) const;
 };
+
+}

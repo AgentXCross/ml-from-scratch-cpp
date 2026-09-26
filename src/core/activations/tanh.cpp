@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 Tensor tanh(const Tensor &x) {
     if (x.empty()) {
@@ -69,4 +70,6 @@ Tensor Tanh::backward(const Tensor &dL_dout) {
 void Tanh::step(double learning_rate) {
     (void) learning_rate;
     // Tanh has no learnable parameters
+}
+
 }

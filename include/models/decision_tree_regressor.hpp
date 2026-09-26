@@ -2,18 +2,17 @@
 
 #include "core/tensor.hpp"
 
-#include <cstddef>
 #include <memory>
 #include <random>
 
 namespace cpp_ml {
 
 struct DecisionTreeNode {
-    bool is_leaf; // A leaf is a terminal node in a decision tree that makes the prediction
+    bool is_leaf; // leaf nodes store the Decision Tree's final value
 
-    int feature_index; // Which feature this node considers
-    double threshold; // Threshold value of the feature
-    double prediction; // Prediction value if this node is a leaf
+    int feature_index; // feature index considered by this node
+    double threshold; // threshold on the feature
+    double prediction; // prediction value if this node is a leaf
 
     std::unique_ptr<DecisionTreeNode> left;
     std::unique_ptr<DecisionTreeNode> right;
@@ -21,7 +20,7 @@ struct DecisionTreeNode {
     DecisionTreeNode();
 };
 
-class DecisionTreeClassifier {
+class DecisionTreeRegressor {
 private:
     std::unique_ptr<DecisionTreeNode> root_;
 
@@ -35,22 +34,22 @@ private:
     bool fitted_;
 
     std::unique_ptr<DecisionTreeNode> build_tree(
-        const Tensor &X,
-        const Tensor &y,
-        int depth // stores the current depth as we recurse
+        const Tensor& X,
+        const Tensor& y,
+        int depth
     );
 
     double predict_sample(
-        const Tensor &x,
-        const DecisionTreeNode *node
-    ) const;
+        const Tensor& x,
+        const DecisionTreeNode* node
+    );
 
 public:
-    DecisionTreeClassifier();
-    DecisionTreeClassifier(
-        int max_depth, 
+    DecisionTreeRegressor();
+    DecisionTreeRegressor(
+        int max_depth,
         int min_samples_split,
-        int max_features = 0, // 0 means to use all features
+        int max_features = 0, // 0 means use all the features
         unsigned int random_seed = 42
     );
 

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 
+namespace cpp_ml {
 
 Tensor relu(const Tensor &x) {
     if (x.empty()) {
@@ -68,4 +69,6 @@ Tensor ReLU::backward(const Tensor &dL_dout) {
 void ReLU::step(double learning_rate) {
     (void) learning_rate;
     // ReLU has no trainable parameters
+}
+
 }

@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class SoftmaxRegression {
 private:
     Tensor weights_;
@@ -27,3 +29,5 @@ public:
     Tensor weights() const;
     Tensor bias() const;
 };
+
+}

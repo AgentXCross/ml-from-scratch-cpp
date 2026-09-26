@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <random>
 
+namespace cpp_ml {
+
 Matrix::Matrix() {
     rows_ = 0;
     cols_ = 0;
@@ -214,4 +216,6 @@ Matrix Matrix::from_vector(
     }
 
     return result;
+}
+
 }

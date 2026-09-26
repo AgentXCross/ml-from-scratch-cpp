@@ -3,6 +3,8 @@
 #include <cassert>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 MinMaxScaler::MinMaxScaler()
     : mins_(Tensor()),
       maxs_(Tensor()),
@@ -101,4 +103,6 @@ Tensor MinMaxScaler::mins() const {
 
 Tensor MinMaxScaler::maxs() const {
     return maxs_;
+}
+
 }

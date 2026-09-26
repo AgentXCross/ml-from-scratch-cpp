@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 // row-wise softmax for rank-2 Tensors only
 Tensor softmax(const Tensor &x) {
     if (!x.is_matrix()) {
@@ -23,4 +25,6 @@ Tensor softmax(const Tensor &x) {
     }
 
     return result;
+}
+
 }

@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <vector>
 
+namespace cpp_ml {
 
 Dataset read_csv_dataset(
     const std::string &filepath,
@@ -78,4 +79,6 @@ Dataset read_csv_dataset(
     assert(dataset.y.cols() == 1);
 
     return dataset;
+}
+
 }

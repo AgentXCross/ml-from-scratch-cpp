@@ -2,6 +2,7 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
 
 /*
 precision_score returns the precision = TP / (TP + FP)
@@ -12,3 +13,5 @@ double precision_score(
     const Tensor &y_pred,
     double positive_class = 1.0
 );
+
+}

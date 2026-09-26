@@ -4,6 +4,8 @@
 #include <cmath>
 #include <stdexcept>
 
+namespace cpp_ml {
+
 StandardScaler::StandardScaler()
     : means_(Tensor()),
       stds_(Tensor()),
@@ -105,4 +107,6 @@ Tensor StandardScaler::means() const {
 
 Tensor StandardScaler::stds() const {
     return stds_;
+}
+
 }

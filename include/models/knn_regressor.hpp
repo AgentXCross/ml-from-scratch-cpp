@@ -2,6 +2,8 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
+
 class KNNRegressor {
 private:
     Tensor X_train_;
@@ -22,3 +24,5 @@ public:
 
     int k() const;
 };
+
+}

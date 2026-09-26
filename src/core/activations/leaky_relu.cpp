@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+namespace cpp_ml {
+
 Tensor leaky_relu(const Tensor &x, double alpha) {
     if (x.empty()) {
         throw std::invalid_argument("Cannot compute Leaky ReLU of an empty tensor");
@@ -86,4 +88,6 @@ Tensor LeakyReLU::backward(const Tensor &dL_dout) {
 void LeakyReLU::step(double learning_rate) {
     (void) learning_rate;
     // LeakyReLU has no learnable parameters
+}
+
 }

@@ -2,6 +2,7 @@
 
 #include "core/tensor.hpp"
 
+namespace cpp_ml {
 
 /*
 f1_score returns the F1 score = 2 * precision * recall / (precision + recall)
@@ -12,3 +13,5 @@ double f1_score(
     const Tensor &y_pred,
     double positive_class = 1.0
 );
+
+}

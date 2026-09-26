@@ -2,6 +2,8 @@
 
 #include "preprocessing/dataset.hpp"
 
+namespace cpp_ml {
+
 struct DatasetSplit {
     Dataset train;
     Dataset test;
@@ -12,3 +14,5 @@ DatasetSplit train_test_split(
     double test_size = 0.2,
     bool shuffle = true
 );
+
+}

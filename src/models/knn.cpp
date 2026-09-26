@@ -1,6 +1,6 @@
-#include "models/knn.hpp"
+#include "cpp_ml/models/knn.hpp"
 
-#include "core/utils/euclidean_distance.hpp"
+#include "cpp_ml/core/utils/euclidean_distance.hpp"
 
 #include <algorithm>
 #include <cassert>

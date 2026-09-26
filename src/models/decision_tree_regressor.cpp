@@ -1,4 +1,4 @@
-#include "models/decision_tree_regressor.hpp"
+#include "cpp_ml/models/decision_tree_regressor.hpp"
 
 namespace cpp_ml {
 

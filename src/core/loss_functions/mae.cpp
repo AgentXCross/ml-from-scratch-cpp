@@ -1,4 +1,4 @@
-#include "core/loss_functions/mae.hpp"
+#include "cpp_ml/core/loss_functions/mae.hpp"
 
 #include <stdexcept>
 

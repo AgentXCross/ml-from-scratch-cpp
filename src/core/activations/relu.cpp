@@ -1,4 +1,4 @@
-#include "core/activations/relu.hpp"
+#include "cpp_ml/core/activations/relu.hpp"
 
 #include <algorithm>
 #include <stdexcept>

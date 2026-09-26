@@ -1,4 +1,4 @@
-#include "core/loss_functions/mse.hpp"
+#include "cpp_ml/core/loss_functions/mse.hpp"
 
 #include <stdexcept>
 

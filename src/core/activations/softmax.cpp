@@ -1,4 +1,4 @@
-#include "core/activations/softmax.hpp"
+#include "cpp_ml/core/activations/softmax.hpp"
 
 #include <cmath>
 #include <stdexcept>

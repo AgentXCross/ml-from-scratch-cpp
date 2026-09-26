@@ -1,4 +1,4 @@
-#include "preprocessing/standard_scaler.hpp"
+#include "cpp_ml/preprocessing/standard_scaler.hpp"
 
 #include <cassert>
 #include <cmath>

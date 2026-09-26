@@ -1,4 +1,4 @@
-#include "core/activations/tanh.hpp"
+#include "cpp_ml/core/activations/tanh.hpp"
 
 #include <cmath>
 #include <stdexcept>

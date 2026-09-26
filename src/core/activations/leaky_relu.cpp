@@ -1,4 +1,4 @@
-#include "core/activations/leaky_relu.hpp"
+#include "cpp_ml/core/activations/leaky_relu.hpp"
 
 #include <stdexcept>
 

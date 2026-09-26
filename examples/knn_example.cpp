@@ -1,9 +1,9 @@
-#include "models/knn.hpp"
+#include "cpp_ml/models/knn.hpp"
 
-#include "core/metrics/accuracy.hpp"
-#include "preprocessing/dataset.hpp"
-#include "preprocessing/standard_scaler.hpp"
-#include "preprocessing/train_test_split.hpp"
+#include "cpp_ml/core/metrics/accuracy.hpp"
+#include "cpp_ml/preprocessing/dataset.hpp"
+#include "cpp_ml/preprocessing/standard_scaler.hpp"
+#include "cpp_ml/preprocessing/train_test_split.hpp"
 
 #include <iostream>
 

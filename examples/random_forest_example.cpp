@@ -1,10 +1,10 @@
-#include "models/random_forest_classifier.hpp"
+#include "cpp_ml/models/random_forest_classifier.hpp"
 
-#include "preprocessing/dataset.hpp"
-#include "preprocessing/train_test_split.hpp"
+#include "cpp_ml/preprocessing/dataset.hpp"
+#include "cpp_ml/preprocessing/train_test_split.hpp"
 
-#include "core/metrics/accuracy.hpp"
-#include "core/metrics/f1_score.hpp"
+#include "cpp_ml/core/metrics/accuracy.hpp"
+#include "cpp_ml/core/metrics/f1_score.hpp"
 
 #include <iostream>
 #include <cmath>

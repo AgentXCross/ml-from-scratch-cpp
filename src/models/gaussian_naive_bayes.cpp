@@ -1,4 +1,4 @@
-#include "models/gaussian_naive_bayes.hpp"
+#include "cpp_ml/models/gaussian_naive_bayes.hpp"
 
 #include <cassert>
 #include <cmath>

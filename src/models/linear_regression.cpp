@@ -1,4 +1,4 @@
-#include "models/linear_regression.hpp"
+#include "cpp_ml/models/linear_regression.hpp"
 
 #include <cassert>
 #include <stdexcept>

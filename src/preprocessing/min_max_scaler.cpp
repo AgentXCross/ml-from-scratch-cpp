@@ -1,4 +1,4 @@
-#include "preprocessing/min_max_scaler.hpp"
+#include "cpp_ml/preprocessing/min_max_scaler.hpp"
 
 #include <cassert>
 #include <stdexcept>

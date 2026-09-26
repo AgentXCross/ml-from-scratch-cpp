@@ -1,4 +1,4 @@
-#include "core/metrics/accuracy.hpp"
+#include "cpp_ml/core/metrics/accuracy.hpp"
 
 #include <stdexcept>
 

@@ -1,6 +1,6 @@
-#include "models/linear_regression.hpp"
-#include "core/tensor.hpp"
-#include "core/loss_functions/mse.hpp"
+#include "cpp_ml/models/linear_regression.hpp"
+#include "cpp_ml/core/tensor.hpp"
+#include "cpp_ml/core/loss_functions/mse.hpp"
 
 #include <iostream>
 

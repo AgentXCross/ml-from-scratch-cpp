@@ -1,7 +1,7 @@
-#include "core/metrics/f1_score.hpp"
+#include "cpp_ml/core/metrics/f1_score.hpp"
 
-#include "core/metrics/precision.hpp"
-#include "core/metrics/recall.hpp"
+#include "cpp_ml/core/metrics/precision.hpp"
+#include "cpp_ml/core/metrics/recall.hpp"
 
 namespace cpp_ml {
 

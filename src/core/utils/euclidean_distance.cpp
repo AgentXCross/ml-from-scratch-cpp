@@ -1,4 +1,4 @@
-#include "core/utils/euclidean_distance.hpp"
+#include "cpp_ml/core/utils/euclidean_distance.hpp"
 
 #include <cmath>
 #include <stdexcept>

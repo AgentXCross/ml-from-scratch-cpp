@@ -1,6 +1,6 @@
-#include "models/softmax_regression.hpp"
+#include "cpp_ml/models/softmax_regression.hpp"
 
-#include "core/activations/softmax.hpp"
+#include "cpp_ml/core/activations/softmax.hpp"
 
 #include <cassert>
 #include <stdexcept>

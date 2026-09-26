@@ -1,4 +1,4 @@
-#include "core/activations/gelu.hpp"
+#include "cpp_ml/core/activations/gelu.hpp"
 
 #include <cmath>
 #include <stdexcept>

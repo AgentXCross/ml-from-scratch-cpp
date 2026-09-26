@@ -1,4 +1,4 @@
-#include "core/layers/sequential.hpp"
+#include "cpp_ml/core/layers/sequential.hpp"
 
 #include <cassert>
 #include <stdexcept>

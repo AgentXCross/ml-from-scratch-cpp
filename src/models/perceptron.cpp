@@ -1,6 +1,6 @@
-#include "models/perceptron.hpp"
+#include "cpp_ml/models/perceptron.hpp"
 
-#include "core/utils/threshold.hpp"
+#include "cpp_ml/core/utils/threshold.hpp"
 
 #include <cassert>
 #include <stdexcept>

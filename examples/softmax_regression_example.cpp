@@ -1,11 +1,11 @@
-#include "models/softmax_regression.hpp"
+#include "cpp_ml/models/softmax_regression.hpp"
 
-#include "core/loss_functions/cross_entropy.hpp"
-#include "preprocessing/dataset.hpp"
-#include "preprocessing/standard_scaler.hpp"
-#include "preprocessing/train_test_split.hpp"
-#include "preprocessing/one_hot_encode.hpp"
-#include "core/metrics/accuracy.hpp"
+#include "cpp_ml/core/loss_functions/cross_entropy.hpp"
+#include "cpp_ml/preprocessing/dataset.hpp"
+#include "cpp_ml/preprocessing/standard_scaler.hpp"
+#include "cpp_ml/preprocessing/train_test_split.hpp"
+#include "cpp_ml/preprocessing/one_hot_encode.hpp"
+#include "cpp_ml/core/metrics/accuracy.hpp"
 
 #include <iostream>
 

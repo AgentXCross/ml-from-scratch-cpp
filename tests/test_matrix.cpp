@@ -1,4 +1,4 @@
-#include "core/matrix.hpp"
+#include "cpp_ml/core/matrix.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -218,7 +218,11 @@ void test_row_extraction() {
     assert(close(row.at(0, 2), 6.0));
 }
 
+}
+
 int main() {
+    using namespace cpp_ml;
+
     test_constructor_and_shape();
     test_default_values_are_zero();
     test_from_vector();
@@ -236,6 +240,4 @@ int main() {
     std::cout << "All Matrix tests passed.\n";
 
     return 0;
-}
-
 }

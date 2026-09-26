@@ -1,22 +1,22 @@
-#include "core/layers/sequential.hpp"
-#include "core/layers/linear.hpp"
-#include "core/layers/layer.hpp"
+#include "cpp_ml/core/layers/sequential.hpp"
+#include "cpp_ml/core/layers/linear.hpp"
+#include "cpp_ml/core/layers/layer.hpp"
 
-#include "core/activations/relu.hpp"
-#include "core/activations/sigmoid.hpp"
+#include "cpp_ml/core/activations/relu.hpp"
+#include "cpp_ml/core/activations/sigmoid.hpp"
 
-#include "core/loss_functions/binary_cross_entropy.hpp"
+#include "cpp_ml/core/loss_functions/binary_cross_entropy.hpp"
 
-#include "core/utils/threshold.hpp"
+#include "cpp_ml/core/utils/threshold.hpp"
 
-#include "preprocessing/dataset.hpp"
-#include "preprocessing/standard_scaler.hpp"
-#include "preprocessing/train_test_split.hpp"
+#include "cpp_ml/preprocessing/dataset.hpp"
+#include "cpp_ml/preprocessing/standard_scaler.hpp"
+#include "cpp_ml/preprocessing/train_test_split.hpp"
 
-#include "core/metrics/accuracy.hpp"
-#include "core/metrics/f1_score.hpp"
-#include "core/metrics/precision.hpp"
-#include "core/metrics/recall.hpp"
+#include "cpp_ml/core/metrics/accuracy.hpp"
+#include "cpp_ml/core/metrics/f1_score.hpp"
+#include "cpp_ml/core/metrics/precision.hpp"
+#include "cpp_ml/core/metrics/recall.hpp"
 
 #include <iostream>
 #include <memory>

@@ -1,6 +1,6 @@
-#include "models/adaline.hpp"
+#include "cpp_ml/models/adaline.hpp"
 
-#include "core/utils/threshold.hpp"
+#include "cpp_ml/core/utils/threshold.hpp"
 
 #include <cassert>
 #include <stdexcept>

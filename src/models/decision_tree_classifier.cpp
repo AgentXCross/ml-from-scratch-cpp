@@ -1,6 +1,6 @@
-#include "models/decision_tree_classifier.hpp"
+#include "cpp_ml/models/decision_tree_classifier.hpp"
 
-#include "core/utils/tree_utils.hpp"
+#include "cpp_ml/core/utils/tree_utils.hpp"
 
 #include <algorithm>
 #include <cassert>

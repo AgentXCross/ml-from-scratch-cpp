@@ -1,10 +1,10 @@
-#include "models/adaline.hpp"
+#include "cpp_ml/models/adaline.hpp"
 
-#include "core/loss_functions/mse.hpp"
-#include "core/metrics/accuracy.hpp"
-#include "preprocessing/dataset.hpp"
-#include "preprocessing/standard_scaler.hpp"
-#include "preprocessing/train_test_split.hpp"
+#include "cpp_ml/core/loss_functions/mse.hpp"
+#include "cpp_ml/core/metrics/accuracy.hpp"
+#include "cpp_ml/preprocessing/dataset.hpp"
+#include "cpp_ml/preprocessing/standard_scaler.hpp"
+#include "cpp_ml/preprocessing/train_test_split.hpp"
 
 #include <iostream>
 

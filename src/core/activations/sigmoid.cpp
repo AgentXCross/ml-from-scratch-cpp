@@ -1,4 +1,4 @@
-#include "core/activations/sigmoid.hpp"
+#include "cpp_ml/core/activations/sigmoid.hpp"
 
 #include <cmath>
 #include <stdexcept>

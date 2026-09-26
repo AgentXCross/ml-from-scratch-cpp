@@ -1,4 +1,4 @@
-#include "core/loss_functions/binary_cross_entropy.hpp"
+#include "cpp_ml/core/loss_functions/binary_cross_entropy.hpp"
 
 #include <cmath>
 #include <stdexcept>

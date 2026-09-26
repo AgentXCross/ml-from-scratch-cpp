@@ -1,0 +1,29 @@
+#pragma once
+
+#include "cpp_ml/core/layers/layer.hpp"
+#include "cpp_ml/core/tensor.hpp"
+
+#include <memory>
+#include <vector>
+
+namespace cpp_ml {
+
+class Sequential {
+private:
+    std::vector<std::unique_ptr<Layer>> layers_;
+
+public:
+    Sequential();
+
+    void add(std::unique_ptr<Layer> layer);
+
+    Tensor forward(const Tensor &X);
+
+    Tensor backward(const Tensor &dL_dout);
+
+    void step(double learning_rate);
+
+    int size() const;
+};
+
+}

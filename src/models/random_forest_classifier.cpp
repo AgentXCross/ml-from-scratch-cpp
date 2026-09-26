@@ -1,4 +1,4 @@
-#include "models/random_forest_classifier.hpp"
+#include "cpp_ml/models/random_forest_classifier.hpp"
 
 #include <cassert>
 #include <map>

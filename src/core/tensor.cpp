@@ -1,4 +1,4 @@
-#include "core/tensor.hpp"
+#include "cpp_ml/core/tensor.hpp"
 
 #include <cmath>
 #include <iostream>

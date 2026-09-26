@@ -1,7 +1,7 @@
-#include "models/logistic_regression.hpp"
+#include "cpp_ml/models/logistic_regression.hpp"
 
-#include "core/activations/sigmoid.hpp"
-#include "core/utils/threshold.hpp"
+#include "cpp_ml/core/activations/sigmoid.hpp"
+#include "cpp_ml/core/utils/threshold.hpp"
 
 #include <cassert>
 #include <stdexcept>

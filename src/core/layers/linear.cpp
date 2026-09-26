@@ -1,4 +1,4 @@
-#include "core/layers/linear.hpp"
+#include "cpp_ml/core/layers/linear.hpp"
 
 #include <cassert>
 #include <stdexcept>

@@ -1,4 +1,4 @@
-#include "core/matrix.hpp"
+#include "cpp_ml/core/matrix.hpp"
 #include <stdexcept>
 #include <random>
 

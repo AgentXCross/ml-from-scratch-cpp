@@ -141,7 +141,7 @@ bool find_best_split(
 }
 
 
-DecisionTreeNode::DecisionTreeNode()
+DecisionTreeClassifierNode::DecisionTreeClassifierNode()
     : is_leaf(false),
       feature_index(-1),
       threshold(0.0),
@@ -240,7 +240,7 @@ else:
     split data
     recursively build the left and right children
 */
-std::unique_ptr<DecisionTreeNode> DecisionTreeClassifier::build_tree(
+std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
     const Tensor &X,
     const Tensor &y,
     int depth
@@ -257,7 +257,7 @@ std::unique_ptr<DecisionTreeNode> DecisionTreeClassifier::build_tree(
         throw std::invalid_argument("y must have exactly one column");
     }
 
-    auto node = std::make_unique<DecisionTreeNode>();
+    auto node = std::make_unique<DecisionTreeClassifierNode>();
 
     if (all_same_class(y) ||
         depth >= max_depth_ ||
@@ -319,7 +319,7 @@ std::unique_ptr<DecisionTreeNode> DecisionTreeClassifier::build_tree(
 
 double DecisionTreeClassifier::predict_sample(
     const Tensor &x,
-    const DecisionTreeNode *node
+    const DecisionTreeClassifierNode *node
 ) const {
     if (node == nullptr) {
         throw std::runtime_error("Cannot predict using an empty tree");

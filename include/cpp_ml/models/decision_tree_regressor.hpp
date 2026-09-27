@@ -7,22 +7,22 @@
 
 namespace cpp_ml {
 
-struct DecisionTreeNode {
+struct DecisionTreeRegressorNode {
     bool is_leaf; // leaf nodes store the Decision Tree's final value
 
     int feature_index; // feature index considered by this node
     double threshold; // threshold on the feature
     double prediction; // prediction value if this node is a leaf
 
-    std::unique_ptr<DecisionTreeNode> left;
-    std::unique_ptr<DecisionTreeNode> right;
+    std::unique_ptr<DecisionTreeRegressorNode> left;
+    std::unique_ptr<DecisionTreeRegressorNode> right;
 
-    DecisionTreeNode();
+    DecisionTreeRegressorNode();
 };
 
 class DecisionTreeRegressor {
 private:
-    std::unique_ptr<DecisionTreeNode> root_;
+    std::unique_ptr<DecisionTreeRegressorNode> root_;
 
     int max_depth_;
     int min_samples_split_;
@@ -33,7 +33,7 @@ private:
 
     bool fitted_;
 
-    std::unique_ptr<DecisionTreeNode> build_tree(
+    std::unique_ptr<DecisionTreeRegressorNode> build_tree(
         const Tensor& X,
         const Tensor& y,
         int depth
@@ -41,7 +41,7 @@ private:
 
     double predict_sample(
         const Tensor& x,
-        const DecisionTreeNode* node
+        const DecisionTreeRegressorNode* node
     );
 
 public:

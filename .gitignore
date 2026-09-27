@@ -2,6 +2,7 @@
 build/
 CMakeFiles/
 .cmake/
+install/
 
 # Generated CMake files
 CMakeCache.txt

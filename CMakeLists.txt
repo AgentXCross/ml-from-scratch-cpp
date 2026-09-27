@@ -5,6 +5,8 @@ project(cpp_ml_from_scratch VERSION 0.1.0 LANGUAGES CXX) # project name, version
 set(CMAKE_CXX_STANDARD 17) # C++ version
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+include(CMakePackageConfigHelpers)
+
 # Regeneration command
 # cmake -S . -B build -DCMAKE_CXX_COMPILER=clang++ 
 
@@ -52,7 +54,38 @@ add_library(cpp_ml
 )
 add_library(cpp_ml::cpp_ml ALIAS cpp_ml)
 target_include_directories(cpp_ml PUBLIC
-    include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
+
+configure_package_config_file(
+    cmake/cpp_mlConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/cpp_mlConfig.cmake
+    INSTALL_DESTINATION lib/cmake/cpp_ml
+)
+
+# Install the compiled static library (libcpp_ml.a) into the lib directory
+# Add cpp_ml to the cpp_mlTargets export set
+install(TARGETS cpp_ml
+    EXPORT cpp_mlTargets
+    ARCHIVE DESTINATION lib
+)
+
+# Copy the public headers into the include directory inside install
+install(DIRECTORY include/cpp_ml
+    DESTINATION include
+)
+
+# Generate and install CMake metadata describing the exported target
+install(EXPORT cpp_mlTargets
+    FILE cpp_mlTargets.cmake 
+    NAMESPACE cpp_ml::
+    DESTINATION lib/cmake/cpp_ml
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/cpp_mlConfig.cmake
+    DESTINATION lib/cmake/cpp_ml
 )
 
 # ====== Tests ======

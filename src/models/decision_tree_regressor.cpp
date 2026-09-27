@@ -2,7 +2,7 @@
 
 namespace cpp_ml {
 
-DecisionTreeNode::DecisionTreeNode()
+DecisionTreeRegressorNode::DecisionTreeRegressorNode()
     : is_leaf(false),
       feature_index(-1),
       threshold(0.0),

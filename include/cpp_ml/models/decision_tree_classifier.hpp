@@ -8,22 +8,22 @@
 
 namespace cpp_ml {
 
-struct DecisionTreeNode {
+struct DecisionTreeClassifierNode {
     bool is_leaf; // A leaf is a terminal node in a decision tree that makes the prediction
 
     int feature_index; // Which feature this node considers
     double threshold; // Threshold value of the feature
     double prediction; // Prediction value if this node is a leaf
 
-    std::unique_ptr<DecisionTreeNode> left;
-    std::unique_ptr<DecisionTreeNode> right;
+    std::unique_ptr<DecisionTreeClassifierNode> left;
+    std::unique_ptr<DecisionTreeClassifierNode> right;
 
-    DecisionTreeNode();
+    DecisionTreeClassifierNode();
 };
 
 class DecisionTreeClassifier {
 private:
-    std::unique_ptr<DecisionTreeNode> root_;
+    std::unique_ptr<DecisionTreeClassifierNode> root_;
 
     int max_depth_;
     int min_samples_split_;
@@ -34,7 +34,7 @@ private:
 
     bool fitted_;
 
-    std::unique_ptr<DecisionTreeNode> build_tree(
+    std::unique_ptr<DecisionTreeClassifierNode> build_tree(
         const Tensor &X,
         const Tensor &y,
         int depth // stores the current depth as we recurse
@@ -42,7 +42,7 @@ private:
 
     double predict_sample(
         const Tensor &x,
-        const DecisionTreeNode *node
+        const DecisionTreeClassifierNode *node
     ) const;
 
 public:

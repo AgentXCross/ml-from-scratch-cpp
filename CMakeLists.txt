@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16) # cmake version requirement
 
-project(cpp_ml_from_scratch VERSION 0.1.0 LANGUAGES CXX) # project name and language
+project(cpp_ml_from_scratch VERSION 0.1.0 LANGUAGES CXX) # project name, version, and language
 
 set(CMAKE_CXX_STANDARD 17) # C++ version
 set(CMAKE_CXX_STANDARD_REQUIRED ON)

@@ -78,7 +78,9 @@ root/
 └── tests/                      Correctness checks for core components.
 ```
 
-## Classical Machine Learning Algorithms
+## Completed Implementations
+
+### Classical Machine Learning Algorithms
 
 - [x] Linear Regression
 - [x] Logistic Regression
@@ -101,11 +103,11 @@ root/
 - [ ] K-Means Clustering
 - [ ] PCA
 
-## Neural Network Components
+### Neural Network Components
 
-### Layers
+#### Layers
 
-- [x] Linear Layer
+- [x] Linear
 - [ ] Conv1D
 - [ ] Conv2D
 - [ ] MaxPool1D
@@ -114,7 +116,7 @@ root/
 - [ ] Dropout
 - [ ] BatchNorm
 
-### Activations
+#### Activations
 
 - [x] Sigmoid
 - [x] ReLU
@@ -123,7 +125,7 @@ root/
 - [x] GeLU
 - [ ] Softmax (Currently only implemented as a function)
 
-## Loss Functions
+### Loss Functions
 
 - [x] Mean-Square Error (MSE)
 - [x] Mean-Absolute Error (MAE)
@@ -131,7 +133,7 @@ root/
 - [x] Binary Cross-Entropy (BCE)
 - [x] Cross-Entropy
 
-## Utilities
+### Utilities
 
 - [x] Sequential
 - [ ] Weight Initialization

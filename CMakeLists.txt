@@ -26,6 +26,7 @@ add_library(cpp_ml
     src/core/loss_functions/mae.cpp
     src/core/loss_functions/binary_cross_entropy.cpp
     src/core/loss_functions/cross_entropy.cpp
+    src/core/loss_functions/huber_loss.cpp
     src/core/metrics/accuracy.cpp
     src/core/metrics/r2_score.cpp
     src/core/metrics/f1_score.cpp

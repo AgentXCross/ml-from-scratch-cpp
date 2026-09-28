@@ -7,7 +7,7 @@ namespace cpp_ml {
 // CE = -Σ(y * log(p)) where y is the truth for the class and p is the probability of the class
 double cross_entropy(
     const Tensor &y_true,
-    const Tensor &y_pred
+    const Tensor &y_probs
 );
 
 /* 

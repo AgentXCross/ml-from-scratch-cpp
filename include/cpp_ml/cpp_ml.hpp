@@ -22,6 +22,7 @@
 #include "cpp_ml/core/loss_functions/mae.hpp"
 #include "cpp_ml/core/loss_functions/binary_cross_entropy.hpp"
 #include "cpp_ml/core/loss_functions/cross_entropy.hpp"
+#include "cpp_ml/core/loss_functions/huber_loss.hpp"
 
 // Metrics
 #include "cpp_ml/core/metrics/accuracy.hpp"

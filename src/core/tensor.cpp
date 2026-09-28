@@ -131,6 +131,38 @@ Tensor Tensor::from_vector(const std::vector<std::vector<double>> &values) {
 }
 
 
+Tensor Tensor::from_flat_vector(
+    const std::vector<double> &values,
+    const std::vector<int> &shape
+) {
+    if (values.empty()) {
+        throw std::invalid_argument("values cannot be empty");
+    }
+
+    if (shape.empty()) {
+        if (values.size() != 1) {
+            throw std::invalid_argument("Scalar tensors must have exactly one value");
+        }
+        
+        return Tensor{values[0]};
+    }
+
+    int total_size = compute_total_size(shape);
+
+    if (values.size() != total_size) {
+        throw std::invalid_argument("Number of values does not match the tensor shape");
+    }
+
+    Tensor tensor{shape};
+
+    for (int i = 0; i < total_size; i++) {
+        tensor.at_flat(i) = values[i];
+    }
+
+    return tensor;
+}
+
+
 Tensor Tensor::zeros(const std::vector<int> &shape) {
     return Tensor(shape, 0.0);
 }

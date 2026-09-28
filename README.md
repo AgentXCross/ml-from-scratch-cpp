@@ -151,17 +151,15 @@ All library code lives in the `cpp_ml` namespace.
 #include <cpp_ml/cpp_ml.hpp>
 
 int main() {
-    cpp_ml::Tensor X = cpp_ml::Tensor::from_vector({
-      {1.0},
-      {2.0},
-      {3.0}
-    });
+    cpp_ml::Tensor X = cpp_ml::Tensor::from_flat_vector(
+        {1.0, 2.0, 3.0},
+        {3, 1}
+    );
 
-    cpp_ml::Tensor y = cpp_ml::Tensor::from_vector({
-      {2.0},
-      {4.0},
-      {6.0}
-    });
+    cpp_ml::Tensor y = cpp_ml::Tensor::from_flat_vector(
+        {2.0, 4.0, 6.0},
+        {3, 1}
+    );
 
     cpp_ml::LinearRegression model(1);
 
@@ -267,7 +265,7 @@ root/
 
 - [x] Mean-Square Error (MSE)
 - [x] Mean-Absolute Error (MAE)
-- [ ] Huber Loss
+- [x] Huber Loss
 - [x] Binary Cross-Entropy (BCE)
 - [x] Cross-Entropy
 

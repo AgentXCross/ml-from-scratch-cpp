@@ -42,6 +42,12 @@ public:
     // Makes a 2D Tensor / Matrix from a vector of vector of doubles
     static Tensor from_vector(const std::vector<std::vector<double>> &values);
 
+    // Make an n-dim Tensor from a flat vector
+    static Tensor from_flat_vector(
+        const std::vector<double> &values,
+        const std::vector<int> &shape
+    );
+
     // Returns a tensor of 0's
     static Tensor zeros(const std::vector<int> &shape);
 

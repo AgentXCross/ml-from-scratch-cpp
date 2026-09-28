@@ -4,6 +4,8 @@ A C++17 machine learning library built from scratch using the C++ Standard Libra
 
 The library follows a PyTorch-inspired design, where training loops are written explicitly, and the math behind forward passes, gradients, and parameter updates stays visible.
 
+`cpp_ml` is designed as an educational library for learning machine learning and deep learning fundamentals without hiding their implementations behind high-level abstractions, commonly seen in libraries like scikit-learn. The goal is to provide a simple interface for users while keeping the algorithm implementations readable.
+
 <p align="center">
   <img src="repo_banner.png" width="90%">
 </p>

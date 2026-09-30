@@ -1,31 +1,36 @@
 #include "cpp_ml/core/matrix.hpp"
-#include <stdexcept>
+
+#include <iostream>
 #include <random>
+#include <stdexcept>
 
 namespace cpp_ml {
 
-Matrix::Matrix() {
-    rows_ = 0;
-    cols_ = 0;
-}
+Matrix::Matrix() 
+    : rows_{0},
+      cols_{0},
+      data_{} {}
 
-Matrix::Matrix(int rows, int cols) {
-    if (rows < 0 || cols < 0) {
+
+static int validate_matrix_dim(int dim) {
+    if (dim < 0) {
         throw std::invalid_argument("Matrix dimensions cannot be negative");
     }
-    rows_ = rows;
-    cols_ = cols;
-    data_ = std::vector<double> (rows * cols, 0.0);
+
+    return dim;
 }
 
-Matrix::Matrix(int rows, int cols, double value) {
-    if (rows < 0 || cols < 0) {
-        throw std::invalid_argument("Matrix dimensions cannot be negative");
-    }
-    rows_ = rows;
-    cols_ = cols;
-    data_ = std::vector<double> (rows * cols, value);
-}
+
+Matrix::Matrix(int rows, int cols)
+    : rows_{validate_matrix_dim(rows)},
+      cols_{validate_matrix_dim(cols)},
+      data_(rows_ * cols_, 0.0) {}
+
+
+Matrix::Matrix(int rows, int cols, double value)
+    : rows_{validate_matrix_dim(rows)},
+      cols_{validate_matrix_dim(cols)},
+      data_(rows_ * cols_, value) {}
 
 int Matrix::rows() const {
     return rows_;
@@ -56,7 +61,7 @@ Matrix Matrix::operator+(const Matrix &other) const {
         throw std::invalid_argument("Matrix dimensions must match for addition");
     }
 
-    Matrix result(rows_, cols_);
+    Matrix result{rows_, cols_};
 
     for (int i = 0; i < rows_ * cols_; i++) {
         result.data_[i] = data_[i] + other.data_[i];
@@ -70,7 +75,7 @@ Matrix Matrix::operator-(const Matrix &other) const {
         throw std::invalid_argument("Matrix dimensions must match for subtraction");
     }
 
-    Matrix result(rows_, cols_);
+    Matrix result{rows_, cols_};
 
     for (int i = 0; i < rows_ * cols_; i++) {
         result.data_[i] = data_[i] - other.data_[i];
@@ -80,7 +85,7 @@ Matrix Matrix::operator-(const Matrix &other) const {
 }
 
 Matrix Matrix::operator*(double scalar) const {
-    Matrix result(rows_, cols_);
+    Matrix result{rows_, cols_};
 
     for (int i = 0; i < rows_ * cols_; i++) {
         result.data_[i] = data_[i] * scalar;
@@ -94,7 +99,7 @@ Matrix Matrix::elementwise_multiply(const Matrix &other) const {
         throw std::invalid_argument("Matrix dimensions must match for element-wise multiplication");
     }
 
-    Matrix result(rows_, cols_);
+    Matrix result{rows_, cols_};
 
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
@@ -110,11 +115,11 @@ Matrix Matrix::matmul(const Matrix &other) const {
         throw std::invalid_argument("Invalid dimensions for matrix multiplication");
     }
 
-    Matrix result(rows_, other.cols_);
+    Matrix result{rows_, other.cols_};
 
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < other.cols_; j++) {
-            double sum = 0.0;
+            double sum{0.0};
 
             for (int k = 0; k < cols_; k++) {
                 sum += at(i, k) * other.at(k, j);
@@ -128,7 +133,7 @@ Matrix Matrix::matmul(const Matrix &other) const {
 }
 
 Matrix Matrix::transpose() const {
-    Matrix result(cols_, rows_);
+    Matrix result{cols_, rows_};
 
     for (int i = 0; i < rows_; i++) {
         for (int j = 0; j < cols_; j++) {
@@ -140,23 +145,23 @@ Matrix Matrix::transpose() const {
 }
 
 std::pair<int, int> Matrix::shape() const {
-    return {rows_, cols_};
+    return std::pair<int, int>{rows_, cols_};
 }
 
 Matrix Matrix::zeros(int rows, int cols) {
-    return Matrix(rows, cols, 0.0);
+    return Matrix{rows, cols, 0.0};
 }
 
 Matrix Matrix::ones(int rows, int cols) {
-    return Matrix(rows, cols, 1.0);
+    return Matrix{rows, cols, 1.0};
 }
 
 Matrix Matrix::random(int rows, int cols, double min, double max) {
-    Matrix result(rows, cols);
+    Matrix result{rows, cols};
 
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> dist(min, max);
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::uniform_real_distribution<double> dist{min, max};
 
     for (int i = 0; i < rows * cols; i++) {
         result.data_[i] = dist(gen);
@@ -183,7 +188,7 @@ Matrix Matrix::row(int row_index) const {
         throw std::out_of_range("Matrix row index is out of range");
     }
 
-    Matrix result(1, cols_);
+    Matrix result{1, cols_};
 
     for (int j = 0; j < cols_; j++) {
         result.at(0, j) = at(row_index, j);
@@ -195,18 +200,18 @@ Matrix Matrix::row(int row_index) const {
 Matrix Matrix::from_vector(
     const std::vector<std::vector<double>> &values
 ) {
-    int rows = values.size();
+    int rows{static_cast<int>(values.size())};
 
     if (rows == 0) {
-        return Matrix();
+        return Matrix{};
     }
 
-    int cols = values[0].size();
+    int cols{static_cast<int>(values[0].size())};
 
-    Matrix result(rows, cols);
+    Matrix result{rows, cols};
 
     for (int i = 0; i < rows; i++) {
-        if (values[i].size() != cols) {
+        if (static_cast<int>(values[i].size()) != cols) {
             throw std::invalid_argument("All rows must have the same number of columns");
         }
 

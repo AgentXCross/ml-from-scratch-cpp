@@ -1,5 +1,6 @@
 #include "cpp_ml/core/utils/tree_utils.hpp"
 
+#include <algorithm>
 #include <cassert>
 #include <map>
 #include <stdexcept>

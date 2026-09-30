@@ -9,17 +9,17 @@
 namespace cpp_ml {
 
 Tensor::Tensor() 
-    : data_(std::vector<double>{0.0}),
-      shape_(std::vector<int>()) {}
+    : data_{0.0},
+      shape_{} {}
 
 
 Tensor::Tensor(double scalar) 
-    : data_(std::vector<double>{scalar}),
-      shape_(std::vector<int>()) {}
+    : data_{scalar},
+      shape_{} {}
 
 
 static int compute_total_size(const std::vector<int> &shape) {
-    int total_size = 1;
+    int total_size{1};
 
     for (int dim : shape) {
         if (dim <= 0) {
@@ -34,27 +34,16 @@ static int compute_total_size(const std::vector<int> &shape) {
 
 
 Tensor::Tensor(const std::vector<int> &shape) 
-    : data_(std::vector<double>(compute_total_size(shape), 0.0)),
-      shape_(shape) {}
+    : data_{std::vector<double>(compute_total_size(shape), 0.0)},
+      shape_{shape} {}
 
 
 Tensor::Tensor(
     const std::vector<int> &shape,
     double fill_value
-) {
-    int total_size = 1;
-
-    for (int i = 0; i < static_cast<int>(shape.size()); i++) {
-        if (shape[i] <= 0) {
-            throw std::invalid_argument("All shape dimensions must be positive");
-        }
-
-        total_size *= shape[i];
-    }
-
-    shape_ = shape;
-    data_ = std::vector<double>(total_size, fill_value);
-}
+)
+    : data_{std::vector<double>(compute_total_size(shape), fill_value)},
+      shape_{shape} {}
 
 
 int Tensor::indices_to_flat(const std::vector<int> &indices) const {
@@ -66,8 +55,8 @@ int Tensor::indices_to_flat(const std::vector<int> &indices) const {
         throw std::invalid_argument("Number of indices must match tensor dimensions");
     }
 
-    int flat_index = 0;
-    int stride = 1; // the last dimension always has stride 1, stride is the number of steps
+    int flat_index{0};
+    int stride{1}; // the last dimension always has stride 1, stride is the number of steps
                     // needed to move in the flat array when you increase one index by 1 in a particular dimension
 
     for (int i = static_cast<int>(shape_.size()) - 1; i >= 0; i--) { // start from the last dimension
@@ -108,14 +97,14 @@ Tensor Tensor::from_vector(const std::vector<std::vector<double>> &values) {
         throw std::invalid_argument("values cannot be empty");
     }
 
-    int num_rows = static_cast<int>(values.size());
-    int num_cols = static_cast<int>(values[0].size());
+    int num_rows{static_cast<int>(values.size())};
+    int num_cols{static_cast<int>(values[0].size())};
 
     if (num_cols == 0) {
         throw std::invalid_argument("values cannot have empty rows");
     }
 
-    Tensor result({num_rows, num_cols});
+    Tensor result{{num_rows, num_cols}};
 
     for (int i = 0; i < num_rows; i++) {
         if (static_cast<int>(values[i].size()) != num_cols) {
@@ -147,9 +136,9 @@ Tensor Tensor::from_flat_vector(
         return Tensor{values[0]};
     }
 
-    int total_size = compute_total_size(shape);
+    int total_size{compute_total_size(shape)};
 
-    if (values.size() != total_size) {
+    if (static_cast<int>(values.size()) != total_size) {
         throw std::invalid_argument("Number of values does not match the tensor shape");
     }
 
@@ -164,12 +153,12 @@ Tensor Tensor::from_flat_vector(
 
 
 Tensor Tensor::zeros(const std::vector<int> &shape) {
-    return Tensor(shape, 0.0);
+    return Tensor{shape, 0.0};
 }
 
 
 Tensor Tensor::ones(const std::vector<int> &shape) {
-    return Tensor(shape, 1.0);
+    return Tensor{shape, 1.0};
 }
 
 
@@ -182,11 +171,11 @@ Tensor Tensor::random(
         throw std::invalid_argument("min_value must be less than max_value");
     }
 
-    Tensor result(shape);
+    Tensor result{shape};
 
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_real_distribution<double> distribution(min_value, max_value);
+    std::random_device rd{};
+    std::mt19937 generator{rd()};
+    std::uniform_real_distribution<double> distribution{min_value, max_value};
 
     for (int i = 0; i < result.size(); i++) {
         result.data_[i] = distribution(generator);
@@ -230,14 +219,14 @@ int Tensor::cols() const {
 
 
 double &Tensor::at(const std::vector<int> &indices) {
-    int flat_index = indices_to_flat(indices);
+    int flat_index{indices_to_flat(indices)};
 
     return data_[flat_index];
 }
 
 
 double Tensor::at(const std::vector<int> &indices) const {
-    int flat_index = indices_to_flat(indices);
+    int flat_index{indices_to_flat(indices)};
 
     return data_[flat_index];
 }
@@ -288,7 +277,7 @@ Tensor Tensor::row(int row_index) const {
         throw std::out_of_range("row_index is out of range");
     }
 
-    Tensor result({1, cols()});
+    Tensor result{{1, cols()}};
 
     for (int j = 0; j < cols(); j++) {
         result.at(0, j) = at(row_index, j);
@@ -307,7 +296,7 @@ Tensor Tensor::col(int col_index) const {
         throw std::out_of_range("Column index out of range");
     }
 
-    Tensor result({rows(), 1});
+    Tensor result{{rows(), 1}};
 
     for (int i = 0; i < rows(); i++) {
         result.at(i, 0) = at(i, col_index);
@@ -334,7 +323,7 @@ Tensor Tensor::squeeze() const {
         }
     }
 
-    Tensor result(new_shape);
+    Tensor result{new_shape};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i];
@@ -367,7 +356,7 @@ Tensor Tensor::squeeze(int axis) const {
         new_shape.push_back(shape_[i]);
     }
 
-    Tensor result(new_shape);
+    Tensor result{new_shape};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i];
@@ -398,7 +387,7 @@ Tensor Tensor::unsqueeze(int axis) const {
         new_shape.push_back(shape_[i]);
     }
 
-    Tensor result(new_shape);
+    Tensor result{new_shape};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i];
@@ -438,10 +427,10 @@ Tensor Tensor::permute(const std::vector<int> &axes) const {
         new_shape.push_back(shape_[axes[i]]);
     }
 
-    Tensor result(new_shape);
+    Tensor result{new_shape};
 
     for (int flat_index = 0; flat_index < size(); flat_index++) { // visit every element
-        std::vector<int> old_indices = flat_to_indices(flat_index);
+        std::vector<int> old_indices{flat_to_indices(flat_index)};
         
         std::vector<int> new_indices(ndim());
 
@@ -461,7 +450,7 @@ Tensor Tensor::reshape(const std::vector<int> &new_shape) const {
         throw std::runtime_error("Cannot reshape an empty tensor");
     }
 
-    int new_size = 1;
+    int new_size{1};
 
     for (int i = 0; i < static_cast<int>(new_shape.size()); i++) {
         if (new_shape[i] <= 0) {
@@ -475,7 +464,7 @@ Tensor Tensor::reshape(const std::vector<int> &new_shape) const {
         throw std::invalid_argument("new_shape must have the same total size as tensor");
     }
 
-    Tensor result(new_shape);
+    Tensor result{new_shape};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i];
@@ -490,7 +479,7 @@ Tensor Tensor::transpose() const {
         throw std::runtime_error("transpose() only works on matrices/tensors of rank 2");
     }
 
-    Tensor result({cols(), rows()});
+    Tensor result{{cols(), rows()}};
 
     for (int i = 0; i < rows(); i++) {
         for (int j = 0; j < cols(); j++) {
@@ -521,7 +510,7 @@ Tensor Tensor::transpose(int axis_1, int axis_2) const {
         axes.push_back(i);
     }
 
-    int temp = axes[axis_1];
+    int temp{axes[axis_1]};
     axes[axis_1] = axes[axis_2];
     axes[axis_2] = temp;
 
@@ -541,18 +530,18 @@ Tensor Tensor::batched_matmul(
         throw std::invalid_argument("batched_matmul requires tensors be at least rank-3");
     }
 
-    int m = a.shape_[a.ndim() - 2];
-    int k = a.shape_[a.ndim() - 1];
+    int m{a.shape_[a.ndim() - 2]};
+    int k{a.shape_[a.ndim() - 1]};
 
-    int b_k = b.shape_[b.ndim() - 2];
-    int n = b.shape_[b.ndim() - 1];
+    int b_k{b.shape_[b.ndim() - 2]};
+    int n{b.shape_[b.ndim() - 1]};
 
     if (k != b_k) {
         throw std::invalid_argument("Inner matrix dimensions must match");
     }
 
-    int batch_dims = a.ndim() - 2; // Number of dims in a excluding the last 2
-    int b_batch_dims = b.ndim() - 2; // Number of dims in b excluding the last 2
+    int batch_dims{a.ndim() - 2}; // Number of dims in a excluding the last 2
+    int b_batch_dims{b.ndim() - 2}; // Number of dims in b excluding the last 2
 
     if (batch_dims != b_batch_dims) {
         throw std::invalid_argument("Batch dimensions must match exactly");
@@ -571,9 +560,9 @@ Tensor Tensor::batched_matmul(
     result_shape.push_back(m);
     result_shape.push_back(n);
 
-    Tensor result(result_shape);
+    Tensor result{result_shape};
 
-    int batch_size = 1;
+    int batch_size{1};
 
     for (int i = 0; i < batch_dims; i++) {
         batch_size *= a.shape_[i];
@@ -583,7 +572,7 @@ Tensor Tensor::batched_matmul(
         // convert the flat batch index into true indices
         std::vector<int> batch_indices(batch_dims);
 
-        int remaining = batch_flat;
+        int remaining{batch_flat};
 
         for (int i = batch_dims - 1; i >= 0; i--) {
             batch_indices[i] = remaining % a.shape_[i];
@@ -592,21 +581,21 @@ Tensor Tensor::batched_matmul(
 
         for (int row = 0; row < m; row++) {
             for (int col = 0; col < n; col++) {
-                double sum = 0.0;
+                double sum{0.0};
 
                 for (int inner = 0; inner < k; inner++) {
-                    std::vector<int> a_indices = batch_indices;
+                    std::vector<int> a_indices{batch_indices};
                     a_indices.push_back(row);
                     a_indices.push_back(inner);
 
-                    std::vector<int> b_indices = batch_indices;
+                    std::vector<int> b_indices{batch_indices};
                     b_indices.push_back(inner);
                     b_indices.push_back(col);
 
                     sum += a.at(a_indices) * b.at(b_indices);
                 } 
 
-                std::vector<int> result_indices = batch_indices;
+                std::vector<int> result_indices{batch_indices};
                 result_indices.push_back(row);
                 result_indices.push_back(col);
 
@@ -628,11 +617,11 @@ Tensor Tensor::matmul(const Tensor &other) const {
         if (cols() != other.rows()) {
             throw std::invalid_argument("Left tensor cols must match right tensor rows");
         }
-        Tensor result({rows(), other.cols()});
+        Tensor result{{rows(), other.cols()}};
 
         for (int i = 0; i < result.rows(); i++) {
             for (int j = 0; j < result.cols(); j++) {
-                double sum = 0.0;
+                double sum{0.0};
 
                 for (int k = 0; k < cols(); k++) {
                     sum += at(i, k) * other.at(k, j);
@@ -658,7 +647,7 @@ Tensor Tensor::elementwise_multiply(const Tensor &other) const {
         throw std::invalid_argument("Both tensors must have the same shape");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] * other.data_[i];
@@ -677,7 +666,7 @@ Tensor Tensor::operator+(const Tensor &other) const {
         throw std::invalid_argument("Both tensors must have the same shape");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] + other.data_[i];
@@ -696,7 +685,7 @@ Tensor Tensor::operator-(const Tensor &other) const {
         throw std::invalid_argument("Both tensors must have the same shape");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] - other.data_[i];
@@ -711,7 +700,7 @@ Tensor Tensor::operator+(double scalar) const {
         throw std::runtime_error("Cannot add to an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] + scalar;
@@ -726,7 +715,7 @@ Tensor Tensor::operator-(double scalar) const {
         throw std::runtime_error("Cannot subtract from an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] - scalar;
@@ -741,7 +730,7 @@ Tensor Tensor::operator*(double scalar) const {
         throw std::runtime_error("Cannot multiply an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] * scalar;
@@ -760,7 +749,7 @@ Tensor Tensor::operator/(double scalar) const {
         throw std::invalid_argument("Cannot divide by 0");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] / scalar;
@@ -955,7 +944,7 @@ double Tensor::sum() const {
         throw std::runtime_error("Cannot sum an empty tensor");
     }
 
-    double sum = 0.0;
+    double sum{0.0};
 
     for (int i = 0; i < size(); i++) {
         sum += data_[i];
@@ -970,7 +959,7 @@ double Tensor::mean() const {
         throw std::runtime_error("Cannot calculate mean of an empty tensor");
     } 
 
-    double sum = 0.0;
+    double sum{0.0};
 
     for (int i = 0; i < size(); i++) {
         sum += data_[i];
@@ -985,7 +974,7 @@ double Tensor::min() const {
         throw std::runtime_error("Cannot calculate min of an empty tensor");
     }
 
-    double cur_min = std::numeric_limits<double>::infinity();
+    double cur_min{std::numeric_limits<double>::infinity()};
 
     for (int i = 0; i < size(); i++) {
         if (data_[i] < cur_min) {
@@ -1002,7 +991,7 @@ double Tensor::max() const {
         throw std::runtime_error("Cannot calculate max of an empty tensor");
     }
 
-    double cur_max = -std::numeric_limits<double>::infinity();
+    double cur_max{-std::numeric_limits<double>::infinity()};
 
     for (int i = 0; i < size(); i++) {
         if (data_[i] > cur_max) {
@@ -1019,8 +1008,8 @@ int Tensor::argmin() const {
         throw std::runtime_error("Cannot calculate argmin of an empty tensor");
     }
 
-    double cur_min = std::numeric_limits<double>::infinity();
-    int min_idx = 0;
+    double cur_min{std::numeric_limits<double>::infinity()};
+    int min_idx{0};
 
     for (int i = 0; i < size(); i++) {
         if (data_[i] < cur_min) {
@@ -1038,8 +1027,8 @@ int Tensor::argmax() const {
         throw std::runtime_error("Cannot calculate argmax of an empty tensor");
     }
 
-    double cur_max = -std::numeric_limits<double>::infinity();
-    int max_idx = 0;
+    double cur_max{-std::numeric_limits<double>::infinity()};
+    int max_idx{0};
 
     for (int i = 0; i < size(); i++) {
         if (data_[i] > cur_max) {
@@ -1053,14 +1042,14 @@ int Tensor::argmax() const {
 
 
 std::vector<int> Tensor::argmin_indices() const {
-    int flat_min_idx = argmin();
+    int flat_min_idx{argmin()};
 
     return flat_to_indices(flat_min_idx);
 }
 
 
 std::vector<int> Tensor::argmax_indices() const {
-    int flat_max_idx = argmax();
+    int flat_max_idx{argmax()};
 
     return flat_to_indices(flat_max_idx);
 }
@@ -1084,7 +1073,7 @@ Tensor Tensor::flatten() const {
         throw std::runtime_error("Cannot flaten an empty tensor");
     }
 
-    Tensor result({1, size()});
+    Tensor result{{1, size()}};
 
     for (int i = 0; i < size(); i++) {
         result.at(0, i) = data_[i];
@@ -1099,7 +1088,7 @@ Tensor Tensor::clone() const {
         throw std::runtime_error("Cannot clone an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i];
@@ -1119,7 +1108,7 @@ Tensor Tensor::operator-() const {
         throw std::invalid_argument("Cannot negate an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = -data_[i];
@@ -1134,7 +1123,7 @@ Tensor Tensor::abs() const {
         throw std::invalid_argument("Cannot take the absolute value of an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = std::abs(data_[i]);
@@ -1149,7 +1138,7 @@ Tensor Tensor::square() const {
         throw std::invalid_argument("Cannot square an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = data_[i] * data_[i];
@@ -1164,7 +1153,7 @@ Tensor Tensor::sqrt() const {
         throw std::invalid_argument("Cannot take the square root of an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         if (data_[i] < 0.0) {
@@ -1183,7 +1172,7 @@ Tensor Tensor::exp() const {
         throw std::invalid_argument("Cannot exponentiate an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = std::exp(data_[i]);
@@ -1198,7 +1187,7 @@ Tensor Tensor::log() const {
         throw std::invalid_argument("Cannot take the natural log of an empty tensor");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         if (data_[i] <= 0.0) {
@@ -1217,7 +1206,7 @@ Tensor Tensor::pow(double exponent) const {
         throw std::invalid_argument("Cannot raise an empty tensor to a power");
     }
 
-    Tensor result(shape_);
+    Tensor result{shape_};
 
     for (int i = 0; i < size(); i++) {
         result.data_[i] = std::pow(data_[i], exponent);

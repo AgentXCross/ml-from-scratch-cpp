@@ -3,6 +3,7 @@
 #include <vector>
 
 namespace cpp_ml {
+
 /*
 Tensor class.
 
@@ -17,10 +18,8 @@ private:
     std::vector<double> data_;
     std::vector<int> shape_;
 
-    // Returns flattened from indices
     int indices_to_flat(const std::vector<int> &indices) const;
 
-    // Returns indices from flatted
     std::vector<int> flat_to_indices(int flat) const;
 
     static Tensor batched_matmul(
@@ -37,25 +36,19 @@ public:
         double fill_value
     );
 
-    // static functions belong to the class itself, not an instance
-
-    // Makes a 2D Tensor / Matrix from a vector of vector of doubles
     static Tensor from_vector(const std::vector<std::vector<double>> &values);
 
-    // Make an n-dim Tensor from a flat vector
     static Tensor from_flat_vector(
         const std::vector<double> &values,
         const std::vector<int> &shape
     );
 
-    // Returns a tensor of 0's
     static Tensor zeros(const std::vector<int> &shape);
 
-    // Returns a tensor of 1's
     static Tensor ones(const std::vector<int> &shape);
 
-    // Returns a tensor with random values within a range
-    static Tensor random(
+
+    static Tensor random( // Returns a tensor with random values within a range uniformly
         const std::vector<int> &shape,
         double min_value = -0.01,
         double max_value = 0.01
@@ -65,18 +58,18 @@ public:
     const std::vector<int> &shape() const;
 
     int size() const;
-    int rows() const; // Only for rank 2
-    int cols() const; // Only for rank 2
+    int rows() const; 
+    int cols() const;
 
     double &at(const std::vector<int> &indices);
     double at(const std::vector<int> &indices) const;
-    double &at(int row, int col); // Only for rank 2
-    double at(int row, int col) const; // Only for rank 2
+    double &at(int row, int col); 
+    double at(int row, int col) const;
     double &at_flat(int flat);
     double at_flat(int flat) const;
 
-    Tensor row(int row_index) const; // Only for rank 2
-    Tensor col(int col_index) const; // Only for rank 2
+    Tensor row(int row_index) const; 
+    Tensor col(int col_index) const; 
 
     Tensor squeeze() const; // Removes all dimensions of size 1
     Tensor squeeze(int axis) const; // Removes the specified dimension if its size is 1

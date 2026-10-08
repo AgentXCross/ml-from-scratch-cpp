@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class ADALINE {
@@ -14,7 +16,7 @@ private:
 
 public:
     ADALINE();
-    ADALINE(int num_features);
+    ADALINE(std::size_t num_features);
 
     Tensor predict_raw(const Tensor &X) const;
     Tensor predict(const Tensor &X) const;

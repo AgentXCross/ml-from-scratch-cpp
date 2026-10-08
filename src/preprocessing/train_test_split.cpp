@@ -33,43 +33,44 @@ DatasetSplit train_test_split(
         throw std::invalid_argument("test_size must be between 0.0 and 1.0 exclusive");
     }
 
-    int num_samples = dataset.X.rows();
-    int num_test = static_cast<int> (num_samples * test_size);
-    int num_train = num_samples - num_test;
+    std::size_t num_samples{dataset.X.rows()};
+    std::size_t num_test{static_cast<std::size_t>(static_cast<double>(num_samples) * test_size)};
+    std::size_t num_train{num_samples - num_test};
 
     if (num_test == 0 || num_train == 0) {
         throw std::invalid_argument("test_size creates an empty train or test split");
     }
 
-    std::vector<int> indices;
+    std::vector<std::size_t> indices{};
+    indices.reserve(num_samples);
 
-    for(int i = 0; i < num_samples; i++) {
+    for (std::size_t i{0}; i < num_samples; ++i) {
         indices.push_back(i);
     }
 
     if (shuffle) {
-        std::random_device rd;
-        std::mt19937 gen(rd());
+        std::random_device rd{};
+        std::mt19937 gen{rd()};
 
         std::shuffle(indices.begin(), indices.end(), gen);
     }
 
-    std::vector<std::vector<double>> X_train;
-    std::vector<std::vector<double>> y_train;
-    std::vector<std::vector<double>> X_test;
-    std::vector<std::vector<double>> y_test;
+    std::vector<std::vector<double>> X_train{};
+    std::vector<std::vector<double>> y_train{};
+    std::vector<std::vector<double>> X_test{};
+    std::vector<std::vector<double>> y_test{};
 
-    for (int i = 0; i < num_samples; i++) {
-        int original_index = indices[i];
+    for (std::size_t i{0}; i < num_samples; ++i) {
+        std::size_t original_index{indices[i]};
 
-        std::vector<double> X_row;
-        std::vector<double> y_row;
+        std::vector<double> X_row{};
+        std::vector<double> y_row{};
 
-        for (int j = 0; j < dataset.X.cols(); j++) {
+        for (std::size_t j{0}; j < dataset.X.cols(); ++j) {
             X_row.push_back(dataset.X.at(original_index, j));
         }
 
-        for (int j = 0; j < dataset.y.cols(); j++) {
+        for (std::size_t j{0}; j < dataset.y.cols(); ++j) {
             y_row.push_back(dataset.y.at(original_index, j));
         }
 
@@ -82,7 +83,7 @@ DatasetSplit train_test_split(
         }
     }
 
-    DatasetSplit split;
+    DatasetSplit split{};
 
     split.train.X = Tensor::from_vector(X_train);
     split.train.y = Tensor::from_vector(y_train);

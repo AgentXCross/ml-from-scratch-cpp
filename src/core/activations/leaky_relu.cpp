@@ -9,9 +9,9 @@ Tensor leaky_relu(const Tensor &x, double alpha) {
         throw std::invalid_argument("Cannot compute Leaky ReLU of an empty tensor");
     }
 
-    Tensor result(x.shape());
+    Tensor result{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
+    for (std::size_t i{0}; i < x.size(); ++i) {
         if (x.at_flat(i) >= 0.0) {
             result.at_flat(i) = x.at_flat(i);
         } else {
@@ -28,9 +28,9 @@ Tensor leaky_relu_gradient(const Tensor &x, double alpha) {
         throw std::invalid_argument("Cannot compute Leaky ReLU gradients of an empty tensor");
     }
 
-    Tensor result(x.shape());
+    Tensor result{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
+    for (std::size_t i{0}; i < x.size(); ++i) {
         if (x.at_flat(i) >= 0.0) {
             result.at_flat(i) = 1;
         } else {
@@ -42,21 +42,20 @@ Tensor leaky_relu_gradient(const Tensor &x, double alpha) {
 }
 
 
-LeakyReLU::LeakyReLU() {
-    input_ = Tensor();
-    alpha_ = 0.01;
-    has_input_ = false;
-}
+LeakyReLU::LeakyReLU()
+    : input_{},
+      alpha_{0.01},
+      has_input_{false} {}
 
 
-LeakyReLU::LeakyReLU(double alpha) {
+LeakyReLU::LeakyReLU(double alpha)
+    : input_{},
+      alpha_{alpha},
+      has_input_{false} {
     if (alpha < 0.0) {
         throw std::invalid_argument("alpha cannot be negative");
     }
 
-    input_ = Tensor();
-    alpha_ = alpha;
-    has_input_ = false;
 }
 
 
@@ -77,9 +76,9 @@ Tensor LeakyReLU::backward(const Tensor &dL_dout) {
         throw std::invalid_argument("dL_dout must have the same shape as input");
     }
 
-    Tensor dout_dX = leaky_relu_gradient(input_, alpha_);
+    Tensor dout_dX{leaky_relu_gradient(input_, alpha_)};
 
-    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX{dL_dout.elementwise_multiply(dout_dX)};
 
     return dL_dX;
 }

@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class LinearRegression {
@@ -15,7 +17,7 @@ private:
 public:
     LinearRegression();
 
-    LinearRegression(int num_features);
+    LinearRegression(std::size_t num_features);
 
     Tensor predict(const Tensor &X) const;
 

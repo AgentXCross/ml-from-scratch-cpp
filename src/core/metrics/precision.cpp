@@ -17,27 +17,27 @@ double precision_score(
         throw std::invalid_argument("y_true and y_pred must have the same shape");
     }
 
-    int tp = 0;
-    int fp = 0;
+    std::size_t tp{0};
+    std::size_t fp{0};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double truth = y_true.at_flat(i);
-        double pred = y_pred.at_flat(i);
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double truth{y_true.at_flat(i)};
+        double pred{y_pred.at_flat(i)};
 
         if (pred == positive_class) {
             if (truth == positive_class) {
-                tp++;
+                ++tp;
             } else if (truth != positive_class) {
-                fp++;
+                ++fp;
             }
         }
     }
 
-    if (tp + fp == 0.0) {
+    if (tp + fp == 0) {
         return 0.0;
     }
 
-    return static_cast<double> (tp) / (tp + fp);
+    return static_cast<double>(tp) / static_cast<double>(tp + fp);
 }
 
 }

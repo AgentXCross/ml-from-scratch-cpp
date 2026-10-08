@@ -3,6 +3,7 @@
 #include "cpp_ml/core/tensor.hpp"
 #include "cpp_ml/models/decision_tree_classifier.hpp"
 
+#include <cstddef>
 #include <memory>
 #include <vector>
 
@@ -13,10 +14,10 @@ private:
     // owns each DecisionTreeClassifier through a unique_ptr
     std::vector<std::unique_ptr<DecisionTreeClassifier>> trees_; 
 
-    int num_trees_;
-    int max_depth_;
-    int min_samples_split_;
-    int max_features_;
+    std::size_t num_trees_;
+    std::size_t max_depth_;
+    std::size_t min_samples_split_;
+    std::size_t max_features_;
 
     unsigned int random_seed_;
     bool fitted_;
@@ -25,10 +26,10 @@ public:
     RandomForestClassifier();
 
     RandomForestClassifier(
-        int num_trees,
-        int max_depth,
-        int min_samples_split,
-        int max_features,
+        std::size_t num_trees,
+        std::size_t max_depth,
+        std::size_t min_samples_split,
+        std::size_t max_features,
         unsigned int random_seed = 42
     );
 
@@ -39,7 +40,7 @@ public:
 
     Tensor predict(const Tensor &X) const;
 
-    int num_trees() const;
+    std::size_t num_trees() const;
 };
 
 }

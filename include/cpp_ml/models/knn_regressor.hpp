@@ -2,18 +2,20 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class KNNRegressor {
 private:
     Tensor X_train_;
     Tensor y_train_;
-    int k_; // number of nearest neighbours used to average to produce the output
+    std::size_t k_; // number of nearest neighbours used to average to produce the output
     bool fitted_;
 
 public:
     KNNRegressor();
-    KNNRegressor(int k);
+    KNNRegressor(std::size_t k);
 
     void fit(
         const Tensor &X_train,
@@ -22,7 +24,7 @@ public:
 
     Tensor predict(const Tensor &X) const;
 
-    int k() const;
+    std::size_t k() const;
 };
 
 }

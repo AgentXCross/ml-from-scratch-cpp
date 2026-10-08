@@ -2,13 +2,14 @@
 #include "cpp_ml/core/tensor.hpp"
 #include "cpp_ml/core/loss_functions/mse.hpp"
 
+#include <cstddef>
 #include <iostream>
 
 // LinearRegression example using a y = 2x + 1 dataset
 
 int main() {
     // Dataset: y = 2x + 1
-    cpp_ml::Tensor X = cpp_ml::Tensor::from_vector({
+    cpp_ml::Tensor X{cpp_ml::Tensor::from_vector({
         {1.0},
         {2.0},
         {3.0},
@@ -27,9 +28,9 @@ int main() {
         {20.0},
         {25.0},
         {50.0},
-    });
+    })};
 
-    cpp_ml::Tensor y = cpp_ml::Tensor::from_vector({
+    cpp_ml::Tensor y{cpp_ml::Tensor::from_vector({
         {3.0},
         {5.0},
         {7.0},
@@ -48,18 +49,18 @@ int main() {
         {41.0},
         {51.0},
         {101.0}
-    });
+    })};
 
-    cpp_ml::LinearRegression model(1);
+    cpp_ml::LinearRegression model{1};
 
-    double learning_rate = 0.001;
-    int epochs = 10000;
+    double learning_rate{0.001};
+    std::size_t epochs{10000};
 
-    for (int epoch = 0; epoch < epochs; epoch++) {
-        cpp_ml::Tensor predictions = model.predict(X);
+    for (std::size_t epoch{0}; epoch < epochs; ++epoch) {
+        cpp_ml::Tensor predictions{model.predict(X)};
 
-        double loss = mean_squared_error(y, predictions);
-        cpp_ml::Tensor loss_gradient = mean_squared_error_gradient(y, predictions);
+        double loss{mean_squared_error(y, predictions)};
+        cpp_ml::Tensor loss_gradient{mean_squared_error_gradient(y, predictions)};
 
         model.backward(X, loss_gradient);
         model.step(learning_rate);

@@ -22,13 +22,13 @@ double binary_cross_entropy(
         throw std::invalid_argument("binary_cross_entropy expects rank-2 tensors");
     }
 
-    double epsilon = 1e-15; // clip the probabilities to prevent extremes when taking log
-    double sum = 0.0;
-    int num_elements = y_true.size();
+    double epsilon{1e-15}; // clip the probabilities to prevent extremes when taking log
+    double sum{0.0};
+    std::size_t num_elements{y_true.size()};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double y = y_true.at_flat(i);
-        double p = y_probs.at_flat(i);
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double y{y_true.at_flat(i)};
+        double p{y_probs.at_flat(i)};
 
         if (p < epsilon) {
             p = epsilon;
@@ -39,7 +39,7 @@ double binary_cross_entropy(
         sum += y * std::log(p) + (1.0 - y) * std::log(1 - p);
     }
 
-    return -sum / num_elements;
+    return -sum / static_cast<double>(num_elements);
 }
 
 
@@ -59,14 +59,14 @@ Tensor binary_cross_entropy_gradient(
         throw std::invalid_argument("binary_cross_entropy_gradient expects rank-2 tensors");
     }
 
-    double epsilon = 1e-15;
-    int num_elements = y_true.size();
+    double epsilon{1e-15};
+    std::size_t num_elements{y_true.size()};
 
-    Tensor dL_dpred(y_true.shape());
+    Tensor dL_dpred{y_true.shape()};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double y = y_true.at_flat(i);
-        double p = y_probs.at_flat(i);
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double y{y_true.at_flat(i)};
+        double p{y_probs.at_flat(i)};
 
         if (p < epsilon) {
             p = epsilon;
@@ -74,7 +74,8 @@ Tensor binary_cross_entropy_gradient(
             p = 1.0 - epsilon;
         }
 
-        dL_dpred.at_flat(i) = (-(y / p) + ((1.0 - y) / (1.0 - p))) / num_elements;
+        dL_dpred.at_flat(i) = (-(y / p) + ((1.0 - y) / (1.0 - p)))
+                              / static_cast<double>(num_elements);
     }
 
     return dL_dpred;

@@ -8,12 +8,12 @@
 namespace cpp_ml {
 
 Perceptron::Perceptron() 
-    : weights_(Tensor()),
-      bias_(Tensor()) {}
+    : weights_{},
+      bias_{} {}
 
 
-static int validate_num_features(int num_features) {
-    if (num_features <= 0) {
+static std::size_t validate_num_features(std::size_t num_features) {
+    if (num_features == 0) {
         throw std::invalid_argument("num_features must be positive");
     }
 
@@ -21,9 +21,9 @@ static int validate_num_features(int num_features) {
 }
 
 
-Perceptron::Perceptron(int num_features) 
-    : weights_(Tensor::random({validate_num_features(num_features), 1})),
-      bias_(Tensor::random({1, 1})) {}   
+Perceptron::Perceptron(std::size_t num_features)
+    : weights_{Tensor::random({validate_num_features(num_features), 1})},
+      bias_{Tensor::random({1, 1})} {}
 
 
 Tensor Perceptron::predict(const Tensor &X) const {
@@ -35,11 +35,11 @@ Tensor Perceptron::predict(const Tensor &X) const {
         throw std::invalid_argument("X columns must match number of weights");
     }
 
-    Tensor scores = X.matmul(weights_);
+    Tensor scores{X.matmul(weights_)};
     assert(scores.is_matrix());
     assert(scores.rows() == X.rows() && scores.cols() == 1);
     
-    for (int i = 0; i < scores.rows(); i++) {
+    for (std::size_t i{0}; i < scores.rows(); ++i) {
         scores.at(i, 0) = scores.at(i, 0) + bias_.at(0, 0);
     }
 
@@ -76,15 +76,15 @@ void Perceptron::train_epoch(
         throw std::invalid_argument("learning_rate must be positive");
     }
 
-    Tensor predictions = predict(X);
+    Tensor predictions{predict(X)};
     assert(predictions.is_matrix());
     assert(predictions.rows() == X.rows() && predictions.cols() == 1);
 
-    for (int i = 0; i < X.rows(); i++) {
-        double error = y_true.at(i, 0) - predictions.at(i, 0);
+    for (std::size_t i{0}; i < X.rows(); ++i) {
+        double error{y_true.at(i, 0) - predictions.at(i, 0)};
 
         if (error != 0.0) {
-            for (int j = 0; j < X.cols(); j++) {
+            for (std::size_t j{0}; j < X.cols(); ++j) {
                 weights_.at(j, 0) += learning_rate * error * X.at(i, j);
             }
 

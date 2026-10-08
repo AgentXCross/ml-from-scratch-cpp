@@ -8,14 +8,14 @@
 namespace cpp_ml {
 
 SoftmaxRegression::SoftmaxRegression()
-    : weights_(Tensor()),
-      bias_(Tensor()),
-      dL_dw_(Tensor()),
-      dL_db_(Tensor()) {}
+    : weights_{},
+      bias_{},
+      dL_dw_{},
+      dL_db_{} {}
 
 
-static int validate_num_features(int num_features) {
-    if (num_features <= 0) {
+static std::size_t validate_num_features(std::size_t num_features) {
+    if (num_features == 0) {
         throw std::invalid_argument("Number of features must be positive");
     }
 
@@ -23,7 +23,7 @@ static int validate_num_features(int num_features) {
 }
 
 
-static int validate_num_classes(int num_classes) {
+static std::size_t validate_num_classes(std::size_t num_classes) {
     if (num_classes < 2) {
         throw std::invalid_argument("SoftmaxRegression requires at least 2 classes");
     }
@@ -34,11 +34,11 @@ static int validate_num_classes(int num_classes) {
 
 // weights are a rank-2 tensor {num_features, num_classes}
 // Each column contains the weight vector for one class
-SoftmaxRegression::SoftmaxRegression(int num_features, int num_classes) 
-    : weights_(Tensor::random({validate_num_features(num_features), validate_num_classes(num_classes)}, -0.01, 0.01)),
-      bias_(Tensor::random({1, num_classes}, -0.01, 0.01)),
-      dL_dw_(Tensor({num_features, num_classes})),
-      dL_db_(Tensor({1, num_classes})) {}
+SoftmaxRegression::SoftmaxRegression(std::size_t num_features, std::size_t num_classes)
+    : weights_{Tensor::random({validate_num_features(num_features), validate_num_classes(num_classes)}, -0.01, 0.01)},
+      bias_{Tensor::random({1, num_classes}, -0.01, 0.01)},
+      dL_dw_{{num_features, num_classes}},
+      dL_db_{{1, num_classes}} {}
 
 
 Tensor SoftmaxRegression::predict_probs(const Tensor &X) const {
@@ -50,12 +50,12 @@ Tensor SoftmaxRegression::predict_probs(const Tensor &X) const {
         throw std::invalid_argument("X columns must match number of weight rows");
     }
 
-    Tensor logits = X.matmul(weights_);
+    Tensor logits{X.matmul(weights_)};
     assert(logits.is_matrix());
     assert(logits.cols() == weights_.cols());
 
-    for (int i = 0; i < X.rows(); i++) {
-        for (int j = 0; j < logits.cols(); j++) {
+    for (std::size_t i{0}; i < X.rows(); ++i) {
+        for (std::size_t j{0}; j < logits.cols(); ++j) {
             logits.at(i, j) += bias_.at(0, j);
         }
     }
@@ -64,13 +64,13 @@ Tensor SoftmaxRegression::predict_probs(const Tensor &X) const {
 }
 
 Tensor SoftmaxRegression::predict(const Tensor &X) const {
-    Tensor probabilities = predict_probs(X);
-    Tensor predictions({probabilities.rows(), 1});
+    Tensor probabilities{predict_probs(X)};
+    Tensor predictions{{probabilities.rows(), 1}};
 
-    for (int i = 0; i < predictions.rows(); i++) {
-        Tensor row = probabilities.row(i);
+    for (std::size_t i{0}; i < predictions.rows(); ++i) {
+        Tensor row{probabilities.row(i)};
         assert(row.rows() == 1);
-        int predicted_class = row.argmax();
+        std::size_t predicted_class{row.argmax()};
 
         predictions.at(i, 0) = static_cast<double>(predicted_class);
     }
@@ -104,10 +104,10 @@ void SoftmaxRegression::backward(
     dL_dw_ = X.transpose().matmul(dL_dlogits);
     assert(dL_dw_.shape() == weights_.shape());
 
-    for (int j = 0; j < dL_dlogits.cols(); j++) {
-        double bias_gradient = 0.0;
+    for (std::size_t j{0}; j < dL_dlogits.cols(); ++j) {
+        double bias_gradient{0.0};
 
-        for (int i = 0; i < dL_dlogits.rows(); i++) {
+        for (std::size_t i{0}; i < dL_dlogits.rows(); ++i) {
             bias_gradient += dL_dlogits.at(i, j);
         }
 

@@ -2,8 +2,9 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
-#include <vector>
+#include <cstddef>
 #include <random>
+#include <vector>
 
 namespace cpp_ml {
 
@@ -16,7 +17,7 @@ X[row, feature_index] <= threshold for left and X[row, feature_index] > threshol
 void split_dataset(
     const Tensor &X,
     const Tensor &y,
-    int feature_index,
+    std::size_t feature_index,
     double threshold,
     Tensor &X_left,
     Tensor &y_left,
@@ -28,9 +29,9 @@ void split_dataset(
 sample_feature_indices returns a vector of the indices of features chosen to be
 considered for creating splits in nodes
 */
-std::vector<int> sample_feature_indices(
-    int num_features,
-    int max_features,
+std::vector<std::size_t> sample_feature_indices(
+    std::size_t num_features,
+    std::size_t max_features,
     std::mt19937 &generator
 );
 

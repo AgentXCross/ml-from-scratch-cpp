@@ -10,9 +10,9 @@ Tensor sigmoid(const Tensor &x) {
         throw std::invalid_argument("Cannot compute sigmoid of an empty tensor");
     }
 
-    Tensor result(x.shape());
+    Tensor result{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
+    for (std::size_t i{0}; i < x.size(); ++i) {
         result.at_flat(i) = 1.0 / (1.0 + std::exp(-x.at_flat(i)));
     }
 
@@ -25,10 +25,10 @@ Tensor sigmoid_gradient(const Tensor &x) {
         throw std::invalid_argument("Cannot compute sigmoid gradients of an empty tensor");
     }
 
-    Tensor result(x.shape());
+    Tensor result{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
-        double sig = 1.0 / (1.0 + std::exp(-x.at_flat(i)));
+    for (std::size_t i{0}; i < x.size(); ++i) {
+        double sig{1.0 / (1.0 + std::exp(-x.at_flat(i)))};
 
         result.at_flat(i) = sig * (1 - sig);
     }
@@ -37,10 +37,9 @@ Tensor sigmoid_gradient(const Tensor &x) {
 }
 
 
-Sigmoid::Sigmoid() {
-    input_ = Tensor();
-    has_input_ = false;
-}
+Sigmoid::Sigmoid()
+    : input_{},
+      has_input_{false} {}
 
 
 Tensor Sigmoid::forward(const Tensor &X) {
@@ -60,9 +59,9 @@ Tensor Sigmoid::backward(const Tensor &dL_dout) {
         throw std::invalid_argument("dL_dout must have the same shape as input");
     }
 
-    Tensor dout_dX = sigmoid_gradient(input_);
+    Tensor dout_dX{sigmoid_gradient(input_)};
 
-    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX{dL_dout.elementwise_multiply(dout_dX)};
 
     return dL_dX;
 }

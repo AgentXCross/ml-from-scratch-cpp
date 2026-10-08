@@ -6,14 +6,14 @@
 namespace cpp_ml {
 
 LinearRegression::LinearRegression() 
-    : weights_(Tensor()), 
-      bias_(Tensor()), 
-      dL_dw_(Tensor()), 
-      dL_db_(Tensor()) {}
+    : weights_{},
+      bias_{},
+      dL_dw_{},
+      dL_db_{} {}
 
 
-static int validate_num_features(int num_features) {
-    if (num_features <= 0) {
+static std::size_t validate_num_features(std::size_t num_features) {
+    if (num_features == 0) {
         throw std::invalid_argument("num_features must be positive");
     }
 
@@ -21,12 +21,11 @@ static int validate_num_features(int num_features) {
 }
 
 
-LinearRegression::LinearRegression(int num_features) 
-    : weights_(Tensor::random({validate_num_features(num_features), 1}, -0.01, 0.01)),
-      bias_(Tensor::random({1, 1}, -0.01, 0.01)),
-      dL_dw_(Tensor({num_features, 1})),
-      dL_db_(Tensor({1, 1})) {
-}
+LinearRegression::LinearRegression(std::size_t num_features)
+    : weights_{Tensor::random({validate_num_features(num_features), 1}, -0.01, 0.01)},
+      bias_{Tensor::random({1, 1}, -0.01, 0.01)},
+      dL_dw_{{num_features, 1}},
+      dL_db_{{1, 1}} {}
 
 
 Tensor LinearRegression::predict(const Tensor &X) const {
@@ -38,11 +37,11 @@ Tensor LinearRegression::predict(const Tensor &X) const {
         throw std::invalid_argument("X columns must match number of weights");
     }
 
-    Tensor predictions = X.matmul(weights_);
+    Tensor predictions{X.matmul(weights_)};
     assert(predictions.is_matrix());
     assert(predictions.cols() == 1);
 
-    for (int i = 0; i < predictions.rows(); i++) {
+    for (std::size_t i{0}; i < predictions.rows(); ++i) {
         predictions.at(i, 0) += bias_.at(0, 0);
     }
 
@@ -75,9 +74,9 @@ void LinearRegression::backward(
     assert(dL_dw_.shape() == weights_.shape());
 
     // For the bias, dpred/db = 1, so dL/db is the sum of dL/dpred.
-    double bias_gradient = 0.0;
+    double bias_gradient{0.0};
 
-    for (int i = 0; i < dL_dpred.rows(); i++) {
+    for (std::size_t i{0}; i < dL_dpred.rows(); ++i) {
         bias_gradient = bias_gradient + dL_dpred.at(i, 0);
     }
 

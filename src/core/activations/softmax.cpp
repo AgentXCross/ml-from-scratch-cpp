@@ -10,16 +10,16 @@ Tensor softmax(const Tensor &x) {
     if (!x.is_matrix()) {
         throw std::invalid_argument("softmax expects a rank-2 tensor");
     }
-    Tensor result(x.shape());
+    Tensor result{x.shape()};
 
-    for (int i = 0; i < x.rows(); i++) {
-        double sum = 0.0;
+    for (std::size_t i{0}; i < x.rows(); ++i) {
+        double sum{0.0};
 
-        for (int j = 0; j < x.cols(); j++) {
+        for (std::size_t j{0}; j < x.cols(); ++j) {
             sum += std::exp(x.at(i, j));
         }
 
-        for (int j = 0; j < x.cols(); j++) {
+        for (std::size_t j{0}; j < x.cols(); ++j) {
             result.at(i, j) = std::exp(x.at(i, j)) / sum;
         }
     }

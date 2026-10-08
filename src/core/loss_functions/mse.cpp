@@ -20,9 +20,9 @@ double mean_squared_error(
         throw std::invalid_argument("mean_squared_error expects rank-2 tensors");
     }
 
-    Tensor error = y_pred - y_true;
+    Tensor error{y_pred - y_true};
 
-    return error.square().sum() / y_true.size();
+    return error.square().sum() / static_cast<double>(y_true.size());
 }
 
 Tensor mean_squared_error_gradient(
@@ -41,7 +41,7 @@ Tensor mean_squared_error_gradient(
         throw std::invalid_argument("mean_squared_error_gradient expects rank-2 tensors");
     }
 
-    Tensor dL_dpred = (y_pred - y_true) * (2.0 / y_true.size());
+    Tensor dL_dpred{(y_pred - y_true) * (2.0 / static_cast<double>(y_true.size()))};
 
     return dL_dpred;
 }

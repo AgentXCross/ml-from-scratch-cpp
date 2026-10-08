@@ -2,6 +2,7 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
 #include <memory>
 #include <random>
 
@@ -10,7 +11,7 @@ namespace cpp_ml {
 struct DecisionTreeRegressorNode {
     bool is_leaf; // leaf nodes store the Decision Tree's final value
 
-    int feature_index; // feature index considered by this node
+    std::size_t feature_index; // feature index considered by this node
     double threshold; // threshold on the feature
     double prediction; // prediction value if this node is a leaf
 
@@ -24,9 +25,9 @@ class DecisionTreeRegressor {
 private:
     std::unique_ptr<DecisionTreeRegressorNode> root_;
 
-    int max_depth_;
-    int min_samples_split_;
-    int max_features_;
+    std::size_t max_depth_;
+    std::size_t min_samples_split_;
+    std::size_t max_features_;
     unsigned int random_seed_;
 
     std::mt19937 generator_;
@@ -36,7 +37,7 @@ private:
     std::unique_ptr<DecisionTreeRegressorNode> build_tree(
         const Tensor& X,
         const Tensor& y,
-        int depth
+        std::size_t depth
     );
 
     double predict_sample(
@@ -47,9 +48,9 @@ private:
 public:
     DecisionTreeRegressor();
     DecisionTreeRegressor(
-        int max_depth,
-        int min_samples_split,
-        int max_features = 0, // 0 means use all the features
+        std::size_t max_depth,
+        std::size_t min_samples_split,
+        std::size_t max_features = 0, // 0 means use all the features
         unsigned int random_seed = 42
     );
 

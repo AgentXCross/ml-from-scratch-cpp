@@ -16,16 +16,16 @@ double accuracy_score(
         throw std::invalid_argument("y_true and y_pred must have the same shape");
     }
 
-    int num_elements = y_true.size();
-    int num_correct = 0;
+    std::size_t num_elements{y_true.size()};
+    std::size_t num_correct{0};
 
-    for (int i = 0; i < y_true.size(); i++) {
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
         if (y_true.at_flat(i) == y_pred.at_flat(i)) {
-            num_correct++;
+            ++num_correct;
         }
     }
 
-    return static_cast<double> (num_correct) / num_elements;
+    return static_cast<double>(num_correct) / static_cast<double>(num_elements);
 }
 
 }

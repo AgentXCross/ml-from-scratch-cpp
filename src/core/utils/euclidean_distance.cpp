@@ -17,7 +17,7 @@ double euclidean_distance(
         throw std::invalid_argument("Tensors must have the same shape");
     }
 
-    Tensor difference = a - b;
+    Tensor difference{a - b};
 
     return std::sqrt(difference.square().sum());
 }

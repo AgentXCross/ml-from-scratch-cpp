@@ -9,14 +9,14 @@
 namespace cpp_ml {
 
 LogisticRegression::LogisticRegression()
-    : weights_(Tensor()),
-      bias_(Tensor()),
-      dL_dw_(Tensor()),
-      dL_db_(Tensor()) {}
+    : weights_{},
+      bias_{},
+      dL_dw_{},
+      dL_db_{} {}
 
 
-static int validate_num_features(int num_features) {
-    if (num_features <= 0) {
+static std::size_t validate_num_features(std::size_t num_features) {
+    if (num_features == 0) {
         throw std::invalid_argument("num_features must be positive");
     }
 
@@ -24,11 +24,11 @@ static int validate_num_features(int num_features) {
 }
 
 
-LogisticRegression::LogisticRegression(int num_features) 
-    : weights_(Tensor::random({validate_num_features(num_features), 1}, -0.01, 0.01)),
-      bias_(Tensor::random({1, 1}, -0.01, 0.01)),
-      dL_dw_(Tensor({num_features, 1})),
-      dL_db_(Tensor({1, 1})) {}
+LogisticRegression::LogisticRegression(std::size_t num_features)
+    : weights_{Tensor::random({validate_num_features(num_features), 1}, -0.01, 0.01)},
+      bias_{Tensor::random({1, 1}, -0.01, 0.01)},
+      dL_dw_{{num_features, 1}},
+      dL_db_{{1, 1}} {}
 
 
 Tensor LogisticRegression::predict_probs(const Tensor &X) const {
@@ -40,11 +40,11 @@ Tensor LogisticRegression::predict_probs(const Tensor &X) const {
         throw std::invalid_argument("X columns must match number of weights");
     }
 
-    Tensor logits = X.matmul(weights_);
+    Tensor logits{X.matmul(weights_)};
     assert(logits.is_matrix());
     assert(logits.cols() == 1);
 
-    for (int i = 0; i < logits.rows(); i++) {
+    for (std::size_t i{0}; i < logits.rows(); ++i) {
         logits.at(i, 0) = logits.at(i, 0) + bias_.at(0, 0);
     }
 
@@ -52,9 +52,9 @@ Tensor LogisticRegression::predict_probs(const Tensor &X) const {
 }
 
 Tensor LogisticRegression::predict(const Tensor &X) const {
-    Tensor probabilities = predict_probs(X);
+    Tensor probabilities{predict_probs(X)};
 
-    Tensor predictions = threshold(probabilities, 0.5);
+    Tensor predictions{threshold(probabilities, 0.5)};
     assert(probabilities.shape() == predictions.shape());
 
     return predictions;
@@ -91,24 +91,24 @@ void LogisticRegression::backward(
     }
 
     // Slightly wasteful as we need to recalculate logits, consider caching later
-    Tensor logits = X.matmul(weights_);
+    Tensor logits{X.matmul(weights_)};
     assert(logits.is_matrix());
     assert(logits.cols() == 1);
 
-    for (int i = 0; i < logits.rows(); i++) {
+    for (std::size_t i{0}; i < logits.rows(); ++i) {
         logits.at(i, 0) = logits.at(i, 0) + bias_.at(0, 0);
     }
 
-    Tensor dpred_dlogits = sigmoid_gradient(logits);
-    Tensor dL_dlogits = dL_dpred.elementwise_multiply(dpred_dlogits);
+    Tensor dpred_dlogits{sigmoid_gradient(logits)};
+    Tensor dL_dlogits{dL_dpred.elementwise_multiply(dpred_dlogits)};
     assert(logits.shape() == dL_dlogits.shape());
 
     dL_dw_ = X.transpose().matmul(dL_dlogits);
     assert(dL_dw_.shape() == weights_.shape());
 
-    double bias_gradient = 0.0;
+    double bias_gradient{0.0};
 
-    for (int i = 0; i < dL_dlogits.rows(); i++) {
+    for (std::size_t i{0}; i < dL_dlogits.rows(); ++i) {
         bias_gradient = bias_gradient + dL_dlogits.at(i, 0);
     }
 

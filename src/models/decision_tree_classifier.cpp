@@ -25,16 +25,16 @@ double weighted_gini_impurity(
         throw std::invalid_argument("y_left and y_right must both be column vectors");
     }
 
-    int n_left = y_left.rows();
-    int n_right = y_right.rows();
-    int n_total = n_left + n_right;
+    std::size_t n_left{y_left.rows()};
+    std::size_t n_right{y_right.rows()};
+    std::size_t n_total{n_left + n_right};
 
     if (n_left == 0 || n_right == 0) {
         return 1.0; // invalid split to have one side have no data
     }
 
-    double left_weight = static_cast<double> (n_left) / n_total;
-    double right_weight = static_cast<double> (n_right) / n_total;
+    double left_weight{static_cast<double>(n_left) / static_cast<double>(n_total)};
+    double right_weight{static_cast<double>(n_right) / static_cast<double>(n_total)};
 
     return left_weight * gini_impurity(y_left)
             + right_weight * gini_impurity(y_right);
@@ -53,9 +53,9 @@ for each feature in the sampled features:
 bool find_best_split(
     const Tensor &X,
     const Tensor &y,
-    int max_features,
+    std::size_t max_features,
     std::mt19937 &generator,
-    int &best_feature_index,
+    std::size_t &best_feature_index,
     double &best_threshold
 ) {
     if (!X.is_matrix() || !y.is_matrix()) {
@@ -74,30 +74,30 @@ bool find_best_split(
         throw std::invalid_argument("y must be a column vector");
     }
 
-    double best_impurity = gini_impurity(y);
-    bool found_split = false;
+    double best_impurity{gini_impurity(y)};
+    bool found_split{false};
 
-    best_feature_index = -1;
+    best_feature_index = 0;
     best_threshold = 0.0;
 
-    std::vector<int> feature_indices = sample_feature_indices(
+    std::vector<std::size_t> feature_indices{sample_feature_indices(
         X.cols(),
         max_features,
         generator
-    );
+    )};
 
-    for (int feature_index : feature_indices) {
-        for (int i = 0; i < X.rows(); i++) {
-            double threshold = X.at(i, feature_index);
+    for (std::size_t feature_index : feature_indices) {
+        for (std::size_t i{0}; i < X.rows(); ++i) {
+            double threshold{X.at(i, feature_index)};
 
-            int n_left = 0;
-            int n_right = 0;
+            std::size_t n_left{0};
+            std::size_t n_right{0};
 
-            for (int sample_index = 0; sample_index < X.rows(); sample_index++) {
+            for (std::size_t sample_index{0}; sample_index < X.rows(); ++sample_index) {
                 if (X.at(sample_index, feature_index) <= threshold) {
-                    n_left++;
+                    ++n_left;
                 } else {
-                    n_right++;
+                    ++n_right;
                 }
             }
 
@@ -105,10 +105,10 @@ bool find_best_split(
                 continue;
             }
 
-            Tensor X_left;
-            Tensor y_left;
-            Tensor X_right;
-            Tensor y_right;
+            Tensor X_left{};
+            Tensor y_left{};
+            Tensor X_right{};
+            Tensor y_right{};
 
             split_dataset(
                 X,
@@ -126,7 +126,7 @@ bool find_best_split(
             assert(y_left.rows() > 0);
             assert(y_right.rows() > 0);
 
-            double impurity = weighted_gini_impurity(y_left, y_right);
+            double impurity{weighted_gini_impurity(y_left, y_right)};
 
             if (impurity < best_impurity) {
                 best_impurity = impurity;
@@ -142,26 +142,26 @@ bool find_best_split(
 
 
 DecisionTreeClassifierNode::DecisionTreeClassifierNode()
-    : is_leaf(false),
-      feature_index(-1),
-      threshold(0.0),
-      prediction(0.0),
-      left(nullptr),
-      right(nullptr) {}
+    : is_leaf{false},
+      feature_index{0},
+      threshold{0.0},
+      prediction{0.0},
+      left{nullptr},
+      right{nullptr} {}
 
 
 DecisionTreeClassifier::DecisionTreeClassifier()
-    : root_(nullptr),
-      max_depth_(5),
-      min_samples_split_(2),
-      max_features_(0),
-      random_seed_(42),
-      generator_(std::mt19937(random_seed_)),
-      fitted_(false) {}
+    : root_{nullptr},
+      max_depth_{5},
+      min_samples_split_{2},
+      max_features_{0},
+      random_seed_{42},
+      generator_{random_seed_},
+      fitted_{false} {}
 
 
-static int validate_max_depth(int max_depth) {
-    if (max_depth <= 0) {
+static std::size_t validate_max_depth(std::size_t max_depth) {
+    if (max_depth == 0) {
         throw std::invalid_argument("max_depth must be positive");
     }
 
@@ -169,7 +169,7 @@ static int validate_max_depth(int max_depth) {
 }
 
 
-static int validate_min_samples_split(int min_samples_split) {
+static std::size_t validate_min_samples_split(std::size_t min_samples_split) {
     if (min_samples_split <= 1) {
         throw std::invalid_argument("min_samples_split must be greater than 1");
     }
@@ -178,28 +178,24 @@ static int validate_min_samples_split(int min_samples_split) {
 }
 
 
-static int validate_max_features(int max_features) {
-    if (max_features < 0) {
-        throw std::invalid_argument("max_features cannot be negative");
-    }
-
+static std::size_t validate_max_features(std::size_t max_features) {
     return max_features;
 }
 
 
 DecisionTreeClassifier::DecisionTreeClassifier(
-    int max_depth, 
-    int min_samples_split,
-    int max_features,
+    std::size_t max_depth,
+    std::size_t min_samples_split,
+    std::size_t max_features,
     unsigned int random_seed
 )
-    : root_(nullptr),
-      max_depth_(validate_max_depth(max_depth)),
-      min_samples_split_(validate_min_samples_split(min_samples_split)),
-      max_features_(validate_max_features(max_features)),
-      random_seed_(random_seed),
-      generator_(std::mt19937(random_seed_)),
-      fitted_(false) {}
+    : root_{nullptr},
+      max_depth_{validate_max_depth(max_depth)},
+      min_samples_split_{validate_min_samples_split(min_samples_split)},
+      max_features_{validate_max_features(max_features)},
+      random_seed_{random_seed},
+      generator_{random_seed_},
+      fitted_{false} {}
 
 
 void DecisionTreeClassifier::fit(
@@ -243,7 +239,7 @@ else:
 std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
     const Tensor &X,
     const Tensor &y,
-    int depth
+    std::size_t depth
 ) {
     if (!X.is_matrix() || !y.is_matrix()) {
         throw std::invalid_argument("X and y must be rank-2 tensors");
@@ -257,7 +253,7 @@ std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
         throw std::invalid_argument("y must have exactly one column");
     }
 
-    auto node = std::make_unique<DecisionTreeClassifierNode>();
+    auto node{std::make_unique<DecisionTreeClassifierNode>()};
 
     if (all_same_class(y) ||
         depth >= max_depth_ ||
@@ -269,17 +265,17 @@ std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
         return node;
     }
 
-    int best_feature_index = -1;
-    double best_threshold = 0.0;
+    std::size_t best_feature_index{0};
+    double best_threshold{0.0};
 
-    bool found_split = find_best_split(
+    bool found_split{find_best_split(
         X,
         y,
         max_features_,
         generator_,
         best_feature_index,
         best_threshold
-    );
+    )};
 
     if (!found_split) {
         node->is_leaf = true;
@@ -288,10 +284,10 @@ std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
         return node;
     }
 
-    Tensor X_left;
-    Tensor y_left;
-    Tensor X_right;
-    Tensor y_right;
+    Tensor X_left{};
+    Tensor y_left{};
+    Tensor X_right{};
+    Tensor y_right{};
 
     split_dataset(
         X,
@@ -358,10 +354,10 @@ Tensor DecisionTreeClassifier::predict(const Tensor &X) const {
         throw std::invalid_argument("X cannot be empty");
     }
 
-    Tensor predictions({X.rows(), 1});
+    Tensor predictions{{X.rows(), 1}};
 
-    for (int i = 0; i < X.rows(); i++) {
-        Tensor sample = X.row(i);
+    for (std::size_t i{0}; i < X.rows(); ++i) {
+        Tensor sample{X.row(i)};
 
         predictions.at(i, 0) = predict_sample(sample, root_.get());
     }

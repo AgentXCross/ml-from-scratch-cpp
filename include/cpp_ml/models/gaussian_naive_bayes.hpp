@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class GaussianNaiveBayes {
@@ -27,7 +29,7 @@ private:
     // By Bayes Rule, posterior = (likelihood * prior) / evidence
     // because P(c | x) = (P(x | c) * P(c)) / P(x)
 
-    int num_classes_;
+    std::size_t num_classes_;
     bool fitted_;
 
 public:
@@ -45,7 +47,7 @@ public:
     Tensor variances() const;
     Tensor priors() const;
 
-    int num_classes() const;
+    std::size_t num_classes() const;
 };
 
 }

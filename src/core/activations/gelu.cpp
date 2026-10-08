@@ -5,7 +5,7 @@
 
 namespace cpp_ml {
 
-static const double pi = 3.14159265358979323846;
+static constexpr double pi{3.14159265358979323846};
 
 Tensor gelu(const Tensor &x) {
     // GELU(x) = x * Φ(x)
@@ -14,10 +14,10 @@ Tensor gelu(const Tensor &x) {
         throw std::invalid_argument("Cannot apply GELU to an empty tensor");
     }
 
-    Tensor phi(x.shape());
+    Tensor phi{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
-        double value = x.at_flat(i);
+    for (std::size_t i{0}; i < x.size(); ++i) {
+        double value{x.at_flat(i)};
 
         phi.at_flat(i) = 0.5 * (1.0 + std::erf(value / std::sqrt(2.0)));
     }
@@ -35,11 +35,11 @@ Tensor gelu_gradient(const Tensor &x) {
         throw std::invalid_argument("Cannot compute GELU gradient of an empty tensor");
     }
 
-    Tensor phi_prime(x.shape());
-    Tensor phi(x.shape());
+    Tensor phi_prime{x.shape()};
+    Tensor phi{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
-        double value = x.at_flat(i);
+    for (std::size_t i{0}; i < x.size(); ++i) {
+        double value{x.at_flat(i)};
 
         phi_prime.at_flat(i) = (1.0 / std::sqrt(2.0 * pi)) * 
                                 std::exp(-0.5 * value * value);
@@ -51,10 +51,9 @@ Tensor gelu_gradient(const Tensor &x) {
 }
 
 
-GELU::GELU() {
-    input_ = Tensor();
-    has_input_ = false;
-}
+GELU::GELU()
+    : input_{},
+      has_input_{false} {}
 
 
 Tensor GELU::forward(const Tensor &X) {
@@ -74,9 +73,9 @@ Tensor GELU::backward(const Tensor &dL_dout) {
         throw std::invalid_argument("dL_dout must have the same shape as input");
     }
 
-    Tensor dout_dX = gelu_gradient(input_);
+    Tensor dout_dX{gelu_gradient(input_)};
 
-    Tensor dL_dX = dL_dout.elementwise_multiply(dout_dX);
+    Tensor dL_dX{dL_dout.elementwise_multiply(dout_dX)};
 
     return dL_dX;
 }

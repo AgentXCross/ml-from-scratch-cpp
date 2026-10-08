@@ -11,14 +11,14 @@
 namespace cpp_ml {
 
 KNNRegressor::KNNRegressor() 
-    : X_train_(Tensor()),
-      y_train_(Tensor()),
-      k_(1),
-      fitted_(false) {}
+    : X_train_{},
+      y_train_{},
+      k_{1},
+      fitted_{false} {}
 
 
-static int validate_k(int k) {
-    if (k <= 0) {
+static std::size_t validate_k(std::size_t k) {
+    if (k == 0) {
         throw std::invalid_argument("k must be positive");
     }
 
@@ -26,11 +26,11 @@ static int validate_k(int k) {
 }
 
 
-KNNRegressor::KNNRegressor(int k) 
-    : X_train_(Tensor()),
-      y_train_(Tensor()),
-      k_(validate_k(k)),
-      fitted_(false) {}
+KNNRegressor::KNNRegressor(std::size_t k)
+    : X_train_{},
+      y_train_{},
+      k_{validate_k(k)},
+      fitted_{false} {}
 
 
 void KNNRegressor::fit(
@@ -84,22 +84,22 @@ Tensor KNNRegressor::predict(const Tensor &X) const {
         throw std::invalid_argument("X must have the same number of columns as X_train");
     }
 
-    Tensor predictions({X.rows(), 1});
+    Tensor predictions{{X.rows(), 1}};
 
-    for (int i = 0; i < X.rows(); i++) {
+    for (std::size_t i{0}; i < X.rows(); ++i) {
         std::vector<std::pair<double, double>> distances_and_values;
 
-        Tensor sample = X.row(i);
+        Tensor sample{X.row(i)};
         assert(sample.rows() == 1);
         assert(sample.cols() == X_train_.cols());
 
-        for (int j = 0; j < X_train_.rows(); j++) {
-            Tensor train_sample = X_train_.row(j);
+        for (std::size_t j{0}; j < X_train_.rows(); ++j) {
+            Tensor train_sample{X_train_.row(j)};
             assert(train_sample.rows() == 1);
             assert(train_sample.cols() == sample.cols());
 
-            double distance = euclidean_distance(sample, train_sample);
-            double value = static_cast<double>(y_train_.at(j, 0));
+            double distance{euclidean_distance(sample, train_sample)};
+            double value{y_train_.at(j, 0)};
 
             distances_and_values.push_back({distance, value});
         }
@@ -113,13 +113,13 @@ Tensor KNNRegressor::predict(const Tensor &X) const {
         );
         
         assert(distances_and_values.size() >= k_);
-        double sum_of_neighbors = 0.0;
+        double sum_of_neighbors{0.0};
 
-        for (int neighbor = 0; neighbor < k_; neighbor++) {
+        for (std::size_t neighbor{0}; neighbor < k_; ++neighbor) {
             sum_of_neighbors += distances_and_values[neighbor].second;
         }
 
-        double average_of_neighbors = static_cast<double>(sum_of_neighbors) / k_;
+        double average_of_neighbors{sum_of_neighbors / static_cast<double>(k_)};
 
         predictions.at(i, 0) = average_of_neighbors;
     }
@@ -132,7 +132,7 @@ Tensor KNNRegressor::predict(const Tensor &X) const {
 }
 
 
-int KNNRegressor::k() const {
+std::size_t KNNRegressor::k() const {
     return k_;
 }
 

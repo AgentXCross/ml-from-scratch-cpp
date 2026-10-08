@@ -1,9 +1,8 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
-#include <initializer_list>
+#include <cstddef>
 #include <utility>
+#include <vector>
 
 namespace cpp_ml {
 
@@ -14,20 +13,20 @@ Depreciated. Replaced with the Tensor class.
 */
 class Matrix {
 private:
-    int rows_;
-    int cols_;
+    std::size_t rows_;
+    std::size_t cols_;
     std::vector<double> data_;
 
 public:
     Matrix();
-    Matrix(int rows, int cols);
-    Matrix(int rows, int cols, double value);
+    Matrix(std::size_t rows, std::size_t cols);
+    Matrix(std::size_t rows, std::size_t cols, double value);
 
-    int rows() const;
-    int cols() const;
+    std::size_t rows() const;
+    std::size_t cols() const;
 
-    double &at(int row, int col); // read + write
-    double at(int row, int col) const; // read-only
+    double &at(std::size_t row, std::size_t col); // read + write
+    double at(std::size_t row, std::size_t col) const; // read-only
 
     Matrix operator+(const Matrix &other) const;
     Matrix operator-(const Matrix &other) const;
@@ -38,17 +37,17 @@ public:
     Matrix matmul(const Matrix &other) const;
     Matrix transpose() const;
 
-    std::pair<int, int> shape() const;
+    std::pair<std::size_t, std::size_t> shape() const;
 
     // class methods
-    static Matrix zeros(int rows, int cols);
-    static Matrix ones(int rows, int cols);
-    static Matrix random(int rows, int cols, double min = -1.0, double max = 1.0);
+    static Matrix zeros(std::size_t rows, std::size_t cols);
+    static Matrix ones(std::size_t rows, std::size_t cols);
+    static Matrix random(std::size_t rows, std::size_t cols, double min = -1.0, double max = 1.0);
 
     void print() const;
     void print_shape() const;
 
-    Matrix row(int row_index) const;
+    Matrix row(std::size_t row_index) const;
 
     static Matrix from_vector(
         const std::vector<std::vector<double>> &values

@@ -21,13 +21,13 @@ double cross_entropy(
         throw std::invalid_argument("cross_entropy expects rank-2 tensors");
     }
 
-    double epsilon = 1e-15;
-    double loss = 0.0;
+    double epsilon{1e-15};
+    double loss{0.0};
 
-    for (int i = 0; i < y_true.rows(); i++) {
-        for (int j = 0; j < y_true.cols(); j++) {
-            double y = y_true.at(i, j);
-            double p = y_probs.at(i, j);
+    for (std::size_t i{0}; i < y_true.rows(); ++i) {
+        for (std::size_t j{0}; j < y_true.cols(); ++j) {
+            double y{y_true.at(i, j)};
+            double p{y_probs.at(i, j)};
 
             if (p < epsilon) {
                 p = epsilon;
@@ -39,7 +39,7 @@ double cross_entropy(
         }
     }
 
-    return loss / y_true.rows();
+    return loss / static_cast<double>(y_true.rows());
 }
 
 
@@ -59,9 +59,9 @@ Tensor cross_entropy_gradient(
         throw std::invalid_argument("cross_entropy_gradient expects rank-2 tensors");
     }
 
-    Tensor dL_dlogits = y_probs - y_true;
+    Tensor dL_dlogits{y_probs - y_true};
 
-    return dL_dlogits / y_true.rows();
+    return dL_dlogits / static_cast<double>(y_true.rows());
 }
 
 }

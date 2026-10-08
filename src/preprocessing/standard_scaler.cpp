@@ -7,9 +7,9 @@
 namespace cpp_ml {
 
 StandardScaler::StandardScaler()
-    : means_(Tensor()),
-      stds_(Tensor()),
-      fitted_(false) {}
+    : means_{},
+      stds_{},
+      fitted_{false} {}
 
 
 void StandardScaler::fit(const Tensor &X) {
@@ -21,28 +21,28 @@ void StandardScaler::fit(const Tensor &X) {
         throw std::invalid_argument("Cannot fit StandardScaler on an empty tensor");
     }
 
-    means_ = Tensor({1, X.cols()});
-    stds_ = Tensor({1, X.cols()});
+    means_ = Tensor{{1, X.cols()}};
+    stds_ = Tensor{{1, X.cols()}};
 
-    for (int j = 0; j < X.cols(); j++) { // loop through features
-        double sum = 0.0;
+    for (std::size_t j{0}; j < X.cols(); ++j) { // loop through features
+        double sum{0.0};
 
-        for (int i = 0; i < X.rows(); i++) { // loop through samples
+        for (std::size_t i{0}; i < X.rows(); ++i) { // loop through samples
             sum = sum + X.at(i, j);
         }
 
-        double mean = sum / X.rows();
+        double mean{sum / static_cast<double>(X.rows())};
         means_.at(0, j) = mean;
 
-        double squared_diff_sum = 0.0;
+        double squared_diff_sum{0.0};
 
-        for (int i = 0; i < X.rows(); i++) {
-            double diff = X.at(i, j) - mean;
+        for (std::size_t i{0}; i < X.rows(); ++i) {
+            double diff{X.at(i, j) - mean};
             squared_diff_sum = squared_diff_sum + diff * diff;
         }
 
-        double variance = squared_diff_sum / X.rows();
-        double std = std::sqrt(variance);
+        double variance{squared_diff_sum / static_cast<double>(X.rows())};
+        double std{std::sqrt(variance)};
 
         if (std == 0.0) {
             std = 1.0;
@@ -77,10 +77,10 @@ Tensor StandardScaler::transform(const Tensor &X) const {
         throw std::invalid_argument("X must have same number of columns as the fitted data");
     }
 
-    Tensor result({X.rows(), X.cols()});
+    Tensor result{{X.rows(), X.cols()}};
 
-    for (int i = 0; i < X.rows(); i++) {
-        for (int j = 0; j < X.cols(); j++) {
+    for (std::size_t i{0}; i < X.rows(); ++i) {
+        for (std::size_t j{0}; j < X.cols(); ++j) {
             result.at(i, j) = (X.at(i, j) - means_.at(0, j)) / stds_.at(0, j);
         }
     }

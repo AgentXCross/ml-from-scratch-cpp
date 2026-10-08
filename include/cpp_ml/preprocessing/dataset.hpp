@@ -2,6 +2,7 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
 #include <string>
 
 namespace cpp_ml {
@@ -14,7 +15,7 @@ struct Dataset {
 // Expects numerical data
 Dataset read_csv_dataset(
     const std::string &filepath,
-    int label_column,
+    std::size_t label_column,
     bool has_header = true
 );
 

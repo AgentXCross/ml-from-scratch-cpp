@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 /*
@@ -10,7 +12,7 @@ turns each label into a one-hot row vector.
 */
 Tensor one_hot_encode(
     const Tensor &y,
-    int num_classes
+    std::size_t num_classes
 );
 
 }

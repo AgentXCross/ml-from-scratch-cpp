@@ -3,11 +3,11 @@
 namespace cpp_ml {
 
 DecisionTreeRegressorNode::DecisionTreeRegressorNode()
-    : is_leaf(false),
-      feature_index(-1),
-      threshold(0.0),
-      prediction(0.0),
-      left(nullptr),
-      right(nullptr) {}
+    : is_leaf{false},
+      feature_index{0},
+      threshold{0.0},
+      prediction{0.0},
+      left{nullptr},
+      right{nullptr} {}
 
 }

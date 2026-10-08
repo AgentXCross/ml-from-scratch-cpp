@@ -16,9 +16,9 @@ bool all_same_class(const Tensor &y) {
         throw std::invalid_argument("y must be a non-empty column vector");
     }
 
-    double first_label = y.at(0, 0);
+    double first_label{y.at(0, 0)};
 
-    for (int i = 1; i < y.rows(); i++) {
+    for (std::size_t i{1}; i < y.rows(); ++i) {
         if (y.at(i, 0) != first_label) {
             return false;
         }
@@ -31,7 +31,7 @@ bool all_same_class(const Tensor &y) {
 void split_dataset(
     const Tensor &X,
     const Tensor &y,
-    int feature_index,
+    std::size_t feature_index,
     double threshold,
     Tensor &X_left,
     Tensor &y_left,
@@ -58,23 +58,23 @@ void split_dataset(
         throw std::invalid_argument("y must have exactly one column");
     }
 
-    if (feature_index < 0 || feature_index >= X.cols()) {
+    if (feature_index >= X.cols()) {
         throw std::invalid_argument("feature_index is out of index");
     }
 
-    std::vector<std::vector<double>> X_left_values;
-    std::vector<std::vector<double>> y_left_values;
-    std::vector<std::vector<double>> X_right_values;
-    std::vector<std::vector<double>> y_right_values;
+    std::vector<std::vector<double>> X_left_values{};
+    std::vector<std::vector<double>> y_left_values{};
+    std::vector<std::vector<double>> X_right_values{};
+    std::vector<std::vector<double>> y_right_values{};
 
-    for (int i = 0; i < X.rows(); i++) {
-        std::vector<double> X_row;
+    for (std::size_t i{0}; i < X.rows(); ++i) {
+        std::vector<double> X_row{};
 
-        for (int j = 0; j < X.cols(); j++) {
+        for (std::size_t j{0}; j < X.cols(); ++j) {
             X_row.push_back(X.at(i, j));
         }
 
-        std::vector<double> y_row = {y.at(i, 0)};
+        std::vector<double> y_row{y.at(i, 0)};
 
         if (X.at(i, feature_index) <= threshold) {
             X_left_values.push_back(X_row);
@@ -107,22 +107,18 @@ void split_dataset(
 }
 
 
-std::vector<int> sample_feature_indices(
-    int num_features,
-    int max_features,
+std::vector<std::size_t> sample_feature_indices(
+    std::size_t num_features,
+    std::size_t max_features,
     std::mt19937 &generator
 ) {
-    if (num_features <= 0) {
+    if (num_features == 0) {
         throw std::invalid_argument("num_features must be positive");
     }
 
-    if (max_features < 0) {
-        throw std::invalid_argument("max_features cannot be negative");
-    }
+    std::vector<std::size_t> feature_indices{};
 
-    std::vector<int> feature_indices;
-
-    for (int feature_index = 0; feature_index < num_features; feature_index++) {
+    for (std::size_t feature_index{0}; feature_index < num_features; ++feature_index) {
         feature_indices.push_back(feature_index);
     }
 
@@ -151,16 +147,16 @@ double gini_impurity(const Tensor &y) {
         throw std::invalid_argument("y must be a non-empty column vector with shape {n_samples, 1}");
     }
 
-    std::map<double, int> class_counts;
+    std::map<double, std::size_t> class_counts{};
 
-    for (int i = 0; i < y.rows(); i++) {
-        class_counts[y.at(i, 0)]++;
+    for (std::size_t i{0}; i < y.rows(); ++i) {
+        ++class_counts[y.at(i, 0)];
     }
     
-    double impurity = 1.0;
+    double impurity{1.0};
 
     for (const auto &[label, count] : class_counts) {
-        double probability = static_cast<double> (count) / y.rows();
+        double probability{static_cast<double>(count) / static_cast<double>(y.rows())};
         impurity -= probability * probability;
     }
 
@@ -177,14 +173,14 @@ double majority_class(const Tensor &y) {
         throw std::invalid_argument("y must be a non-empty column vector with shape {n_samples, 1}");
     }
 
-    std::map<double, int> class_counts;
+    std::map<double, std::size_t> class_counts{};
 
-    for (int i = 0; i < y.rows(); i++) {
-        class_counts[y.at(i, 0)]++;
+    for (std::size_t i{0}; i < y.rows(); ++i) {
+        ++class_counts[y.at(i, 0)];
     }
 
-    double best_label = 0.0;
-    int best_count = -1;
+    double best_label{0.0};
+    std::size_t best_count{0};
 
     for (const auto &[label, count] : class_counts) {
         if (count > best_count) {

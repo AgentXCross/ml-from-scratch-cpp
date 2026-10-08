@@ -6,9 +6,9 @@
 namespace cpp_ml {
 
 MinMaxScaler::MinMaxScaler()
-    : mins_(Tensor()),
-      maxs_(Tensor()),
-      fitted_(false) {}
+    : mins_{},
+      maxs_{},
+      fitted_{false} {}
 
 
 void MinMaxScaler::fit(const Tensor &X) {
@@ -20,15 +20,15 @@ void MinMaxScaler::fit(const Tensor &X) {
         throw std::invalid_argument("Cannot fit MinMaxScaler on an empty tensor");
     }
 
-    mins_ = Tensor({1, X.cols()});
-    maxs_ = Tensor({1, X.cols()});
+    mins_ = Tensor{{1, X.cols()}};
+    maxs_ = Tensor{{1, X.cols()}};
 
-    for (int j = 0; j < X.cols(); j++) {
-        double min_value = X.at(0, j);
-        double max_value = X.at(0, j);
+    for (std::size_t j{0}; j < X.cols(); ++j) {
+        double min_value{X.at(0, j)};
+        double max_value{X.at(0, j)};
 
-        for (int i = 0; i < X.rows(); i++) {
-            double value = X.at(i, j);
+        for (std::size_t i{0}; i < X.rows(); ++i) {
+            double value{X.at(i, j)};
 
             if (value < min_value) {
                 min_value = value;
@@ -69,10 +69,10 @@ Tensor MinMaxScaler::transform(const Tensor &X) const {
         throw std::invalid_argument("X must have the same number of columns as the fitted data");
     }
 
-    Tensor result({X.rows(), X.cols()});
+    Tensor result{{X.rows(), X.cols()}};
 
-    for (int i = 0; i < X.rows(); i++) {
-        for (int j = 0; j < X.cols(); j++) {
+    for (std::size_t i{0}; i < X.rows(); ++i) {
+        for (std::size_t j{0}; j < X.cols(); ++j) {
             if (maxs_.at(0, j) - mins_.at(0, j) == 0.0) {
                 result.at(i, j) = 0.0;
                 continue;

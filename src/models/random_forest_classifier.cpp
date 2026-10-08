@@ -10,17 +10,17 @@
 namespace cpp_ml {
 
 RandomForestClassifier::RandomForestClassifier()
-    : trees_(),
-      num_trees_(10),
-      max_depth_(5),
-      min_samples_split_(2),
-      max_features_(0),
-      random_seed_(42),
-      fitted_(false) {}
+    : trees_{},
+      num_trees_{10},
+      max_depth_{5},
+      min_samples_split_{2},
+      max_features_{0},
+      random_seed_{42},
+      fitted_{false} {}
 
 
-static int validate_num_trees(int num_trees) {
-    if (num_trees <= 0) {
+static std::size_t validate_num_trees(std::size_t num_trees) {
+    if (num_trees == 0) {
         throw std::invalid_argument("num_trees must be positive");
     }
 
@@ -28,8 +28,8 @@ static int validate_num_trees(int num_trees) {
 }
 
 
-static int validate_max_depth(int max_depth) {
-    if (max_depth <= 0) {
+static std::size_t validate_max_depth(std::size_t max_depth) {
+    if (max_depth == 0) {
         throw std::invalid_argument("max_depth must be positive");
     }
 
@@ -37,7 +37,7 @@ static int validate_max_depth(int max_depth) {
 }
 
 
-static int validate_min_samples_split(int min_samples_split) {
+static std::size_t validate_min_samples_split(std::size_t min_samples_split) {
     if (min_samples_split <= 1) {
         throw std::invalid_argument("min_samples_split must be greater than 1");
     } 
@@ -46,29 +46,25 @@ static int validate_min_samples_split(int min_samples_split) {
 }
 
 
-static int validate_max_features(int max_features) {
-    if (max_features < 0) {
-        throw std::invalid_argument("max_features must be positive or 0 (to represent all features)");
-    }
-
+static std::size_t validate_max_features(std::size_t max_features) {
     return max_features;
 }
 
 
 RandomForestClassifier::RandomForestClassifier(
-    int num_trees,
-    int max_depth,
-    int min_samples_split,
-    int max_features,
+    std::size_t num_trees,
+    std::size_t max_depth,
+    std::size_t min_samples_split,
+    std::size_t max_features,
     unsigned int random_seed
 )
-    : trees_(),
-      num_trees_(validate_num_trees(num_trees)),
-      max_depth_(validate_max_depth(max_depth)),
-      min_samples_split_(validate_min_samples_split(min_samples_split)),
-      max_features_(validate_max_features(max_features)),
-      random_seed_(random_seed),
-      fitted_(false) {}
+    : trees_{},
+      num_trees_{validate_num_trees(num_trees)},
+      max_depth_{validate_max_depth(max_depth)},
+      min_samples_split_{validate_min_samples_split(min_samples_split)},
+      max_features_{validate_max_features(max_features)},
+      random_seed_{random_seed},
+      fitted_{false} {}
 
 
 void RandomForestClassifier::fit(
@@ -91,10 +87,6 @@ void RandomForestClassifier::fit(
         throw std::invalid_argument("X and y must have the same number of rows");
     }
 
-    if (max_features_ < 0) {
-        throw std::invalid_argument("max_features must be positive or 0 (to represent all features)");
-    }
-
     if (max_features_ > X.cols()) {
         throw std::invalid_argument("max_features cannot be greater than the number of features");
     }
@@ -102,14 +94,14 @@ void RandomForestClassifier::fit(
     trees_.clear();
     trees_.reserve(num_trees_);
 
-    std::mt19937 generator(random_seed_);
-    std::uniform_int_distribution<int> sample_distribution(
+    std::mt19937 generator{random_seed_};
+    std::uniform_int_distribution<std::size_t> sample_distribution{
         0,
         X.rows() - 1
-    );
+    };
 
     // Randomly sample the original dataset with replacement N times, where N is the number of samples in the original dataset (bootstrapping)
-    for (int tree_index = 0; tree_index < num_trees_; tree_index++) {
+    for (std::size_t tree_index{0}; tree_index < num_trees_; ++tree_index) {
         std::vector<std::vector<double>> X_bootstrap_values;
         std::vector<std::vector<double>> y_bootstrap_values;
 
@@ -117,12 +109,12 @@ void RandomForestClassifier::fit(
         X_bootstrap_values.reserve(X.rows());
         y_bootstrap_values.reserve(y.rows());
 
-        for (int i = 0; i < X.rows(); i++) {
-            int sampled_index = sample_distribution(generator);
+        for (std::size_t i{0}; i < X.rows(); ++i) {
+            std::size_t sampled_index{sample_distribution(generator)};
 
             std::vector<double> X_row;
 
-            for (int j = 0; j < X.cols(); j++) {
+            for (std::size_t j{0}; j < X.cols(); ++j) {
                 X_row.push_back(X.at(sampled_index, j));
             }
 
@@ -130,8 +122,8 @@ void RandomForestClassifier::fit(
             y_bootstrap_values.push_back({y.at(sampled_index, 0)});
         }
 
-        Tensor X_bootstrap = Tensor::from_vector(X_bootstrap_values);
-        Tensor y_bootstrap = Tensor::from_vector(y_bootstrap_values);
+        Tensor X_bootstrap{Tensor::from_vector(X_bootstrap_values)};
+        Tensor y_bootstrap{Tensor::from_vector(y_bootstrap_values)};
         assert(X_bootstrap.is_matrix());
         assert(y_bootstrap.is_matrix());
         assert(X_bootstrap.rows() == X.rows());
@@ -139,19 +131,19 @@ void RandomForestClassifier::fit(
         assert(y_bootstrap.rows() == y.rows());
         assert(y_bootstrap.cols() == 1);
 
-        std::unique_ptr<DecisionTreeClassifier> tree = std::make_unique<DecisionTreeClassifier> (
+        std::unique_ptr<DecisionTreeClassifier> tree{std::make_unique<DecisionTreeClassifier>(
             max_depth_,
             min_samples_split_,
             max_features_,
-            random_seed_ + tree_index
-        );
+            random_seed_ + static_cast<unsigned int>(tree_index)
+        )};
 
         tree->fit(X_bootstrap, y_bootstrap);
 
         trees_.push_back(std::move(tree)); // transfer ownership
     }
 
-    assert(static_cast<int>(trees_.size()) == num_trees_);
+    assert(trees_.size() == num_trees_);
 
     fitted_ = true;
 }
@@ -170,11 +162,11 @@ Tensor RandomForestClassifier::predict(const Tensor &X) const {
         throw std::invalid_argument("X cannot be empty");
     }
 
-    if (static_cast<int>(trees_.size()) != num_trees_) {
+    if (trees_.size() != num_trees_) {
         throw std::runtime_error("RandomForestClassifier has an invalid number of fitted trees");
     }
 
-    Tensor predictions({X.rows(), 1});
+    Tensor predictions{{X.rows(), 1}};
 
     // Each individual tree predicts one label per sample
     // Each element in tree_predictions is the prediction of one tree on all samples
@@ -182,7 +174,7 @@ Tensor RandomForestClassifier::predict(const Tensor &X) const {
     std::vector<Tensor> tree_predictions; 
     tree_predictions.reserve(trees_.size());
 
-    for (int tree_index = 0; tree_index < static_cast<int>(trees_.size()); tree_index++) {
+    for (std::size_t tree_index{0}; tree_index < trees_.size(); ++tree_index) {
         // predict from decision_tree_classifier.cpp returns a column vector
         tree_predictions.push_back(trees_[tree_index]->predict(X)); 
         assert(tree_predictions[tree_index].is_matrix());
@@ -190,20 +182,20 @@ Tensor RandomForestClassifier::predict(const Tensor &X) const {
         assert(tree_predictions[tree_index].cols() == 1);
     }
 
-    for (int i = 0; i < X.rows(); i++) { // ith sample
-        std::map<double, int> class_counts;
+    for (std::size_t i{0}; i < X.rows(); ++i) { // ith sample
+        std::map<double, std::size_t> class_counts;
 
-        for (int tree_index = 0; tree_index < static_cast<int>(tree_predictions.size()); tree_index++) {
-            double predicted_class = tree_predictions[tree_index].at(i, 0);
-            class_counts[predicted_class]++;
+        for (std::size_t tree_index{0}; tree_index < tree_predictions.size(); ++tree_index) {
+            double predicted_class{tree_predictions[tree_index].at(i, 0)};
+            ++class_counts[predicted_class];
         }
 
-        double best_class = 0.0;
-        int best_count = -1;
+        double best_class{0.0};
+        std::size_t best_count{0};
 
         for (const auto &[key, value] : class_counts) {
-            double class_label = key;
-            int count = value;
+            double class_label{key};
+            std::size_t count{value};
 
             if (count > best_count) {
                 best_count = count;
@@ -222,7 +214,7 @@ Tensor RandomForestClassifier::predict(const Tensor &X) const {
 }
 
 
-int RandomForestClassifier::num_trees() const {
+std::size_t RandomForestClassifier::num_trees() const {
     return num_trees_;
 }
 

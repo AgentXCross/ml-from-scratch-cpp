@@ -2,18 +2,20 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class KNN {
 private:
     Tensor X_train_;
     Tensor y_train_;
-    int k_; // # of neighbors considered in classifying
+    std::size_t k_; // # of neighbors considered in classifying
     bool fitted_;
 
 public:
     KNN();
-    KNN(int k);
+    KNN(std::size_t k);
 
     void fit(
         const Tensor &X_train,
@@ -22,7 +24,7 @@ public:
 
     Tensor predict(const Tensor &X) const;
 
-    int k() const;
+    std::size_t k() const;
 };
 
 }

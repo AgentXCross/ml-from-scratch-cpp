@@ -17,25 +17,25 @@ double recall_score(
         throw std::invalid_argument("y_true and y_pred must have the same shape");
     }
 
-    int tp = 0;
-    int fn = 0;
+    std::size_t tp{0};
+    std::size_t fn{0};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double truth = y_true.at_flat(i);
-        double pred = y_pred.at_flat(i);
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double truth{y_true.at_flat(i)};
+        double pred{y_pred.at_flat(i)};
 
         if (pred == positive_class && truth == positive_class) {
-            tp++;
+            ++tp;
         } else if (pred != positive_class && truth == positive_class) {
-            fn++;
+            ++fn;
         }
     }
 
-    if (tp + fn == 0.0) {
+    if (tp + fn == 0) {
         return 0.0;
     }
 
-    return static_cast<double> (tp) / (tp + fn);
+    return static_cast<double>(tp) / static_cast<double>(tp + fn);
 }
 
 }

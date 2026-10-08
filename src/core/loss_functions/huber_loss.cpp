@@ -26,10 +26,10 @@ double huber_loss(
         throw std::invalid_argument("Huber Loss expects rank-2 tensors");
     }
 
-    double loss = 0.0;
+    double loss{0.0};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double error = std::abs(y_true.at_flat(i) - y_pred.at_flat(i));
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double error{std::abs(y_true.at_flat(i) - y_pred.at_flat(i))};
 
         if (error <= delta) {
             loss += 0.5 * error * error;
@@ -38,7 +38,7 @@ double huber_loss(
         }
     }
 
-    return loss / y_pred.rows();
+    return loss / static_cast<double>(y_pred.rows());
 }
 
 cpp_ml::Tensor huber_loss_gradient(
@@ -64,8 +64,8 @@ cpp_ml::Tensor huber_loss_gradient(
 
     Tensor dL_dpred{y_true.shape()};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double error = y_pred.at_flat(i) - y_true.at_flat(i);
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double error{y_pred.at_flat(i) - y_true.at_flat(i)};
 
         if (std::abs(error) <= delta) {
             dL_dpred.at_flat(i) = error;

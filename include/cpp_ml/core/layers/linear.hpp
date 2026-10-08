@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/layers/layer.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class Linear : public Layer {
@@ -17,8 +19,8 @@ private:
 public:
     Linear();
     Linear(
-        int in_features,
-        int out_features
+        std::size_t in_features,
+        std::size_t out_features
     );
 
     /*

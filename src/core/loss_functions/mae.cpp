@@ -20,9 +20,9 @@ double mean_absolute_error(
         throw std::invalid_argument("mean_absolute_error expects rank-2 tensors");
     }
 
-    Tensor error = y_pred - y_true;
+    Tensor error{y_pred - y_true};
 
-    return error.abs().sum() / y_true.size();
+    return error.abs().sum() / static_cast<double>(y_true.size());
 }
 
 Tensor mean_absolute_error_gradient(
@@ -41,15 +41,15 @@ Tensor mean_absolute_error_gradient(
         throw std::invalid_argument("mean_absolute_error_gradient expects rank-2 tensors");
     }
 
-    Tensor dL_dpred(y_true.shape());
+    Tensor dL_dpred{y_true.shape()};
 
-    for (int i = 0; i < y_true.size(); i++) {
-        double error = y_pred.at_flat(i) - y_true.at_flat(i);
+    for (std::size_t i{0}; i < y_true.size(); ++i) {
+        double error{y_pred.at_flat(i) - y_true.at_flat(i)};
 
         if (error > 0.0) {
-            dL_dpred.at_flat(i) = 1.0 / y_true.size();
+            dL_dpred.at_flat(i) = 1.0 / static_cast<double>(y_true.size());
         } else if (error < 0.0) {
-            dL_dpred.at_flat(i) = -1.0 / y_true.size();
+            dL_dpred.at_flat(i) = -1.0 / static_cast<double>(y_true.size());
         } else {
             dL_dpred.at_flat(i) = 0.0; // MAE not differentiable at 0
         }

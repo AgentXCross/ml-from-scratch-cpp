@@ -1,5 +1,7 @@
 #include "cpp_ml/core/utils/threshold.hpp"
 
+#include <stdexcept>
+
 namespace cpp_ml {
 
 Tensor threshold(
@@ -12,9 +14,9 @@ Tensor threshold(
         throw std::invalid_argument("Cannot threshold an empty tensor");
     }
 
-    Tensor result(x.shape());
+    Tensor result{x.shape()};
 
-    for (int i = 0; i < x.size(); i++) {
+    for (std::size_t i{0}; i < x.size(); ++i) {
         if (x.at_flat(i) >= cutoff) {
             result.at_flat(i) = upper;
         } else {

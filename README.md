@@ -242,13 +242,14 @@ root/
 2. Functions, variables, parameters, and any other identifiers are written in snake_case.
 3. Private data members in classes are written using trailing underscores (e.g. data_, size_).
 4. The `using namespace std`; directive is never used. When referring to entities from the Standard Library, always use the `std` namespace followed by the scope resolution operator.
-5. Brace initialization is preferred whenever possible (e.g. int x{5}).
+5. Brace initialization is preferred whenever possible (e.g. `int x{5}`).
 6. Constructor methods prefer intializer list syntax whenever possible.
 7. Header files all use `#pragma once`.
 8. Empty tensors are not allowed, but scalar tensors are allowed.
 9. Shape checks should happen before mathematical operations.
 10. Vectors use parentheses initialization `std::vector<T>(size, value)`.
 11. Runtime validation throws standard exceptions if an error occures. 
+12. Pre-increment (`++i`) is preferred over post-increment (`i++`).
 
 ## Implementation Status
 

@@ -1,13 +1,14 @@
 #include "cpp_ml/preprocessing/one_hot_encode.hpp"
 
 #include <cassert>
+#include <cmath>
 #include <stdexcept>
 
 namespace cpp_ml {
 
 Tensor one_hot_encode(
     const Tensor &y,
-    int num_classes
+    std::size_t num_classes
 ) {
     if (!y.is_matrix()) {
         throw std::invalid_argument("y must be a rank-2 tensor");
@@ -25,17 +26,18 @@ Tensor one_hot_encode(
         throw std::invalid_argument("num_classes must be at least 2");
     }
 
-    Tensor result({y.rows(), num_classes});
+    Tensor result{{y.rows(), num_classes}};
 
-    for (int i = 0; i < y.rows(); i++) {
-        double label = y.at(i, 0);
-        int class_id = static_cast<int> (label);
+    for (std::size_t i{0}; i < y.rows(); ++i) {
+        double label{y.at(i, 0)};
 
-        if (label != class_id) {
+        if (label < 0.0 || std::floor(label) != label) {
             throw std::invalid_argument("class labels must be integers");
         }
 
-        if (class_id < 0 || class_id >= num_classes) {
+        std::size_t class_id{static_cast<std::size_t>(label)};
+
+        if (class_id >= num_classes) {
             throw std::invalid_argument("class label is out of range");
         }
 

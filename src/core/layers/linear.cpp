@@ -5,37 +5,40 @@
 
 namespace cpp_ml {
 
-Linear::Linear() {
-    weights_ = Tensor();
-    bias_ = Tensor();
-
-    input_ = Tensor();
-
-    dL_dW_ = Tensor();
-    dL_db_ = Tensor();
-}
-
-
-Linear::Linear(
-    int in_features,
-    int out_features
-) {
-    if (in_features <= 0) {
+static std::size_t validate_in_features(std::size_t in_features) {
+    if (in_features == 0) {
         throw std::invalid_argument("in_features must be positive");
     }
 
-    if (out_features <= 0) {
+    return in_features;
+}
+
+
+static std::size_t validate_out_features(std::size_t out_features) {
+    if (out_features == 0) {
         throw std::invalid_argument("out_features must be positive");
     }
 
-    weights_ = Tensor::random({in_features, out_features}, -0.1, 0.1);
-    bias_ = Tensor::random({1, out_features}, -0.1, 0.1);
-
-    input_ = Tensor();
-
-    dL_dW_ = Tensor({in_features, out_features});
-    dL_db_ = Tensor({1, out_features});
+    return out_features;
 }
+
+Linear::Linear()
+    : weights_{},
+      bias_{},
+      input_{},
+      dL_dW_{},
+      dL_db_{} {}
+
+
+Linear::Linear(
+    std::size_t in_features,
+    std::size_t out_features
+)
+    : weights_{Tensor::random({validate_in_features(in_features), validate_out_features(out_features)}, -0.1, 0.1)},
+      bias_{Tensor::random({1, validate_out_features(out_features)}, -0.1, 0.1)},
+      input_{},
+      dL_dW_{{in_features, out_features}},
+      dL_db_{{1, out_features}} {}
 
 
 Tensor Linear::forward(const Tensor &X) {
@@ -49,12 +52,12 @@ Tensor Linear::forward(const Tensor &X) {
 
     input_ = X;
 
-    Tensor output = X.matmul(weights_); // output has shape (# of samples, # of features)
+    Tensor output{X.matmul(weights_)}; // output has shape (# of samples, # of features)
     assert(output.rows() == X.rows() && output.cols() == weights_.cols());
     assert(output.ndim() == 2);
 
-    for (int i = 0; i < output.rows(); i++) {
-        for (int j = 0; j < output.cols(); j++) {
+    for (std::size_t i{0}; i < output.rows(); ++i) {
+        for (std::size_t j{0}; j < output.cols(); ++j) {
             output.at(i, j) = output.at(i, j) + bias_.at(0, j);
         }
     }
@@ -85,17 +88,17 @@ Tensor Linear::backward(const Tensor &dL_dout) {
     // dL_dW = X.T @ dL_dout
     dL_dW_ = input_.transpose().matmul(dL_dout);
 
-    for (int j = 0; j < dL_dout.cols(); j++) {
-        double bias_gradient = 0.0;
+    for (std::size_t j{0}; j < dL_dout.cols(); ++j) {
+        double bias_gradient{0.0};
 
-        for (int i = 0; i < dL_dout.rows(); i++) {
+        for (std::size_t i{0}; i < dL_dout.rows(); ++i) {
             bias_gradient += dL_dout.at(i, j);
         }
 
         dL_db_.at(0, j) = bias_gradient;
     }
 
-    Tensor dL_dX = dL_dout.matmul(weights_.transpose());
+    Tensor dL_dX{dL_dout.matmul(weights_.transpose())};
 
     assert(dL_dW_.shape() == weights_.shape());
     assert(dL_db_.shape() == bias_.shape());

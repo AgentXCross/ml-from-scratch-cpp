@@ -3,6 +3,7 @@
 #include "cpp_ml/core/layers/layer.hpp"
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
 #include <memory>
 #include <vector>
 
@@ -23,7 +24,7 @@ public:
 
     void step(double learning_rate);
 
-    int size() const;
+    std::size_t size() const;
 };
 
 }

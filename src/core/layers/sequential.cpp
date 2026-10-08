@@ -6,7 +6,7 @@
 namespace cpp_ml {
 
 Sequential::Sequential()
-    : layers_(std::vector<std::unique_ptr<Layer>>()) {}
+    : layers_{} {}
 
 
 void Sequential::add(std::unique_ptr<Layer> layer) {
@@ -23,9 +23,9 @@ Tensor Sequential::forward(const Tensor &X) {
         throw std::runtime_error("Sequential must have at least one layer");
     }
 
-    Tensor output = X;
+    Tensor output{X};
 
-    for (int i = 0; i < static_cast<int>(layers_.size()); i++) {
+    for (std::size_t i{0}; i < layers_.size(); ++i) {
         output = layers_[i]->forward(output);
         assert(!output.empty());
     }
@@ -43,9 +43,9 @@ Tensor Sequential::backward(const Tensor &dL_dout) {
         throw std::invalid_argument("dL_dout cannot be empty");
     }
 
-    Tensor backprop_gradient = dL_dout;
+    Tensor backprop_gradient{dL_dout};
 
-    for (int i = static_cast<int>(layers_.size()) - 1; i >= 0; i--) {
+    for (std::size_t i{layers_.size()}; i-- > 0;) {
         backprop_gradient = layers_[i]->backward(backprop_gradient);
         assert(!backprop_gradient.empty());
     }
@@ -59,14 +59,14 @@ void Sequential::step(double learning_rate) {
         throw std::runtime_error("Sequential must have at least one layer");
     }
 
-    for (int i = 0; i < static_cast<int>(layers_.size()); i++) {
+    for (std::size_t i{0}; i < layers_.size(); ++i) {
         layers_[i]->step(learning_rate);
     }
 }
 
 
-int Sequential::size() const {
-    return static_cast<int>(layers_.size());
+std::size_t Sequential::size() const {
+    return layers_.size();
 }
 
 }

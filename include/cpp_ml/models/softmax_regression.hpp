@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class SoftmaxRegression {
@@ -14,7 +16,7 @@ private:
 
 public:
     SoftmaxRegression();
-    SoftmaxRegression(int num_features, int num_classes);
+    SoftmaxRegression(std::size_t num_features, std::size_t num_classes);
 
     Tensor predict_probs(const Tensor &X) const;
     Tensor predict(const Tensor &X) const;

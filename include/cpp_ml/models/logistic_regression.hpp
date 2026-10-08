@@ -2,6 +2,8 @@
 
 #include "cpp_ml/core/tensor.hpp"
 
+#include <cstddef>
+
 namespace cpp_ml {
 
 class LogisticRegression {
@@ -14,7 +16,7 @@ private:
 
 public:
     LogisticRegression();
-    LogisticRegression(int num_features);
+    LogisticRegression(std::size_t num_features);
 
     Tensor predict_probs(const Tensor &X) const; // returns sigmoid probs
     Tensor predict(const Tensor &X) const; // returns class labels {0, 1}

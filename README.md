@@ -1,5 +1,10 @@
 # C++ Machine Learning Library from Scratch
 
+![C++17](https://img.shields.io/badge/C++-17-blue)
+![CMake](https://img.shields.io/badge/CMake-supported-064F8C)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Release](https://img.shields.io/badge/release-v0.1.0-orange)
+
 A C++17 machine learning library built from scratch using the C++ Standard Library. `cpp_ml` implements classical machine learning algorithms, neural network components, preprocessing utilities, and core tensor operations. 
 
 The library follows a PyTorch-inspired design, where training loops are written explicitly, and the math behind forward passes, gradients, and parameter updates stays visible.

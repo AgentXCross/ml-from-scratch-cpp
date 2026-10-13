@@ -1,9 +1,9 @@
 # C++ Machine Learning Library from Scratch
 
 ![C++17](https://img.shields.io/badge/C++-17-blue)
-![CMake](https://img.shields.io/badge/CMake-supported-064F8C)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Release](https://img.shields.io/badge/release-v0.1.0-orange)
+![CMake](https://img.shields.io/badge/CMake-3.16+-41008C)
+![License](https://img.shields.io/badge/License-MIT-008C21)
+![Release](https://img.shields.io/badge/Release-v0.1.0-FF0073)
 
 A C++17 machine learning library built from scratch using the C++ Standard Library. `cpp_ml` implements classical machine learning algorithms, neural network components, preprocessing utilities, and core tensor operations. 
 
@@ -178,21 +178,21 @@ All library code lives in the `cpp_ml` namespace.
 #include <cpp_ml/cpp_ml.hpp>
 
 int main() {
-    cpp_ml::Tensor X = cpp_ml::Tensor::from_flat_vector(
+    cpp_ml::Tensor X{cpp_ml::Tensor::from_flat_vector(
         {1.0, 2.0, 3.0},
         {3, 1}
-    );
+    )};
 
-    cpp_ml::Tensor y = cpp_ml::Tensor::from_flat_vector(
+    cpp_ml::Tensor y{cpp_ml::Tensor::from_flat_vector(
         {2.0, 4.0, 6.0},
         {3, 1}
-    );
+    )};
 
     cpp_ml::LinearRegression model(1);
 
     model.fit(X, y, 100, 0.1);
 
-    cpp_ml::Tensor predictions = model.predict(X);
+    cpp_ml::Tensor predictions{model.predict(X)};
 }
 ```
 

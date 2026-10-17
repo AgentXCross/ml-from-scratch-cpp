@@ -27,7 +27,6 @@ bool all_same_class(const Tensor &y) {
     return true;
 }
 
-
 void split_dataset(
     const Tensor &X,
     const Tensor &y,
@@ -106,7 +105,6 @@ void split_dataset(
     assert(y_right.cols() == 1);
 }
 
-
 std::vector<std::size_t> sample_feature_indices(
     std::size_t num_features,
     std::size_t max_features,
@@ -137,7 +135,6 @@ std::vector<std::size_t> sample_feature_indices(
     return feature_indices;
 }
 
-
 double gini_impurity(const Tensor &y) {
     if (y.empty()) {
         throw std::invalid_argument("y cannot be empty");
@@ -162,7 +159,6 @@ double gini_impurity(const Tensor &y) {
 
     return impurity;
 }
-
 
 double majority_class(const Tensor &y) {
     if (y.empty()) {
@@ -190,6 +186,30 @@ double majority_class(const Tensor &y) {
     }
 
     return best_label;
+}
+
+std::size_t validate_max_depth(std::size_t max_depth) {
+    if (max_depth == 0) {
+        throw std::invalid_argument("max_depth must be positive");
+    }
+
+    return max_depth;
+}
+
+std::size_t validate_min_samples_split(std::size_t min_samples_split) {
+    if (min_samples_split <= 1) {
+        throw std::invalid_argument("min_samples_split must be greater than 1");
+    }
+
+    return min_samples_split;
+}
+
+std::size_t validate_max_features(std::size_t max_features) {
+    if (max_features < 0) {
+        throw std::invalid_argument("max_features must be non-negative");
+    }
+
+    return max_features;
 }
 
 }

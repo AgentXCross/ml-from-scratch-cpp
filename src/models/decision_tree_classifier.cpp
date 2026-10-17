@@ -9,10 +9,9 @@
 
 namespace cpp_ml {
 
-/*
-Weighted Gini Impurity = (n_left / n_total) * gini(left) + (n_right / n_total) * gini(right)
-During training, we choose the split that has the lowest weighted gini impurity.
-*/
+/**
+ * @brief Weighted Gini Impurity = (n_left / n_total) * gini(left) + (n_right / n_total) * gini(right)
+ */
 double weighted_gini_impurity(
     const Tensor &y_left,
     const Tensor &y_right
@@ -40,16 +39,15 @@ double weighted_gini_impurity(
             + right_weight * gini_impurity(y_right);
 }
 
-
-/*
-find_best_split returns True if a valid split is found, false otherwise.
-Method:
-for each feature in the sampled features:
-    for each value in that feature:
-        try splitting there (split at the values of the training samples)
-        score the split
-        keep the best one
-*/
+/**
+ * @brief find_best_split returns True if a valid split is found, false otherwise.
+ * 
+ * @param X training samples
+ * @param y training sample targets
+ * @param max_features number of features allowed to be considered
+ * @param best_feature_index best feature to split on, returned by reference
+ * @param best_threshold best threshold to split on, returned by reference
+ */
 bool find_best_split(
     const Tensor &X,
     const Tensor &y,
@@ -149,54 +147,22 @@ DecisionTreeClassifierNode::DecisionTreeClassifierNode()
       left{nullptr},
       right{nullptr} {}
 
-
 DecisionTreeClassifier::DecisionTreeClassifier()
-    : root_{nullptr},
-      max_depth_{5},
-      min_samples_split_{2},
-      max_features_{0},
-      random_seed_{42},
-      generator_{random_seed_},
-      fitted_{false} {}
-
-
-static std::size_t validate_max_depth(std::size_t max_depth) {
-    if (max_depth == 0) {
-        throw std::invalid_argument("max_depth must be positive");
-    }
-
-    return max_depth;
-}
-
-
-static std::size_t validate_min_samples_split(std::size_t min_samples_split) {
-    if (min_samples_split <= 1) {
-        throw std::invalid_argument("min_samples_split must be greater than 1");
-    }
-
-    return min_samples_split;
-}
-
-
-static std::size_t validate_max_features(std::size_t max_features) {
-    return max_features;
-}
-
+    : DecisionTreeClassifier(5, 2, 0, 42) {}
 
 DecisionTreeClassifier::DecisionTreeClassifier(
     std::size_t max_depth,
     std::size_t min_samples_split,
     std::size_t max_features,
-    unsigned int random_seed
+    std::size_t random_seed
 )
     : root_{nullptr},
       max_depth_{validate_max_depth(max_depth)},
       min_samples_split_{validate_min_samples_split(min_samples_split)},
       max_features_{validate_max_features(max_features)},
       random_seed_{random_seed},
-      generator_{random_seed_},
+      generator_{static_cast<std::mt19937::result_type>(random_seed_)},
       fitted_{false} {}
-
 
 void DecisionTreeClassifier::fit(
     const Tensor &X,
@@ -223,19 +189,6 @@ void DecisionTreeClassifier::fit(
     fitted_ = true;
 }
 
-
-/*
-Recursively create nodes, returns the root.
-
-create node
-if stopping condition 
-(all same class or reached max depth or not enough samples for split or no split found):
-    make leaf
-else:
-    find best split
-    split data
-    recursively build the left and right children
-*/
 std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
     const Tensor &X,
     const Tensor &y,
@@ -311,7 +264,6 @@ std::unique_ptr<DecisionTreeClassifierNode> DecisionTreeClassifier::build_tree(
 
     return node;
 }
-
 
 double DecisionTreeClassifier::predict_sample(
     const Tensor &x,
